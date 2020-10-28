@@ -1,0 +1,10 @@
+*.iml
+.project
+.classpath
+.DS_Store
+.idea/
+.settings/
+/build
+/captures
+.externalNativeBuild
+.cxx
