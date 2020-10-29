@@ -13,21 +13,12 @@ public class Snippet {
 	String text;
 	Language lang;
 	
-	public Snippet(ArrayList<Snippet> DBSnippets) {
-		this.id = generateNewID(DBSnippets);
-		this.timestamp = (new Date()).getTime();
-		this.password = null;
-		this.info = null;
-		this.text = null;
-		this.lang = null;
-	}
-	
 	public Snippet(ArrayList<Snippet> DBSnippets, String password) {
 		this.id = generateNewID(DBSnippets);
-		this.timestamp = (new Date()).getTime();;
+		this.timestamp = (new Date()).getTime();
 		this.password = password;
-		this.info = null;
-		this.text = null;
+		this.info = "";
+		this.text = "";
 		this.lang = null;
 	}
 	
@@ -109,9 +100,13 @@ public class Snippet {
 	}
 	
 	private String generateNewID(ArrayList<Snippet> DBSnippets) {
-				String newID = generateID();
+		String newID = generateID();
+		if (DBSnippets == null) {
+			return newID;
+		}
 		
 		int iter = 0;
+		
 		while (iter < DBSnippets.size()) {
 			if (newID == DBSnippets.get(iter).getID()) {
 				newID = generateID();

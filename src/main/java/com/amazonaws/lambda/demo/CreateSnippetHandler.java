@@ -49,11 +49,7 @@ public class CreateSnippetHandler implements RequestStreamHandler {
 		
 		SnippetDAO snipdao = new SnippetDAO();
 		Snippet snip = null;
-		
-		if (passParam == "") {
-			snip = new Snippet(snipdao.getAllSnippets());
-		}
-		else if (passParam.length() > 32) {
+		if (passParam.length() < 32) {
 			snip = new Snippet(snipdao.getAllSnippets(), passParam);
 		}
 		else {
