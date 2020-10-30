@@ -1,0 +1,317 @@
+swagger: '2.0'
+info:
+  description: Snippet Code Collaboration System
+  version: 1.0.0
+  title: Snippet API
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: jdcontrerasalbuj@wpi.edu
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+# host: CS509project.swagger.io
+# basePath: /v2
+tags:
+- name: admin
+  description: Secured Admin-only calls
+- name: snippet
+  description: snippet related calls
+- name: comment
+  description: comment related calls
+# schemes:
+# - http
+paths:
+  /snippets:
+    post:
+      tags:
+      - snippet
+      summary: Create a Snippet for a Creator
+      operationId: createSnippet
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: snippet
+        description: Create snippet with password or not 
+        required: false
+        schema:
+          type: object
+          properties:
+            timestamp:
+              type: integer
+            password:
+              type: string
+      responses:
+        200:
+          description: Snippet created
+        400:
+          description: Invalid Snippet
+  /snippets/listSnippets:
+    get:
+      tags:
+      - snippet
+      - admin
+      summary: Get a list of all snippets
+      description: If admin, gets all existing snippets.
+      operationId: listSnippets
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Snippet'
+        404:
+          description: No snippets found
+        405:
+          description: List snippets not allowed
+  /snippets/deleteSnippet:
+    post:
+      tags:
+      - snippet
+      summary: Deletes Snippet with given ID
+      description: If admin, can be done to any Snippet. Else, User must be 
+        creator of given Snippet.
+      operationId: deleteSnippet
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: id
+        description: ID of Snippet to be deleted
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Snippet deleted
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Snippet'
+        404:
+          description: No Snippet found with provided ID
+        405:
+          description: Could not delete Snippet
+  /snippets/removeStaleSnippets:
+    post:
+      tags:
+      - snippet
+      - admin
+      summary: If admin, deletes all Snippets older than N days
+      operationId: removeStaleSnippets
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: date
+        in: body
+        description: Date to filter by
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: All Snippets older than X days deleted
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Snippet'
+        404:
+          description: No snippets found that satisfy input
+        405:
+          description: Remove stale snippets not allowed
+  /snippets/{id}:
+    get:
+      tags:
+      - snippet
+      summary: Find Snippet by ID
+      description: Returns Snippet
+      operationId: getSnippetById
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: ID of Snippet to return
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Snippet'
+        400:
+          description: Invalid ID supplied
+  /snippets/{id}/updateText:
+    post:
+          tags:
+          - snippet
+          summary: Updates Snippet text with given ID
+          description: Both creator and viewers can update text
+          operationId: updateSnippetText
+          consumes:
+          - application/json
+          produces:
+          - application/json
+          parameters:
+          - in: path
+            name: id
+            description: ID of Snippet to edit text
+            required: true
+            type: string
+          - in: body
+            name: snippetText
+            description: Text of Snippet to update
+            required: true
+            schema:
+              type: string
+          responses:
+            200:
+              description: Snippet text updated
+            404:
+              description: No Snippet found with provided ID
+  /snippets/{id}/updateInfo:
+    post:
+          tags:
+          - snippet
+          summary: Updates Snippet Info with given ID
+          description: If creator, can edit Snippet Info. 
+          operationId: updateSnippetInfo
+          consumes:
+          - application/json
+          produces:
+          - application/json
+          parameters:
+          - in: path
+            name: id
+            description: ID of Snippet to edit info
+            required: true
+            type: string
+          - in: body
+            name: snippetInfo
+            description: Info of Snippet to update
+            required: true
+            schema: 
+              type: string
+          responses:
+            200:
+              description: Snippet info updated
+            404:
+              description: No Snippet found with provided ID
+            405:
+              description: Info edit not allowed
+  
+  /comments:
+    post:
+      tags:
+      - comment
+      summary: Add a coment to the snippet
+      operationId: addComment
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: comment
+        description: create comment
+        required: true
+        schema:
+          $ref: '#/definitions/Comment'
+      responses:
+        200:
+          description: Comment added
+        400:
+          description: Comment failed
+  /comments/deleteComment:
+    post:
+      tags:
+      - comment
+      summary: Deletes comment with given ID
+      description: Creator or viewer can delete comment
+      operationId: deleteComment
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: id
+        description: ID of Comment to be deleted
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Comment deleted
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
+        404:
+          description: No comment found with provided ID
+        405:
+          description: Delete comment not allowed 
+  /comments/{id}:
+    get:
+      tags:
+      - comment
+      summary: Finds Comment by id
+      description: Returns a single comment
+      operationId: getCommentById
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: ID of comment to return
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            items:
+              $ref: '#/definitions/Comment'
+        400:
+          description: Invalid comment ID supplied
+
+definitions:
+  Snippet:
+    type: object
+    properties:
+      id:
+        type: string
+      text:
+        type: string
+      info:
+        type: string
+      password:
+        type: string
+      lang:
+        type: string
+      timestamp:
+        type: integer
+  Comment:
+    type: object
+    properties:
+      id:
+        type: string
+      snippetID:
+        type: string
+      timestamp:
+        type: integer
+      text:
+        type: string
+      regionStart:
+        type: integer
+      regionEnd:
+        type: integer

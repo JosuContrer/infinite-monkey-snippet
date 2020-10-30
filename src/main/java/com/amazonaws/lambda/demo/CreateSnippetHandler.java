@@ -62,7 +62,7 @@ public class CreateSnippetHandler implements RequestStreamHandler {
 				statusCode = 400;
 			}
 			
-			// TODO - probably breaks code
+			// Adds snippet to DB
 			snipdao.addSnippet(snip);
 			
 			// Processes RESPONSE
