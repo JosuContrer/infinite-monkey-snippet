@@ -88,7 +88,7 @@ public class SnippetDAO {
 		ps.setString(1, snip.getID());
 		ps.setLong(2, snip.getTimestamp());
 		ps.setString(3,  snip.getPassword());
-		ps.setString(5, snip.getInfo());
+		ps.setString(4, snip.getInfo());
 		ps.setInt(5, snip.getLangAsInt());
 		ps.setBlob(6, snipTextToBlob(snip));
 		

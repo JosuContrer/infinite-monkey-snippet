@@ -38,8 +38,6 @@ public class CreateSnippetHandler implements RequestStreamHandler {
 			}
 		}
 		
-		logger.log("Past StringBuilder");
-		
 		// Parse to get only the body form the API Gateway
 		JsonNode node = Jackson.fromJsonString(incoming.toString(), JsonNode.class);
 		if (node.has("body")) {
@@ -57,8 +55,6 @@ public class CreateSnippetHandler implements RequestStreamHandler {
 			SnippetDAO snipdao = new SnippetDAO();
 			Snippet snip = null;
 			
-			logger.log("Past DAO");
-			
 			if (passParam.length() < 32) {
 				snip = new Snippet(snipdao.getAllSnippets(), passParam);
 			}
@@ -67,7 +63,7 @@ public class CreateSnippetHandler implements RequestStreamHandler {
 			}
 			
 			// TODO - probably breaks code
-			//snipdao.addSnippet(snip);
+			snipdao.addSnippet(snip);
 			
 			// Processes RESPONSE
 			PrintWriter pw = new PrintWriter(output);
@@ -83,13 +79,11 @@ public class CreateSnippetHandler implements RequestStreamHandler {
 		catch (Exception e) {
 			PrintWriter pw = new PrintWriter(output);
 			
-			logger.log("Error " + e.getMessage());
+			StringWriter errSW = new StringWriter();
+			PrintWriter errPW = new PrintWriter(errSW);
+			e.printStackTrace(errPW);
 			
-//			StringWriter errSW = new StringWriter();
-//			PrintWriter errPW = new PrintWriter(errSW);
-//			e.printStackTrace(errPW);
-			
-			String response = Result.ResultJSON(statusCode, Result.ErrorJSON(e.getMessage(), "bruh"));
+			String response = Result.ResultJSON(statusCode, Result.ErrorJSON(e.getMessage(), errSW.toString()));
 			
 			pw.print(response);
 			pw.close();

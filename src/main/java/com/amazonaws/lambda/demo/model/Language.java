@@ -20,6 +20,11 @@ public enum Language {
 	
 	public static Language intToLang(int i) {
 		Language[] langArr = Language.values();
-		return langArr[i];
+		if (i == -1) {
+			return null;
+		}
+		else {
+			return langArr[i];
+		}
 	}
 }

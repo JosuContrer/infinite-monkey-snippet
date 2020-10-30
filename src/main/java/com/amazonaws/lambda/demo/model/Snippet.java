@@ -64,7 +64,12 @@ public class Snippet {
 	}
 	
 	public int getLangAsInt() {
-		return lang.langToInt();
+		if (this.lang == null) {
+			return -1;
+		}
+		else {
+			return this.lang.langToInt();
+		}
 	}
 	
 	public void setLang(Language lang) {
