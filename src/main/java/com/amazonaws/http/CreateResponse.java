@@ -1,4 +1,4 @@
-package com.amazonaws.labda.demo.http;
+package com.amazonaws.http;
 
 public class CreateResponse {
 	public String id;

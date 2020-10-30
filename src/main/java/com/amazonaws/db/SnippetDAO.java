@@ -1,11 +1,11 @@
-package com.amazonaws.lambda.demo.db;
+package com.amazonaws.db;
 
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import com.amazonaws.lambda.demo.model.Snippet;
+import com.amazonaws.model.Snippet;
 
 public class SnippetDAO {
 	java.sql.Connection conn;

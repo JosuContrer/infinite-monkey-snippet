@@ -1,6 +1,6 @@
-package com.amazonaws.labda.demo.http;
+package com.amazonaws.http;
 
-import com.amazonaws.lambda.demo.model.Snippet;
+import com.amazonaws.model.Snippet;
 
 /*
  * /snippets/{id}:

@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.demo;
+package com.amazonaws;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,9 +8,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import com.amazonaws.lambda.demo.db.SnippetDAO;
-import com.amazonaws.lambda.demo.model.Snippet;
-import com.amazonaws.lambda.demo.model.Result;
+import com.amazonaws.db.SnippetDAO;
+import com.amazonaws.model.Result;
+import com.amazonaws.model.Snippet;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;

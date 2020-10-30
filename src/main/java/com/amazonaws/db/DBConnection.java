@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.demo.db;
+package com.amazonaws.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.demo.model;
+package com.amazonaws.model;
 
 public class Result {
 

@@ -1,4 +1,4 @@
-package com.amazonaws.lambda.demo.model;
+package com.amazonaws.model;
 
 import java.util.ArrayList;
 import java.util.Date;

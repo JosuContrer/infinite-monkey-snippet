@@ -1,3 +1,4 @@
+package com.amazonaws;
 //package com.amazonaws.lambda.demo;
 //
 //import java.io.PrintWriter;

@@ -1,9 +1,9 @@
-package com.amazonaws.lambda.demo;
+package com.amazonaws;
 
-import com.amazonaws.labda.demo.http.GetRequest;
-import com.amazonaws.labda.demo.http.GetResponse;
-import com.amazonaws.lambda.demo.db.SnippetDAO;
-import com.amazonaws.lambda.demo.model.Snippet;
+import com.amazonaws.db.SnippetDAO;
+import com.amazonaws.http.GetRequest;
+import com.amazonaws.http.GetResponse;
+import com.amazonaws.model.Snippet;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
