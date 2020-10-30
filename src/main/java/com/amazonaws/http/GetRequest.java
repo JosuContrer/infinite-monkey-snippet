@@ -2,7 +2,7 @@ package com.amazonaws.http;
 
 public class GetRequest {
 	
-	private String snippetId = null;
+	private String snippetId;
 	
 	public GetRequest() {}
 	
