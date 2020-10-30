@@ -11,7 +11,7 @@ public class SnippetDAO {
 	java.sql.Connection conn;
 	final static String table = "snippets";
 	
-	public SnippetDAO() {
+	public SnippetDAO() throws Exception {
 		conn = DBConnection.connect();
 	}
 	
@@ -34,127 +34,87 @@ public class SnippetDAO {
 		return retBlob;
 	}
 	
-	public Snippet getSnippet(String id) {
-		try {
-			Snippet retSnip = null;
-			
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id=?;");
-			ps.setString(1, id);
-			ResultSet result = ps.executeQuery();
-			
-			while(result.next()) {
-				retSnip = SQLToSnippet(result);
-			}
-			
-			result.close();
-			ps.close();
-			
-			return retSnip;
-		}
-		catch (Exception e) {
-			System.err.println("DB Error: Can't get Snippet w/ id=" + id);
-			e.printStackTrace();
-			
-			return null;
-		}
-	}
-	
-	public boolean updateSnippetInfo(Snippet snip) {
-		try {
-			PreparedStatement ps = conn.prepareStatement("UPDATE " + table + " SET info=? WHERE id=?;");
-			ps.setString(1, snip.getInfo());
-			ps.setString(2, snip.getID());
-			
-			int numUpdated = ps.executeUpdate();
-			ps.close();
-			
-			return (numUpdated == 1);
-		}
-		catch (Exception e) {
-			System.err.println("DB Error: Can't update Snippet w/ id=" + snip.getID() + " | INFO=" + snip.getInfo());
-			e.printStackTrace();
-			
-			return false;
-		}
-	}
-	
-	public boolean updateSnippetText(Snippet snip) {
-		try {
-			PreparedStatement ps = conn.prepareStatement("UPDATE " + table + " SET info=? WHERE id=?;");
-				
-			ps.setBlob(1, snipTextToBlob(snip));
-			ps.setString(2, snip.getID());
-			
-			int numUpdated = ps.executeUpdate();
-			ps.close();
-			
-			return (numUpdated == 1);
-		}
-		catch (Exception e) {
-			System.err.println("DB Error: Can't update Snippet w/ id=" + snip.getID() + " | TEXT=" + snip.getText());
-			e.printStackTrace();
-			
-			return false;
-		}
-	}
-	
-	public boolean addSnippet(Snippet snip) {
-		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id=?;");
-			ps.setString(1, snip.getID());
-			
-			ResultSet result = ps.executeQuery();
-			
-			if (result.next()) {
-				throw new Exception("DB Error: Adding Snippet w/ id=" + snip.getID() + " when Snippet already exists");
-			}
-			
-			ps = conn.prepareStatement("INSERT INTO " + table + " (id,timestamp,password,info,lang,text) values(?,?,?,?,?,?);");
-			ps.setString(1, snip.getID());
-			ps.setLong(2, snip.getTimestamp());
-			ps.setString(3,  snip.getPassword());
-			ps.setString(5, snip.getInfo());
-			ps.setInt(5, snip.getLangAsInt());
-			ps.setBlob(6, snipTextToBlob(snip));
-			
-			ps.execute();
-			
-			// not in og code -> if error might be with these closes
-			result.close();
-			ps.close();
-			
-			return true;
-		}
-		catch (Exception e) {
-			System.err.println("DB Error: Can't add Snippet w/ id=" + snip.getID());
-			e.printStackTrace();
-			
-			return false;
-		}
-	}
-	
-	public ArrayList<Snippet> getAllSnippets() {
-		ArrayList<Snippet> retList = new ArrayList<Snippet>();
+	public Snippet getSnippet(String id) throws Exception {
+		Snippet retSnip = null;
 		
-		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + table + ";");
-			
-			ResultSet result = ps.executeQuery();
-			
-			while(result.next()) {
-				retList.add(SQLToSnippet(result));
-			}
-			
-			result.close();
-			ps.close();
-			
-			return retList;
+		PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id=?;");
+		ps.setString(1, id);
+		ResultSet result = ps.executeQuery();
+		
+		while(result.next()) {
+			retSnip = SQLToSnippet(result);
 		}
-		catch (Exception e) {
-			System.err.println("DB Error: Can't get all Snippets");
-			e.printStackTrace();
+		
+		result.close();
+		ps.close();
+		
+		return retSnip;
+	}
+	
+	public boolean updateSnippetInfo(Snippet snip) throws Exception {
+		PreparedStatement ps = conn.prepareStatement("UPDATE " + table + " SET info=? WHERE id=?;");
+		ps.setString(1, snip.getInfo());
+		ps.setString(2, snip.getID());
+		
+		int numUpdated = ps.executeUpdate();
+		ps.close();
+		
+		return (numUpdated == 1);
+	}
+	
+	public boolean updateSnippetText(Snippet snip) throws Exception {
+		PreparedStatement ps = conn.prepareStatement("UPDATE " + table + " SET info=? WHERE id=?;");
 			
-			return null;
+		ps.setBlob(1, snipTextToBlob(snip));
+		ps.setString(2, snip.getID());
+		
+		int numUpdated = ps.executeUpdate();
+		ps.close();
+		
+		return (numUpdated == 1);
+	}
+	
+	public boolean addSnippet(Snippet snip) throws Exception {
+		PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id=?;");
+		ps.setString(1, snip.getID());
+		
+		ResultSet result = ps.executeQuery();
+		
+		if (result.next()) {
+			throw new Exception("DB Error: Adding Snippet w/ id=" + snip.getID() + " when Snippet already exists");
 		}
+		
+		ps = conn.prepareStatement("INSERT INTO " + table + " (id,timestamp,password,info,lang,text) values(?,?,?,?,?,?);");
+		ps.setString(1, snip.getID());
+		ps.setLong(2, snip.getTimestamp());
+		ps.setString(3,  snip.getPassword());
+		ps.setString(5, snip.getInfo());
+		ps.setInt(5, snip.getLangAsInt());
+		ps.setBlob(6, snipTextToBlob(snip));
+		
+		ps.execute();
+		
+		// not in og code -> if error might be with these closes
+		result.close();
+		ps.close();
+		
+		return true;
+	}
+	
+	public ArrayList<Snippet> getAllSnippets() throws Exception {
+		ArrayList<Snippet> retList = new ArrayList<Snippet>();
+
+		PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + table + ";");
+		
+		ResultSet result = ps.executeQuery();
+		
+		while(result.next()) {
+			retList.add(SQLToSnippet(result));
+		}
+		
+		result.close();
+		ps.close();
+		
+		return retList;
 	}
 }

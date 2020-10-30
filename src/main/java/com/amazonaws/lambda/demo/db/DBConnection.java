@@ -13,7 +13,7 @@ public class DBConnection {
 	
 	static Connection conn;
 	
-	static Connection connect() {
+	static Connection connect() throws Exception {
 		if (conn != null) {
 			return conn;
 		}
@@ -24,32 +24,22 @@ public class DBConnection {
 		
 		if (url == null) {
 			String error = "Env var dbURL does not exist";
-			System.err.println(error);
-			return null;
+			throw new Exception(error);
 		}
 		else if (username == null) {
 			String error = "Env var dbUsername does not exist";
-			System.err.println(error);
-			return null;
+			throw new Exception(error);
 		}
 		else if (password == null) {
 			String error = "Env var dbPassword does not exist";
-			System.err.println(error);
-			return null;
+			throw new Exception(error);
 		}
 		
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			
-			conn = DriverManager.getConnection(jdbcTag + url + ":" + dbPort + "/" + dbName + multiQuery, 
-					username, password);
-			
-			return conn;
-		}
-		catch (Exception e) {
-			System.err.println("DB Error: " + url + " | " + dbName + " | " + username + " | " + password);
-			e.printStackTrace();
-			return null;
-		}
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		
+		conn = DriverManager.getConnection(jdbcTag + url + ":" + dbPort + "/" + dbName + multiQuery, 
+				username, password);
+		
+		return conn;
 	}
 }
