@@ -1,19 +1,19 @@
 package com.amazonaws.http;
 
-public class GetRequest {
-	
-	private String snippetId = null;
+import java.io.Serializable;
+
+public class GetRequest implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	public String id = null;
 	
 	public GetRequest() {}
 	
 	public GetRequest(String id) {
-		this.snippetId = id;
+		this.id = id;
 	}
 	
-	public String getSnippetId() { return snippetId; }
-	public void setSnippetId(String id) { this.snippetId = id; }
-	
 	public String toString() {
-		return "GetRequest(" + snippetId + ")";
+		return "GetRequest(" + id + ")";
 	}
 }

@@ -20,7 +20,11 @@ public class GetSnippetHandler implements RequestHandler<GetRequest, GetResponse
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		
 		logger = context.getLogger();
+		if (context != null) { 
+			context.getLogger();
+		}
 		logger.log("->Snippet ID GET Requested: " + input.toString());
+		logger.log(gson.toJson(context));
 		
 		GetResponse response;
 		
@@ -28,15 +32,15 @@ public class GetSnippetHandler implements RequestHandler<GetRequest, GetResponse
 			// Check Database for Snippet with given ID
 			SnippetDAO snipdao = new SnippetDAO();
 			
-			Snippet snippet = snipdao.getSnippet(input.getSnippetId());
-			logger.log("->Input Snippet to get form DB: " + input.getSnippetId());
+			Snippet snippet = snipdao.getSnippet(input.id);
+			logger.log("->Input Snippet to get form DB: " + input.id);
 			logger.log("     |->beautify: " + gson.toJson(input));
 			logger.log("->Event Type: " + input.getClass().toString()); 
 			// Create snippet response
 			response = new GetResponse(200, snippet);
 			
 		} catch(Exception e) {
-			return new GetResponse(400, input.getSnippetId()); // 400: Invalid ID supplied	
+			return new GetResponse(400, input.id); // 400: Invalid ID supplied	
 		}
 		
 		return response;
