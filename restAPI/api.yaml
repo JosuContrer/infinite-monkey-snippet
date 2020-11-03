@@ -56,8 +56,6 @@ paths:
       summary: Get a list of all snippets
       description: If admin, gets all existing snippets.
       operationId: listSnippets
-      consumes:
-      - application/json
       produces:
       - application/json
       responses:
@@ -93,10 +91,6 @@ paths:
       responses:
         200:
           description: Snippet deleted
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Snippet'
         404:
           description: No Snippet found with provided ID
         405:
@@ -154,62 +148,62 @@ paths:
           description: Invalid ID supplied
   /snippets/{id}/updateText:
     post:
-          tags:
-          - snippet
-          summary: Updates Snippet text with given ID
-          description: Both creator and viewers can update text
-          operationId: updateSnippetText
-          consumes:
-          - application/json
-          produces:
-          - application/json
-          parameters:
-          - in: path
-            name: id
-            description: ID of Snippet to edit text
-            required: true
-            type: string
-          - in: body
-            name: snippetText
-            description: Text of Snippet to update
-            required: true
-            schema:
-              type: string
-          responses:
-            200:
-              description: Snippet text updated
-            404:
-              description: No Snippet found with provided ID
+      tags:
+      - snippet
+      summary: Updates Snippet text with given ID
+      description: Both creator and viewers can update text
+      operationId: updateSnippetText
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: ID of Snippet to edit text
+        required: true
+        type: string
+      - in: body
+        name: snippetText
+        description: Text of Snippet to update
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Snippet text updated
+        404:
+          description: No Snippet found with provided ID
   /snippets/{id}/updateInfo:
     post:
-          tags:
-          - snippet
-          summary: Updates Snippet Info with given ID
-          description: If creator, can edit Snippet Info. 
-          operationId: updateSnippetInfo
-          consumes:
-          - application/json
-          produces:
-          - application/json
-          parameters:
-          - in: path
-            name: id
-            description: ID of Snippet to edit info
-            required: true
-            type: string
-          - in: body
-            name: snippetInfo
-            description: Info of Snippet to update
-            required: true
-            schema: 
-              type: string
-          responses:
-            200:
-              description: Snippet info updated
-            404:
-              description: No Snippet found with provided ID
-            405:
-              description: Info edit not allowed
+      tags:
+      - snippet
+      summary: Updates Snippet Info with given ID
+      description: If creator, can edit Snippet Info. 
+      operationId: updateSnippetInfo
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: ID of Snippet to edit info
+        required: true
+        type: string
+      - in: body
+        name: snippetInfo
+        description: Info of Snippet to update
+        required: true
+        schema: 
+          type: string
+      responses:
+        200:
+          description: Snippet info updated
+        404:
+          description: No Snippet found with provided ID
+        405:
+          description: Info edit not allowed
   
   /comments:
     post:
@@ -233,6 +227,32 @@ paths:
           description: Comment added
         400:
           description: Comment failed
+  /comments/listCommentsBySnippet:
+    post:
+      tags:
+        - comment
+      summary: Gets all comments by snippet ID
+      operationId: listCommentsBySnippet
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: snippetID
+        description: ID of snippet to get appropriate comments
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: got all comments from ID
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
+        400:
+          description: failed to get comments
   /comments/deleteComment:
     post:
       tags:
@@ -297,7 +317,7 @@ definitions:
       password:
         type: string
       lang:
-        type: string
+        type: integer
       timestamp:
         type: integer
   Comment:
