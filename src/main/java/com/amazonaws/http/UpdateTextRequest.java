@@ -20,4 +20,8 @@ public class UpdateTextRequest implements Serializable{
 	public void setSnippetText(String snippetText) {
 		this.snippetText = snippetText;
 	}
+	
+	public String toString() {
+		return "UpadteTextRequest(" + id + ", " + snippetText + ")";
+	}
 }
