@@ -63,7 +63,7 @@ public class SnippetDAO {
 	}
 	
 	public boolean updateSnippetText(Snippet snip) throws Exception {
-		PreparedStatement ps = conn.prepareStatement("UPDATE " + table + " SET info=? WHERE id=?;");
+		PreparedStatement ps = conn.prepareStatement("UPDATE " + table + " SET text=? WHERE id=?;");
 			
 		ps.setBlob(1, snipTextToBlob(snip));
 		ps.setString(2, snip.getID());

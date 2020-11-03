@@ -27,13 +27,14 @@ public class UpdateTextHandler implements RequestHandler<UpdateTextRequest, Upda
 			SnippetDAO snipdao = new SnippetDAO();
 			
 			// TODO: Make function to update Snippet without having to create a snippet object
-			Snippet snippet = snipdao.getSnippet(input.getId());
-			snippet.setText(input.getSnippetText());
+			Snippet snippet = snipdao.getSnippet(input.id);
+			snippet.setText(input.text);
 			snipdao.updateSnippetText(snippet);
 			
 			response = new UpdateTextResponse(200);
 			
 		} catch(Exception e) {
+			logger.log(e.getMessage());
 			return new UpdateTextResponse(404);
 		}
 		

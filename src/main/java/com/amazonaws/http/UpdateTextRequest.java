@@ -6,7 +6,7 @@ public class UpdateTextRequest implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	public String id;
-	public String snippetText;
+	public String text;
 	
 	public String getId() {
 		return id;
@@ -15,13 +15,20 @@ public class UpdateTextRequest implements Serializable{
 		this.id = id;
 	}
 	public String getSnippetText() {
-		return snippetText;
+		return text;
 	}
-	public void setSnippetText(String snippetText) {
-		this.snippetText = snippetText;
+	public void setSnippetText(String text) {
+		this.text = text;
+	}
+	
+	public UpdateTextRequest() {}
+	
+	public UpdateTextRequest(String id, String text) {
+		this.id = id;
+		this.text = text;
 	}
 	
 	public String toString() {
-		return "UpadteTextRequest(" + id + ", " + snippetText + ")";
+		return "UpdateTextRequest(" + id + ", " + text + ")";
 	}
 }

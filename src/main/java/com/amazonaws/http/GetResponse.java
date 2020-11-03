@@ -2,47 +2,6 @@ package com.amazonaws.http;
 
 import com.amazonaws.model.Snippet;
 
-/*
- * /snippets/{id}:
-    get:
-      tags:
-      - snippet
-      summary: Find Snippet by ID
-      description: Returns Snippet
-      operationId: getSnippetById
-      produces:
-      - application/json
-      parameters:
-      - name: id
-        in: path
-        description: ID of Snippet to return
-        required: true
-        type: string
-      responses:
-        200:
-          description: successful operation
-          schema:
-            $ref: '#/definitions/Snippet'
-        400:
-          description: Invalid ID supplied
-          
-    Snippet:
-    type: object
-    properties:
-      id:
-        type: string
-      text:
-        type: string
-      info:
-        type: string
-      password:
-        type: string
-      lang:
-        type: string
-      timestamp:
-        type: integer
- */
-
 public class GetResponse {
 	
 	private int statusCode;
