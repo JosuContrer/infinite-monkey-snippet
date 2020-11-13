@@ -116,15 +116,13 @@ class Homepage extends Component {
     render() {
         return (
             // className="block-example border border-dark"
-            <Container fluid id="homepage">
-                <Row>
-                    <Col xs="6">
-                        <div>
-                            <h1>Infinite Monkey Snippet</h1>
-                            <img className="main_logo" src={logo} alt="Logo"/>
-                        </div>
-                    </Col>
-                    <Col xs="6">
+            <div class="container" id="homepage">
+               
+                    <div class="column">
+                        <h1>Infinite Monkey Snippet</h1>
+                        <img className="main_logo" src={logo} alt="Logo"/>
+                    </div>
+                    <div class="column">
                         <ul>
                         <Form>
                             <FormGroup className="input_group">
@@ -144,9 +142,9 @@ class Homepage extends Component {
                             </FormGroup>
                         </Form>
                         </ul>
-                    </Col>
-                </Row>
-            </Container>
+                    </div>
+               
+            </div>
           
         );
     }

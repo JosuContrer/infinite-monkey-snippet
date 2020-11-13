@@ -1,3 +1,5 @@
+/*--------- Fonts ---------------*/
+@import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
 
 body {
     background-color: #FCCD04;
@@ -9,28 +11,45 @@ body {
 #homepage .container{
     height: 100vh;
     width: 100%;
-    display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    object-fit: contain;
+    align-items: baseline;
+    display: flex;
+    /* object-fit: contain;
+    flex-direction:column;
+    justify-content:flex-end;
+    flex-wrap: wrap; */
 }
 
-#homepage .row{
-    min-height: 100%;
-    justify-content: center;
-    align-items: center;
+#homepage .column{
+    flex-grow: 1;
+    width: 50%;
+    /* color: black; */
+    /* background-color: #0a0e27; */
 }
 
 #homepage h1 {
-    color: black;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 75px;
-    font-weight: bolder;
-    text-align: center;
-    justify-content: center;
+    /* background-color: #3a50d9; */
+    color: #A63A50;
+    font-size: 100px;
+    font-family: 'Shrikhand', cursive;
+    line-height: 80%;
+    text-shadow: -4px 3px 0 #FCCD04, -14px 7px 0 #0a0e27;
+    -webkit-text-stroke: 3px black;
     margin-top: 40px;
-}
+    animation: colorchange 10s infinite;
+  }
+
+  @keyframes colorchange {
+    0% {
+      -webkit-text-stroke: 3px black;
+    }
+    50% {
+      -webkit-text-stroke: 3px #a0ddff;
+    }
+    100% {
+      -webkit-text-stroke: 3px black;
+    }
+  }
 
 #homepage h4 {
     color: black;
@@ -51,7 +70,7 @@ body {
     margin-right: auto;
     margin-top: 10%;
     margin-bottom: 15%;
-    width: 75%;
+    width: 20px;
     min-width: 600px;
 }
 
