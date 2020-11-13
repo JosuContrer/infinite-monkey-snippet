@@ -69,13 +69,20 @@ public class SnippetDAO {
 		return (numUpdated == 1);
 	}
 	
-	public boolean updateSnippetInfo(Snippet snip) throws Exception {
-		PreparedStatement ps = conn.prepareStatement("UPDATE " + table + " SET info=? WHERE id=?;");
-		ps.setString(1, snip.getInfo());
-		ps.setString(2, snip.getID());
+	public boolean updateSnippetInfo(Snippet snip, String password) throws Exception {
 		
-		int numUpdated = ps.executeUpdate();
-		ps.close();
+		int numUpdated = 2;
+		
+		if (snip.isPassword(password)) {
+			PreparedStatement ps = conn.prepareStatement("UPDATE " + table + " SET info=? WHERE id=?;");
+			ps.setString(1, snip.getInfo());
+			ps.setString(2, snip.getID());
+			
+			numUpdated = ps.executeUpdate();
+			ps.close();
+		} else {
+			return false;
+		}
 		
 		return (numUpdated == 1);
 	}
