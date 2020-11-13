@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-
+import AceEditor from "react-ace";
 import "./styles.css";
 
 class Snippet extends Component {
@@ -164,9 +164,27 @@ class Snippet extends Component {
                         <div id="textDiv" className="leftCol">
                             <h5>Text:</h5>
                             <br/>
-                            <form>
-                                <textarea id="textArea" value={this.state.text} onChange={this.textChanged}/>
-                            </form>
+                            <AceEditor
+                                placeholder="Placeholder Text"
+                                mode="javascript"
+                                theme="monokai"
+                                name="blah2"
+                                onLoad={this.onLoad}
+                                onChange={this.onChange}
+                                fontSize={14}
+                                showPrintMargin={true}
+                                showGutter={true}
+                                highlightActiveLine={true}
+                                value={`function onLoad(editor) {
+                                console.log("i've loaded");
+                                }`}
+                                setOptions={{
+                                enableBasicAutocompletion: false,
+                                enableLiveAutocompletion: false,
+                                enableSnippets: false,
+                                showLineNumbers: true,
+                                tabSize: 2,
+                                }}/>
                         </div>
                         <div id="commentDiv" className="rightCol">
                             <h5>Comments:</h5>
