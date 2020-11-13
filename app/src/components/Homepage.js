@@ -5,9 +5,6 @@ import {Form, FormGroup, Label, Input, FormFeedback, FormText,
 } from "reactstrap"
 import logo from './images/logo.png'
 
-import "./styles.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 class Homepage extends Component {
     constructor(props) {
         super(props);
@@ -116,7 +113,7 @@ class Homepage extends Component {
     render() {
         return (
             // className="block-example border border-dark"
-            <div class="container" id="homepage">
+            <div id="homepage">
                
                     <div class="column">
                         <h1>Infinite Monkey Snippet</h1>

@@ -1,6 +1,5 @@
 import React, {Component} from "react"
 import AceEditor from "react-ace";
-import "./styles.css";
 
 class Snippet extends Component {
     constructor(props) {
