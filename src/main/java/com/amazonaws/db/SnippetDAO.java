@@ -51,6 +51,16 @@ public class SnippetDAO {
 		return retSnip;
 	}
 	
+	public boolean deleteSnippet(String id) throws Exception {
+		PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE id=?;");
+		ps.setString(1, id);
+		
+		int numUpdated = ps.executeUpdate();
+		ps.close();
+		
+		return (numUpdated == 1);
+	}
+	
 	public boolean updateSnippetInfo(Snippet snip) throws Exception {
 		PreparedStatement ps = conn.prepareStatement("UPDATE " + table + " SET info=? WHERE id=?;");
 		ps.setString(1, snip.getInfo());
