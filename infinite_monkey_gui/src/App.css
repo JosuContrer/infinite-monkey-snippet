@@ -5,11 +5,11 @@
 body{
   font-family: Arial;
   padding: 10px;
-  background: black;
+  background: #F5E6CC;
 }
 
 .card{
-  background-color: dimgray;
+  background-color: #FCCD04;
   padding: 1em;
   margin-top: 0.5em;
   border-radius: 25px;
@@ -18,12 +18,12 @@ body{
 /*Header card*/
 .header h1{
   text-align: center;
-  color: darkorange;
+  color: black;
 }
 
 .header h2{
   font-size: 20px;
-  color: #FF5548;
+  color: rgb(90, 85, 85);
 }
 
 /*Snippet Info*/
@@ -70,15 +70,15 @@ color: white;
 }
 
 .card button{
-margin-top: 1%;
-  height: 50px;
-  min-width: 100%;
-  border: 2px solid black;
-  color: black;
-  background-color: darkorange;
-  font-weight: bold;
-  text-align: center;
-  border-radius: 10px;
+    margin-top: 1%;
+    height: 50px;
+    min-width: 100%;
+    border: 2px solid #FFB48F;
+    color: black;
+    background-color: #FFB48F;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px;
 }
 
 .card button:hover{
@@ -96,7 +96,7 @@ padding: 0.5em;
 }
 
 .card #commentArea {
-background: orange;
+background: #F5E6CC;
 padding: 0.5em;
   border-radius: 10px;
 min-height: 540px;

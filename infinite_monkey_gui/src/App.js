@@ -31,61 +31,57 @@ class App extends React.Component {
                         </div>
                     </div>
 
-                <div className="card">
-                    <div id="infoDiv" className="leftCol">
-                        <h5>Info:</h5>
-                        <textarea type="text" id="infoArea"></textarea>
-                    </div>
-			        <div id="langDiv" className="rightCol" >
-				        <div id="accessory" >
-					        <h5 id="languageText" >Language: </h5>
-					        <h5 id = "timestampText" >Timestamp: </h5>
+                    <div className="card">
+                        <div id="infoDiv" className="leftCol">
+                            <h5>Info:</h5>
+                            <textarea type="text" id="infoArea"></textarea>
                         </div>
-				    </div>
+			            <div id="langDiv" className="rightCol" >
+				            <div id="accessory" >
+					            <h5 id="languageText" >Language: </h5>
+					            <h5 id = "timestampText" >Timestamp: </h5>
+                            </div>
+				        </div>
 				        <button type="button">Save Info</button>
-			    </div>
-            </div>
-            <div className="card" >
-                <div id="textDiv" className="leftCol" >
-                    <h5>Text:</h5>
-                    <div id="text_container"></div>
-                    <textarea id="textArea" ></textarea>
+			        </div>
                 </div>
-                <div id="commentDiv" className="rightCol" >
-                    <h5>Comments:</h5>
-                    <div id="commentArea"></div>
-                    <button type="button" onclick="saveText(this)" >Save Text</button>
+                <div className="card" >
+                    <div id="textDiv" className="leftCol" >
+                        <h5>Text:</h5>
+                        <div id="text_container"></div>
+                            <div className="row">
+                            <AceEditor
+                                placeholder="Placeholder Text"
+                                mode="javascript"
+                                theme="monokai"
+                                name="blah2"
+                                onLoad={this.onLoad}
+                                onChange={this.onChange}
+                                fontSize={14}
+                                showPrintMargin={true}
+                                showGutter={true}
+                                highlightActiveLine={true}
+                                value={`function onLoad(editor) {
+                                console.log("i've loaded");
+                                }`}
+                                setOptions={{
+                                enableBasicAutocompletion: false,
+                                enableLiveAutocompletion: false,
+                                enableSnippets: false,
+                                showLineNumbers: true,
+                                tabSize: 2,
+                                }}/>
+                        </div>
+                    </div>
+                    <div id="commentDiv" className="rightCol" >
+                        <h5>Comments:</h5>
+                        <div id="commentArea"></div>
+                        <button type="button" onclick="saveText(this)" >Save Text</button>
+                    </div> 
                 </div>
-                        
-                             
-                <div className="row">
-                <AceEditor
-                    placeholder="Placeholder Text"
-                    mode="javascript"
-                    theme="monokai"
-                    name="blah2"
-                    onLoad={this.onLoad}
-                    onChange={this.onChange}
-                    fontSize={14}
-                    showPrintMargin={true}
-                    showGutter={true}
-                    highlightActiveLine={true}
-                    value={`function onLoad(editor) {
-                    console.log("i've loaded");
-                    }`}
-                    setOptions={{
-                    enableBasicAutocompletion: false,
-                    enableLiveAutocompletion: false,
-                    enableSnippets: false,
-                    showLineNumbers: true,
-                    tabSize: 2,
-                    }}/>
-                </div>
-
-                    <div className="card" id="contactDiv" >
+                <div className="card" id="contactDiv" >
                         <h5>Contact Us</h5>
                         <p>some text and links (github, linkedin, instagram, etc.)</p>
-                    </div> 
                 </div>
             </div>  
         );
