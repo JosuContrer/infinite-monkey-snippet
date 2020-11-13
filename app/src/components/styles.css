@@ -1,0 +1,201 @@
+/*--------- Fonts ---------------*/
+@import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
+
+body {
+    background-color: #FCCD04;
+    padding: 10px;
+}
+
+/* ---------- HOMEPAGE ---------- */
+
+#homepage {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#homepage .column{
+    width: 50%;
+    min-width: 600px;
+}
+
+#homepage h1 {
+    /* background-color: #3a50d9; */
+    color: #A63A50;
+    font-size: 100px;
+    font-family: 'Shrikhand', cursive;
+    line-height: 80%;
+    text-shadow: -4px 3px 0 #FCCD04, -14px 7px 0 #0a0e27;
+    -webkit-text-stroke: 3px black;
+    margin-top: 40px;
+    animation: colorchange 10s infinite;
+  }
+
+@keyframes colorchange {
+    0% {
+        -webkit-text-stroke: 3px black;
+    }
+    50% {
+        -webkit-text-stroke: 3px #a0ddff;
+    }
+    100% {
+        -webkit-text-stroke: 3px black;
+    }
+}
+
+#homepage h4 {
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 50px;
+    text-align: center;
+}
+
+#homepage div{
+    text-align: center;
+    justify-items: center;
+    align-items: center;
+}
+
+#homepage .main_logo {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    margin-bottom: 15%;
+    width: 20px;
+    min-width: 600px;
+}
+
+#homepage .input_group{
+    padding: 20px;
+}
+
+#homepage .input_group Input{
+    margin-left: auto;
+    margin-right: auto;
+    width: 65%;
+    height: 70px;
+    min-width: 300px;
+    padding: 2px;
+}
+
+#homepage .input_group .formF{
+    font-size: 20px;
+}
+
+#homepage .input_group Button{
+    width: 400px;
+    height: 75px;
+    font-size: 30px;
+    font-weight: bold;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+/* ---------- SNIPPET ---------- */
+
+#snippetpage * {
+    box-sizing: border-box;
+}
+
+#snippetpage .snippetsection{
+    background-color: dimgray;
+    padding: 1em;
+    margin-top: 0.5em;
+    border-radius: 25px;
+}
+
+/*Header card*/
+#snippetpage .header h1{
+    text-align: center;
+    color: darkorange;
+}
+
+#snippetpage .header h2{
+    font-size: 20px;
+    color: #FF5548;
+}
+
+/*Snippet Info*/
+#snippetpage h5{
+    margin: 0;
+    padding: 0;
+    position: relative;
+    font-size: 15px;
+}
+
+#snippetpage .snippetsection {
+	display: flex;
+}
+
+#snippetpage .snippetsection .leftCol {
+	min-width: 69%;
+	margin-right: 2%;
+}
+
+#snippetpage .snippetsection .rightCol {
+	min-width: 29%;
+}
+
+#snippetpage .snippetsection #infoArea {
+    position: initial;
+    height: 100px;
+    padding: 0.5em;
+    border-radius: 10px;
+    resize: none;
+	min-width: 100%;
+}
+
+#snippetpage .snippetsection #langDiv #accessory {
+	margin-top: 7%;
+	justify-content: space-between;
+}
+
+#snippetpage .snippetsection #langDiv #accessory h5 {
+	display: inline-block;
+	min-width: 45%;
+	margin-right: 2%;
+	margin-bottom: 0.5em;
+	color: white;
+}
+
+#snippetpage .snippetsection button{
+	margin-top: 1%;
+    height: 50px;
+    min-width: 100%;
+    border: 2px solid black;
+    color: black;
+    background-color: darkorange;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px;
+}
+
+#snippetpage .snippetsection button:hover{
+    border-color: white;
+}
+
+/*Snippet Text*/
+/*#snippetpage .snippetsection .ace_content {*/
+/*    height: 600px;*/
+/*    min-width: 100%;*/
+/*    font-size: 11pt;*/
+/*    resize: vertical;*/
+/*	padding: 0.5em;*/
+/*    border-radius: 10px;*/
+/*}*/
+
+#snippetpage .snippetsection #commentArea {
+	background: orange;
+	padding: 0.5em;
+    border-radius: 10px;
+	min-height: 540px;
+}
+
+#snippetpage #contactDiv {
+	min-width: 100%;
+	flex-direction: column;
+}
+
+
+
+
