@@ -43,6 +43,10 @@ public class Snippet {
 		return this.password;
 	}
 	
+	public boolean isPassword(String pass) {
+		return this.password == pass;
+	}
+	
 	public String getInfo() {
 		return this.info;
 	}

@@ -32,17 +32,18 @@ public class DeleteSnippetHandler implements RequestHandler<DeleteSnippetRequest
 		
 		try {
 			SnippetDAO snipdao = new SnippetDAO();
-		
-			//Get snippet form database 
-			Snippet snip = snipdao.getSnippet(input.getId());
 			
-			// TODO: add password check to delete snippet
 			//Delete Snippet 
-			snipdao.deleteSnippet(snip.getID());
-			response = new DeleteSnippetResponse(statusCode);
+			if(snipdao.deleteSnippet(input.getId(), input.getPassword())) {
+				response = new DeleteSnippetResponse(statusCode);
+			} else {
+				statusCode = 405;
+				response = new DeleteSnippetResponse(statusCode);
+			}
 			
 		} catch(Exception e) {
-			return new DeleteSnippetResponse(405);
+			statusCode = 404;
+			return new DeleteSnippetResponse(statusCode);
 		}
 		
 		return response;

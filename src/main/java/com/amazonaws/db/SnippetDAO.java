@@ -51,12 +51,20 @@ public class SnippetDAO {
 		return retSnip;
 	}
 	
-	public boolean deleteSnippet(String id) throws Exception {
-		PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE id=?;");
-		ps.setString(1, id);
+	public boolean deleteSnippet(String id, String password) throws Exception {
 		
-		int numUpdated = ps.executeUpdate();
-		ps.close();
+		Snippet snip = getSnippet(id);
+		int numUpdated = 2;
+		
+		if(snip.isPassword(password)) {
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE id=?;");
+			ps.setString(1, id);
+			
+			numUpdated = ps.executeUpdate();
+			ps.close();
+		}else {
+			return false;
+		}
 		
 		return (numUpdated == 1);
 	}
