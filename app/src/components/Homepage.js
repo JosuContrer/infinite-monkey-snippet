@@ -1,6 +1,12 @@
 import React, {Component} from "react";
+import {Form, FormGroup, Label, Input, FormFeedback, FormText,
+        Col, Row, Container,
+        Jumbotron, Button
+} from "reactstrap"
+import logo from './images/logo.png'
 
 import "./styles.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Homepage extends Component {
     constructor(props) {
@@ -109,23 +115,39 @@ class Homepage extends Component {
 
     render() {
         return (
-            <div id="homepage">
-                <h1>Infinite Monkey Snippet</h1>
-                <h4>Create a Snippet (password optional)</h4>
-                <div>
-                    <form>
-                        <input type="text" value={this.state.password} onChange={this.passChanged} />
-                    </form>
-                    <button onClick={this.createSnippet}>Create Snippet</button>
-                </div>
-                <h4>Enter Snippet ID</h4>
-                <div>
-                    <form onSubmit={this.loadSnippet}>
-                        <input type="text" value={this.state.snippetID} onChange={this.idChanged} />
-                    </form>
-                    <button onClick={this.loadSnippet}>Enter</button>
-                </div>
-            </div>
+            // className="block-example border border-dark"
+            <Container fluid id="homepage">
+                <Row>
+                    <Col xs="6">
+                        <div>
+                            <h1>Infinite Monkey Snippet</h1>
+                            <img className="main_logo" src={logo} alt="Logo"/>
+                        </div>
+                    </Col>
+                    <Col xs="6">
+                        <ul>
+                        <Form>
+                            <FormGroup className="input_group">
+                                <h4>Create a Snippet</h4>
+                                <Input valid  type="text" value={this.state.password} onChange={this.passChanged} />
+                                <FormFeedback  className="formF">Good Password My Dude!</FormFeedback>
+                                <FormText className="formF">Note: Password is Optional</FormText>
+                                <Button outline color="primary" onClick={this.createSnippet}>Create Snippet</Button>
+                            </FormGroup>
+                            
+                            <FormGroup className="input_group">
+                                <h4>Enter Snippet ID</h4>
+                                <Input type="text" value={this.state.snippetID} onChange={this.idChanged}/>
+                                <FormFeedback valid className="formF">Nice Snippet ID</FormFeedback>
+                                <br></br>
+                                <Button outline color="primary" onClick={this.loadSnippet}>Enter</Button>
+                            </FormGroup>
+                        </Form>
+                        </ul>
+                    </Col>
+                </Row>
+            </Container>
+          
         );
     }
 }

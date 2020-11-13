@@ -1,32 +1,84 @@
 
 body {
-    background-color: black;
+    background-color: #FCCD04;
     padding: 10px;
 }
 
 /* ---------- HOMEPAGE ---------- */
 
-#homepage {
-    position: center;
+#homepage .container{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    object-fit: contain;
+}
+
+#homepage .row{
+    min-height: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 #homepage h1 {
-    color: yellow;
-    text-align: center
+    color: black;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 75px;
+    font-weight: bolder;
+    text-align: center;
+    justify-content: center;
+    margin-top: 40px;
 }
 
 #homepage h4 {
-    color: yellow;
-    text-align: center
-}
-
-#homepage p{
-    color: yellow;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 50px;
     text-align: center;
 }
 
 #homepage div{
     text-align: center;
+    justify-items: center;
+    align-items: center;
+}
+
+#homepage .main_logo {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    margin-bottom: 15%;
+    width: 75%;
+    min-width: 600px;
+}
+
+#homepage .input_group{
+    padding: 20px;
+}
+
+#homepage .input_group Input{
+    margin-left: auto;
+    margin-right: auto;
+    width: 65%;
+    height: 70px;
+    min-width: 300px;
+    padding: 2px;
+}
+
+#homepage .input_group .formF{
+    font-size: 20px;
+}
+
+#homepage .input_group Button{
+    width: 400px;
+    height: 75px;
+    font-size: 30px;
+    font-weight: bold;
+    justify-content: center;
+    margin-top: 10px;
 }
 
 /* ---------- SNIPPET ---------- */
