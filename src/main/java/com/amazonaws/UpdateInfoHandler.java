@@ -29,7 +29,7 @@ public class UpdateInfoHandler implements RequestHandler<UpdateInfoRequest, Upda
 			SnippetDAO snipdao = new SnippetDAO();
 			
 			Snippet snippet = snipdao.getSnippet(input.id);
-			snippet.setInfo(input.text);
+			snippet.setInfo(input.info);
 			snipdao.updateSnippetInfo(snippet);
 			
 			response = new UpdateInfoResponse(200);
