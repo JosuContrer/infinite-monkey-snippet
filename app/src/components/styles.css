@@ -1,0 +1,139 @@
+
+body {
+    background-color: black;
+    padding: 10px;
+}
+
+/* ---------- HOMEPAGE ---------- */
+
+#homepage {
+    position: center;
+}
+
+#homepage h1 {
+    color: yellow;
+    text-align: center
+}
+
+#homepage h4 {
+    color: yellow;
+    text-align: center
+}
+
+#homepage p{
+    color: yellow;
+    text-align: center;
+}
+
+#homepage div{
+    text-align: center;
+}
+
+/* ---------- SNIPPET ---------- */
+
+#snippetpage * {
+    box-sizing: border-box;
+}
+
+#snippetpage .card{
+    background-color: dimgray;
+    padding: 1em;
+    margin-top: 0.5em;
+    border-radius: 25px;
+}
+
+/*Header card*/
+#snippetpage .header h1{
+    text-align: center;
+    color: darkorange;
+}
+
+#snippetpage .header h2{
+    font-size: 20px;
+    color: #FF5548;
+}
+
+/*Snippet Info*/
+#snippetpage h5{
+    margin: 0;
+    padding: 0;
+    position: relative;
+    font-size: 15px;
+}
+
+#snippetpage .card {
+	display: flex;
+}
+
+#snippetpage .card .leftCol {
+	min-width: 69%;
+	margin-right: 2%;
+}
+
+#snippetpage .card .rightCol {
+	min-width: 29%;
+}
+
+#snippetpage .card #infoArea {
+    position: initial;
+    height: 100px;
+    padding: 0.5em;
+    border-radius: 10px;
+    resize: none;
+	min-width: 100%;
+}
+
+#snippetpage .card #langDiv #accessory {
+	margin-top: 7%;
+	justify-content: space-between;
+}
+
+#snippetpage .card #langDiv #accessory h5 {
+	display: inline-block;
+	min-width: 45%;
+	margin-right: 2%;
+	margin-bottom: 0.5em;
+	color: white;
+}
+
+#snippetpage .card button{
+	margin-top: 1%;
+    height: 50px;
+    min-width: 100%;
+    border: 2px solid black;
+    color: black;
+    background-color: darkorange;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 10px;
+}
+
+#snippetpage .card button:hover{
+    border-color: white;
+}
+
+/*Snippet Text*/
+#snippetpage .card #textArea {
+    height: 600px;
+    min-width: 100%;
+    font-size: 11pt;
+    resize: vertical;
+	padding: 0.5em;
+    border-radius: 10px;
+}
+
+#snippetpage .card #commentArea {
+	background: orange;
+	padding: 0.5em;
+    border-radius: 10px;
+	min-height: 540px;
+}
+
+#snippetpage #contactDiv {
+	min-width: 100%;
+	flex-direction: column;
+}
+
+
+
+
