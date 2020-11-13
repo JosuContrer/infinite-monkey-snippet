@@ -97,7 +97,7 @@ body {
     box-sizing: border-box;
 }
 
-#snippetpage .card{
+#snippetpage .snippetsection{
     background-color: dimgray;
     padding: 1em;
     margin-top: 0.5em;
@@ -123,20 +123,20 @@ body {
     font-size: 15px;
 }
 
-#snippetpage .card {
+#snippetpage .snippetsection {
 	display: flex;
 }
 
-#snippetpage .card .leftCol {
+#snippetpage .snippetsection .leftCol {
 	min-width: 69%;
 	margin-right: 2%;
 }
 
-#snippetpage .card .rightCol {
+#snippetpage .snippetsection .rightCol {
 	min-width: 29%;
 }
 
-#snippetpage .card #infoArea {
+#snippetpage .snippetsection #infoArea {
     position: initial;
     height: 100px;
     padding: 0.5em;
@@ -145,12 +145,12 @@ body {
 	min-width: 100%;
 }
 
-#snippetpage .card #langDiv #accessory {
+#snippetpage .snippetsection #langDiv #accessory {
 	margin-top: 7%;
 	justify-content: space-between;
 }
 
-#snippetpage .card #langDiv #accessory h5 {
+#snippetpage .snippetsection #langDiv #accessory h5 {
 	display: inline-block;
 	min-width: 45%;
 	margin-right: 2%;
@@ -158,7 +158,7 @@ body {
 	color: white;
 }
 
-#snippetpage .card button{
+#snippetpage .snippetsection button{
 	margin-top: 1%;
     height: 50px;
     min-width: 100%;
@@ -170,21 +170,21 @@ body {
     border-radius: 10px;
 }
 
-#snippetpage .card button:hover{
+#snippetpage .snippetsection button:hover{
     border-color: white;
 }
 
 /*Snippet Text*/
-#snippetpage .card #textArea {
-    height: 600px;
-    min-width: 100%;
-    font-size: 11pt;
-    resize: vertical;
-	padding: 0.5em;
-    border-radius: 10px;
-}
+/*#snippetpage .snippetsection .ace_content {*/
+/*    height: 600px;*/
+/*    min-width: 100%;*/
+/*    font-size: 11pt;*/
+/*    resize: vertical;*/
+/*	padding: 0.5em;*/
+/*    border-radius: 10px;*/
+/*}*/
 
-#snippetpage .card #commentArea {
+#snippetpage .snippetsection #commentArea {
 	background: orange;
 	padding: 0.5em;
     border-radius: 10px;

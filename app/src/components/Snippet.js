@@ -1,6 +1,10 @@
 import React, {Component} from "react"
 import AceEditor from "react-ace";
 
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/theme-monokai";
+
+
 class Snippet extends Component {
     constructor(props) {
         super(props);
@@ -70,9 +74,9 @@ class Snippet extends Component {
         });
     }
 
-    textChanged(event) {
+    textChanged(newText) {
         this.setState({
-            text: event.target.value,
+            text: newText,
         });
     }
 
@@ -134,16 +138,23 @@ class Snippet extends Component {
     }
 
     render() {
+        const reactStyle = {
+          aceStyle: {
+              borderRadius: "10px",
+              padding: "0.5em",
+          }
+        };
+
         return (
             <div id="snippetpage">
                 <div className="column">
-                    <div className="card">
+                    <div className="snippetsection">
                         <div className="header">
                             <h1>Infinite Monkey Snippet</h1>
                             <h2 id="snippetId">Snippet ID: {this.state.snippetID}</h2>
                         </div>
                     </div>
-                    <div className="card">
+                    <div className="snippetsection">
                         <div id="infoDiv" className="leftCol">
                             <h5>Info:</h5>
                             <br/>
@@ -159,30 +170,29 @@ class Snippet extends Component {
                             <button type="button">Save Info</button>
                         </div>
                     </div>
-                    <div className="card">
+                    <div className="snippetsection">
                         <div id="textDiv" className="leftCol">
                             <h5>Text:</h5>
                             <br/>
                             <AceEditor
-                                placeholder="Placeholder Text"
-                                mode="javascript"
-                                theme="monokai"
-                                name="blah2"
-                                onLoad={this.onLoad}
-                                onChange={this.onChange}
+                                placeholder=""
+                                mode={"java"}
+                                width={"100%"}
+                                theme={"monokai"}
+                                height={"600px"}
+                                onChange={this.textChanged}
                                 fontSize={14}
                                 showPrintMargin={true}
                                 showGutter={true}
                                 highlightActiveLine={true}
-                                value={`function onLoad(editor) {
-                                console.log("i've loaded");
-                                }`}
+                                value={this.state.text}
+                                style={reactStyle.aceStyle}
                                 setOptions={{
-                                enableBasicAutocompletion: false,
-                                enableLiveAutocompletion: false,
-                                enableSnippets: false,
-                                showLineNumbers: true,
-                                tabSize: 2,
+                                    enableBasicAutocompletion: false,
+                                    enableLiveAutocompletion: false,
+                                    enableSnippets: false,
+                                    showLineNumbers: true,
+                                    tabSize: 2,
                                 }}/>
                         </div>
                         <div id="commentDiv" className="rightCol">
@@ -192,7 +202,7 @@ class Snippet extends Component {
                             <button type="button" onClick={this.textSubmit}>Save Text</button>
                         </div>
                     </div>
-                    <div className="card" id="contactDiv">
+                    <div className="snippetsection" id="contactDiv">
                         <h5>Contact Us</h5>
                         <p>some text and links (github, linkedin, instagram, etc.)</p>
                     </div>
