@@ -98,31 +98,7 @@ public class SnippetDAO {
 		
 		return (numUpdated == 1);
 	}
-	
-//	public boolean updateSnippetText(String id, String text) throws Exception {
-//		Snippet snip;
-//		
-//		PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id=?;");
-//		ps.setString(1, id);
-//		ResultSet result = ps.executeQuery();
-//		
-//		while(result.next()) {
-//			snip = SQLToSnippet(result);
-//		}
-//		
-//		result.close();
-//		
-//		ps = conn.prepareStatement("UPDATE " + table + " SET info=? WHERE id=?;");
-//			
-//		ps.setBlob(1, snipTextToBlob(snip));
-//		ps.setString(2, snip.getID());
-//		
-//		int numUpdated = ps.executeUpdate();
-//		ps.close();
-//		
-//		return (numUpdated == 1);
-//	}
-//	
+
 	public boolean addSnippet(Snippet snip) throws Exception {
 		PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id=?;");
 		ps.setString(1, snip.getID());

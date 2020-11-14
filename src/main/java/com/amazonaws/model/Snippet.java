@@ -44,7 +44,7 @@ public class Snippet {
 	}
 	
 	public boolean isPassword(String pass) {
-		return this.password == pass;
+		return this.password.equals(pass);
 	}
 	
 	public String getInfo() {
@@ -117,7 +117,7 @@ public class Snippet {
 		int iter = 0;
 		
 		while (iter < DBSnippets.size()) {
-			if (newID == DBSnippets.get(iter).getID()) {
+			if (newID.equals(DBSnippets.get(iter).getID())) {
 				newID = generateID();
 				iter = 0;
 			}

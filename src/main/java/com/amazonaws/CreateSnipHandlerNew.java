@@ -26,7 +26,7 @@ public class CreateSnipHandlerNew implements RequestHandler<CreateRequest, Creat
         CreateResponse response;
         int statusCode = 200;
 
-        String pw = input.getPass();
+        String pw = input.password;
 
 		try{
 
