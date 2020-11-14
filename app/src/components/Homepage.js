@@ -56,7 +56,7 @@ class Homepage extends Component {
                 if(xhr.status === 200){
                     console.log("XHR: " + xhr.responseText);
                     let jsonResponse = JSON.parse(xhr.responseText);
-                    let snipID = jsonResponse["body"]["result"]
+                    let snipID = jsonResponse["id"]
 
                     extThis.setState({
                         snippetID: snipID,

@@ -1,4 +1,5 @@
-import React, {Component} from "react"
+import React, {Component} from "react";
+import ReactDOM from "react-dom";
 import AceEditor from "react-ace";
 
 import "ace-builds/src-noconflict/mode-java";
@@ -23,12 +24,18 @@ class Snippet extends Component {
             info: "",
             text: "",
 
+            inputtedPass: "",
+
         };
 
         this.infoChanged = this.infoChanged.bind(this);
         this.textChanged = this.textChanged.bind(this);
 
         this.textSubmit = this.textSubmit.bind(this);
+        this.infoSubmit = this.infoSubmit.bind(this);
+
+        this.editInfo = this.editInfo.bind(this);
+        this.deleteSnippet = this.deleteSnippet.bind(this);
     }
 
     componentDidMount() {
@@ -68,24 +75,7 @@ class Snippet extends Component {
         }
     }
 
-    infoChanged(event) {
-        this.setState({
-            info: event.target.value,
-        });
-    }
-
-    textChanged(newText) {
-        this.setState({
-            text: newText,
-        });
-    }
-
-    textSubmit(event) {
-        let extThis = this;
-        let text_url = this.state.url + "/updateText";
-
-        let snipText = this.state.text;
-
+    static textToDB(textURL, fieldName, snipText, password="") {
         const backspace = String.fromCharCode(8);
         const formfeed = String.fromCharCode(12);
         const newline = String.fromCharCode(10);
@@ -105,14 +95,19 @@ class Snippet extends Component {
 
         let data = {};
 
-        data["text"] = snipText;
+        data[fieldName] = snipText;
+
+        if (fieldName === "info") {
+            data["password"] = password;
+        }
+
         let json = JSON.stringify(data);
 
         let xhr = new XMLHttpRequest();
-        xhr.open("POST", text_url, true);
+        xhr.open("POST", textURL, true);
 
         console.log("JSON: " + json);
-        console.log(text_url);
+        console.log(textURL);
 
         xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -129,12 +124,116 @@ class Snippet extends Component {
                     console.log(jsonResponse);
                 }
                 else if(xhr.status === 404){
-                    alert("Unable to update text");
+                    alert("Unable to update" + fieldName);
                 }
             } else {
                 console.log("Didn't processes");
             }
         }
+    }
+
+    deleteSnippet(event) {
+        let textURL = this.state.url + "/deleteSnippet"
+
+        let data = {};
+
+        data["password"] = this.state.inputtedPass;
+        let json = JSON.stringify(data);
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", textURL, true);
+
+        console.log("JSON: " + json);
+        console.log(textURL);
+
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        //send data as JSON
+        xhr.send(json);
+
+        // Process the response an update GUI
+        xhr.onloadend = function() {
+            console.log(xhr);
+            if(xhr.readyState === XMLHttpRequest.DONE){
+                if(xhr.status === 200){
+                    console.log("XHR: " + xhr.responseText);
+                    let jsonResponse = JSON.parse(xhr.responseText);
+                    console.log(jsonResponse);
+
+                    window.open("/", "_self");
+                }
+                else if(xhr.status === 404){
+                    alert("Unable to delete Snippet");
+                }
+            } else {
+                console.log("Didn't processes");
+            }
+        }
+
+        event.preventDefault();
+    }
+
+    editInfo(event) {
+        const promptResp = prompt("Please Enter Snippet Password:");
+
+        let extThis = this;
+
+        if (promptResp === this.state.password) {
+            this.setState({
+                inputtedPass: promptResp,
+            });
+
+            let infoTextArea = document.createElement("textarea")
+            infoTextArea.id = "infoArea";
+            infoTextArea.value = this.state.info;
+            infoTextArea.onchange = this.infoChanged;
+
+            let buttDiv = document.createElement("div");
+            buttDiv.id = "buttDiv";
+
+            let infoButton = document.createElement("button");
+            infoButton.id = "infoButton"
+            infoButton.type = "button"
+            infoButton.onclick = this.infoSubmit;
+            infoButton.innerText = "Save Info";
+
+            let deleteButton = document.createElement("button");
+            deleteButton.id = "deleteButton"
+            deleteButton.type = "button"
+            deleteButton.onclick = extThis.deleteSnippet;
+            deleteButton.innerText = "Delete Snippet";
+
+            buttDiv.appendChild(infoButton);
+            buttDiv.appendChild(deleteButton);
+
+            document.getElementById("infoForm").replaceChild(infoTextArea, document.getElementById("infoArea"));
+            document.getElementById("langDiv").replaceChild(buttDiv, document.getElementById("infoButton"));
+        }
+        else {
+            alert("The password entered was incorrect.")
+
+            event.preventDefault();
+        }
+    }
+
+    infoChanged(event) {
+        this.setState({
+            info: event.target.value,
+        });
+    }
+
+    textChanged(newText) {
+        this.setState({
+            text: newText,
+        });
+    }
+
+    infoSubmit(event) {
+        Snippet.textToDB(this.state.url + "/updateInfo", "info", this.state.info, this.state.inputtedPass);
+    }
+
+    textSubmit(event) {
+        Snippet.textToDB(this.state.url + "/updateText", "text", this.state.text);
     }
 
     render() {
@@ -158,8 +257,8 @@ class Snippet extends Component {
                         <div id="infoDiv" className="leftCol">
                             <h5>Info:</h5>
                             <br/>
-                            <form>
-                                <textarea id="infoArea" value={this.state.info} onChange={this.infoChanged} />
+                            <form id="infoForm">
+                                <p id="infoArea">{this.state.info}</p>
                             </form>
                         </div>
                         <div id="langDiv" className="rightCol">
@@ -167,7 +266,7 @@ class Snippet extends Component {
                                 <h5 id="languageText">Language: {this.state.languageText}</h5>
                                 <h5 id="timestampText">Timestamp: {this.state.timestampText}</h5>
                             </div>
-                            <button type="button">Save Info</button>
+                            <button id="infoButton" type="button" onClick={this.editInfo}>Edit Info</button>
                         </div>
                     </div>
                     <div className="snippetsection">
