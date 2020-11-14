@@ -160,7 +160,7 @@ class Snippet extends Component {
                     let jsonResponse = JSON.parse(xhr.responseText);
                     console.log(jsonResponse);
 
-                    window.open("", "_self");
+                    window.open("/", "_self");
                 }
                 else if(xhr.status === 404){
                     alert("Unable to delete Snippet");
