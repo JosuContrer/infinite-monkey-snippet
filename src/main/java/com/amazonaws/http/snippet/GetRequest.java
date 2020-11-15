@@ -1,4 +1,4 @@
-package com.amazonaws.http;
+package com.amazonaws.http.snippet;
 import java.io.Serializable;
 
 public class GetRequest implements Serializable {
