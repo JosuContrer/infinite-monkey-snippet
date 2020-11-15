@@ -1,92 +1,53 @@
 package com.amazonaws;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import com.amazonaws.db.SnippetDAO;
-import com.amazonaws.model.Result;
+import com.amazonaws.http.snippet.CreateRequest;
+import com.amazonaws.http.snippet.CreateResponse;
 import com.amazonaws.model.Snippet;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
-import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
-import com.amazonaws.util.json.Jackson;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
 
-public class CreateSnippetHandler implements RequestStreamHandler {
+public class CreateSnippetHandler implements RequestHandler<CreateRequest, CreateResponse>{
 
 	LambdaLogger logger;
-	
-	// To handle client requests and respond 
+
 	@Override
-	public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
+	public CreateResponse handleRequest(CreateRequest input, Context context) {
+
 		logger = context.getLogger();
-		if (context != null) { 
+
+		if (context != null) {
 			context.getLogger();
 		}
-		
-		// Load entire input into String since it is a JSON request
-		StringBuilder incoming = new StringBuilder();
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(input))){
-			String line = null;
-			while((line = br.readLine()) != null) {
-				incoming.append(line);
-			}
-		}
-		
-		// Parse to get only the body form the API Gateway
-		JsonNode node = Jackson.fromJsonString(incoming.toString(), JsonNode.class);
-		if (node.has("body")) {
-			node = Jackson.fromJsonString(node.get("body").asText(), JsonNode.class);
-		}
-			
-		// Processes the JSON password and creation of snippet 
-		int statusCode = 200;
-		
-		// Processes the password TODO: check feasible password and no special characters
-		String passParam = node.get("password").asText();
-		
-		try {
-			
-			SnippetDAO snipdao = new SnippetDAO();
+
+		logger.log("-> Snippet Create Snippet Request: " + input.toString());
+
+        CreateResponse response;
+        int statusCode = 200;
+
+        String pw = input.password;
+
+		try{
+
+            SnippetDAO snipdao = new SnippetDAO();
 			Snippet snip = null;
-			
-			if (passParam.length() < 32) {
-				snip = new Snippet(snipdao.getAllSnippets(), passParam);
-			}
-			else {
-				statusCode = 400;
-			}
-			
-			// Adds snippet to DB
-			snipdao.addSnippet(snip);
-			
-			// Processes RESPONSE
-			PrintWriter pw = new PrintWriter(output);
-			
-			// Create JSON response
-			String response = Result.ResultJSON(statusCode, snip.getID());
-			
-			// Send Response
-			//   Codes API: 200 (Snippet created), 400 (Invalid snippet)
-			pw.print(response);
-			pw.close();
-		}
-		catch (Exception e) {
-			PrintWriter pw = new PrintWriter(output);
-			
-			StringWriter errSW = new StringWriter();
-			PrintWriter errPW = new PrintWriter(errSW);
-			e.printStackTrace(errPW);
-			
-			String response = Result.ResultJSON(statusCode, Result.ErrorJSON(e.getMessage(), errSW.toString()));
-			
-			pw.print(response);
-			pw.close();
-		}
+
+            if (pw.length() < 32) {
+                snip = new Snippet(snipdao.getAllSnippets(), pw);
+            } else {
+                statusCode = 400;
+            }
+
+            snipdao.addSnippet(snip);
+
+            response = new CreateResponse(snip.getID(), statusCode);
+
+		} catch(Exception e) {
+            logger.log(e.getMessage());
+            return new CreateResponse("0", 404);
+        }
+
+        return response;
 	}
 }
