@@ -16,7 +16,7 @@ public class CommentDAO {
 	}
 	
 	
-	public static Comment SQLToComment(ResultSet result) throws Exception {
+	public Comment SQLToComment(ResultSet result) throws Exception {
 		String id = result.getString("id");
 		String snippetID = result.getString("snippetID");
 		long timestamp = result.getLong("timestamp");

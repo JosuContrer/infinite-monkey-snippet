@@ -15,7 +15,7 @@ public class SnippetDAO {
 		conn = DBConnection.connect();
 	}
 	
-	public static Snippet SQLToSnippet(ResultSet result) throws Exception {
+	public Snippet SQLToSnippet(ResultSet result) throws Exception {
 		String id = result.getString("id");
 		long timestamp = result.getLong("timestamp");
 		String password = result.getString("password");
