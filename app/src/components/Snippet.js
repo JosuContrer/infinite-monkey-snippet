@@ -253,6 +253,24 @@ class Snippet extends Component {
         });
     }
 
+    // Create comment
+    createComment(){
+        // Get the selected lines on ACE
+
+        // let editor = document.getElementById('mainEditor');
+        let linesSelected = this.refs.mainEditor.getValue();
+        console.log(linesSelected);
+        // let start = linesSelected[0].start.row + 1;
+        // let end = linesSelected[0].end.row + 1;
+
+        // console.log("Start line: " + start);
+        // console.log("End line: " + end);
+               
+        // Get the text on the textbox
+
+        // Send the HTTP Request to DB
+    }
+
     render() {
         const reactStyle = {
           aceStyle: {
@@ -278,7 +296,8 @@ class Snippet extends Component {
                             <div id="accessory">
                                 <h5 id="languageText">Language: {this.state.languageText}</h5>
                            </div>
-                            <button id="infoButton" type="button" onClick={this.editInfo}>Edit Info</button>
+                            {/* <button id="infoButton" type="button" onClick={this.editInfo}>Edit Info</button> */}
+                            <button id="infoButton" type="button" onClick={this.createComment}>Edit Info</button>
                         </div>
                     </div>
                     <div className="snippetsection">
@@ -298,6 +317,7 @@ class Snippet extends Component {
                         <div class="break"></div>
                         <div id="textDiv" className="leftCol">
                             <AceEditor
+                                ref="mainEditor"
                                 placeholder=""
                                 mode={this.state.languageText}
                                 width={"100%"}

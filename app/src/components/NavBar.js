@@ -33,7 +33,7 @@ function NavBar() {
         <>
             <div id='navBar' class='navbar'>
                 <div class='navbar-container'>
-                    <a id='mainLogo' class='navbar-logo'href='https://www.youtube.com/watch?v=TmKh7lAwnBI&ab_channel=BadBunny'>
+                    <a id='mainLogo' class='navbar-logo' href='/'>
                        <FontAwesomeIcon icon={faKeyboard}/> Infinite Monkey Snippet 
                     </a>
                     {/* <div class='menu-icon' onClick={toggleMenu}>
