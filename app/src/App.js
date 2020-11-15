@@ -4,6 +4,7 @@ import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Homepage from "./components/Homepage";
 import Snippet from "./components/Snippet";
 import Error from "./components/Error";
+import Testing from "./components/NavBar";
 
 class App extends Component {
     render() {
@@ -13,6 +14,7 @@ class App extends Component {
                     <Switch>
                         <Route path="/" component={Homepage} exact/>
                         <Route path="/snippet" component={Snippet} exact/>
+                        <Route path="/test" component={Testing} exact/>
                         <Route component={Error}/>
                     </Switch>
                 </div>

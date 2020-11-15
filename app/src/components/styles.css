@@ -3,7 +3,11 @@
 
 body {
     background-color: #FCCD04;
-    padding: 10px;
+    height: 100%;
+}
+
+html {
+    height: 100%;
 }
 
 /* ---------- HOMEPAGE ---------- */
@@ -97,30 +101,105 @@ body {
     box-sizing: border-box;
 }
 
+#snippetpage {
+    background-color: #212529;
+    padding-left: 2em;
+    padding-right: 2em;
+    padding-top: 0.1em;
+}
+
 #snippetpage .snippetsection{
-    background-color: dimgray;
+    background-color: #403d39;
     padding: 1em;
     margin-top: 0.5em;
-    border-radius: 25px;
+    border-radius: 10px;
 }
 
-/*Header card*/
-#snippetpage .header h1{
-    text-align: center;
-    color: darkorange;
-}
-
-#snippetpage .header h2{
+/*Snippet Info Titles*/
+#snippetpage .infoTitle{
+    margin: 0;
+    padding: 4px;
+    line-height: 0;
+    position: relative;
     font-size: 20px;
-    color: #FF5548;
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
 }
-
-/*Snippet Info*/
-#snippetpage h5{
+#snippetpage .commentsTitle{
     margin: 0;
     padding: 0;
+    line-height: 0;
     position: relative;
+    align-self: center;
     font-size: 15px;
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+}
+
+/** Contact Info **/
+#snippetpage .contactTitle{
+    font-size: 30px;
+    color: white;
+}
+
+#snippetpage .contactInfo{
+    color: white;
+}
+
+#snippetpage .iconStyled{
+    color: white;
+    text-decoration: none;
+    margin-left: 10px;
+    font-size: 35px;
+    align-self: center;
+    justify-self: center;
+}
+
+#snippetpage .iconStyled:hover{
+  color: #faa307;
+}
+
+#snippetpage .iconStyled .linkedInContent{
+    visibility: hidden;
+    width: 100px;
+    font-size: 20px;
+    background-color: #FCCD04;
+    color: black;
+    text-align: center;
+    border-radius: 4px;
+    padding: 1px;
+    margin-bottom: 0;
+
+    /* position */
+    position: absolute;
+    z-index: 1;
+    bottom: 1px;
+    align-self: center;
+}
+
+#snippetpage .iconStyled:hover .linkedInContent{
+    visibility: visible;
+}
+
+/** Flexbox Goodies **/
+#snippetpage .flexContainerBar{
+    display: flex;
+    align-items: center;justify-content: center;
+    width: 100%;
+}
+
+#snippetpage .equalCol{
+    min-width: 30%;
+    margin-left: 1em;
+    justify-content: center;
+    align-items: center;
+}
+
+#snippetpage h3{
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    margin-top: 2%;
+    color: #adb5bd;
 }
 
 #snippetpage .snippetsection {
@@ -133,7 +212,7 @@ body {
 }
 
 #snippetpage .snippetsection .rightCol {
-	min-width: 29%;
+    min-width: 29%;
 }
 
 #snippetpage .snippetsection #infoArea {
@@ -157,7 +236,9 @@ body {
 	display: inline-block;
 	min-width: 45%;
 	margin-right: 2%;
-	margin-bottom: 1.6em;
+    margin-bottom: 1.6em;
+    font-size: 15px;
+    font-family: 'Courier New', Courier, monospace;
 	color: white;
 }
 
@@ -165,11 +246,12 @@ body {
 	margin-top: 1%;
     height: 50px;
     min-width: 100%;
-    border: 2px solid black;
-    color: black;
-    background-color: darkorange;
-    font-weight: bold;
+    border: 2px solid #48cae4;
+    color: #48cae4;
+    background-color: transparent;
+    /* font-weight: bold; */
     text-align: center;
+    font-size: 20px;
     border-radius: 10px;
 }
 
@@ -188,31 +270,55 @@ body {
 }
 
 #snippetpage .snippetsection button:hover{
-    border-color: white;
+    border: 3px solid #faa307;
+    color: #faa307;
 }
 
-/*Snippet Text*/
-/*#snippetpage .snippetsection .ace_content {*/
-/*    height: 600px;*/
-/*    min-width: 100%;*/
-/*    font-size: 11pt;*/
-/*    resize: vertical;*/
-/*	padding: 0.5em;*/
-/*    border-radius: 10px;*/
-/*}*/
-
 #snippetpage .snippetsection #commentArea {
-	background: orange;
+	background: #495057;
 	padding: 0.5em;
     border-radius: 10px;
 	min-height: 540px;
 }
 
 #snippetpage #contactDiv {
-	min-width: 100%;
+    min-width: 100%;
+    align-items: center;
+    justify-content: center;
 	flex-direction: column;
 }
 
+#snippetpage a{
+    text-decoration: none;
+}
 
+/* ---------- ERROR PAGE ---------- */
+#errorpage #mainContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 95vh;
+    width: 100%;
+}
 
+#errorpage p{
+    color: #A63A50;
+    font-size: 100px;
+    font-family: 'Shrikhand', cursive;
+    line-height: 80%;
+    text-shadow: -4px 3px 0 #FCCD04, -14px 7px 0 #0a0e27;
+    -webkit-text-stroke: 3px black;
+    animation: colorChangeError 2s infinite;
+}
 
+@keyframes colorChangeError{
+    0%{
+        -webkit-text-stroke: 3px #0a0e27;
+    }
+    50%{
+        -webkit-text-stroke: 3px red;
+    }
+    100%{
+        -webkit-text-stroke: 3px #0a0e27;
+    }
+}
