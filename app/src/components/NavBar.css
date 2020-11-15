@@ -1,6 +1,7 @@
 .navbar{
     background-color: black;
     height: 80px;
+    transition: 0.8s;
     position: sticky;
     top: 0;
     z-index: 999;
@@ -23,6 +24,7 @@
     align-items: flex-start;
     margin-top: 10px;
     margin-left: 10px;
+    transition: 0.8s;
 }
 
 .menu-icon{

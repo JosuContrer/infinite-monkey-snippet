@@ -9,11 +9,31 @@ function NavBar() {
     const toggleMenu = () => setClick(!click);
     const goHome = () => {window.open("/", "_self");}
 
+    // Responsive Navbar to scroll 
+    //      -waits for document to be loaded
+    //      -adds scroll event listener
+    document.addEventListener('DOMContentLoaded', function(){
+
+        window.addEventListener('scroll', responsiveNavBar);
+        var navbar = document.getElementById('navBar');
+        var logo = document.getElementById('mainLogo');
+
+        function responsiveNavBar(){
+            if(window.scrollY > 30){
+                navbar.style.backgroundColor = "black";
+                logo.style.color = "white";
+            }else{
+                navbar.style.backgroundColor = "#FCCD04";
+                logo.style.color = "#A63A50";
+            }
+        }
+    })
+
     return (
         <>
-            <nav class='navbar'>
+            <div id='navBar' class='navbar'>
                 <div class='navbar-container'>
-                    <a class='navbar-logo' href='https://www.youtube.com/watch?v=TmKh7lAwnBI&ab_channel=BadBunny'>
+                    <a id='mainLogo' class='navbar-logo'href='https://www.youtube.com/watch?v=TmKh7lAwnBI&ab_channel=BadBunny'>
                        <FontAwesomeIcon icon={faKeyboard}/> Infinite Monkey Snippet 
                     </a>
                     {/* <div class='menu-icon' onClick={toggleMenu}>
@@ -25,7 +45,7 @@ function NavBar() {
                         </li>
                     </ul>*/}
                 </div>
-            </nav>  
+            </div>  
         </>
     )
 }

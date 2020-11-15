@@ -147,6 +147,8 @@ html {
 }
 
 #snippetpage .iconStyled{
+    position: relative;
+    display: inline;
     color: white;
     text-decoration: none;
     margin-left: 10px;
@@ -163,18 +165,31 @@ html {
     visibility: hidden;
     width: 100px;
     font-size: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bolder;
+    /* -webkit-text-stroke: 0.5px black; */
     background-color: #FCCD04;
-    color: black;
+    color: #A63A50;
     text-align: center;
-    border-radius: 4px;
-    padding: 1px;
+    border: 3px solid #48cae4;
+    border-radius: 10px;
+    padding: 3px;
     margin-bottom: 0;
 
     /* position */
     position: absolute;
     z-index: 1;
-    bottom: 1px;
-    align-self: center;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -50px;
+}
+
+#snippetpage .iconStyled .linkedInContent a{
+    color: #A63A50;
+}
+
+#snippetpage .iconStyled .linkedInContent a:hover{
+    color: #8a2f41;
 }
 
 #snippetpage .iconStyled:hover .linkedInContent{

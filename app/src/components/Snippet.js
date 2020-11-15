@@ -25,7 +25,7 @@ class Snippet extends Component {
             url: initURL,
             snippetID: snippetID,
             password: "",
-            languageText: "",
+            languageText: "java",
             timestampText: "",
             info: "",
             text: "",
@@ -299,7 +299,7 @@ class Snippet extends Component {
                         <div id="textDiv" className="leftCol">
                             <AceEditor
                                 placeholder=""
-                                mode={"java"}
+                                mode={this.state.languageText}
                                 width={"100%"}
                                 theme={"monokai"}
                                 height={"600px"}
@@ -335,12 +335,17 @@ class Snippet extends Component {
                                 <FontAwesomeIcon icon={faLinkedin} />
                                 <ul class="linkedInContent">
                                     <a href="https://www.linkedin.com/in/josue-contreras-127238141/">Josue</a><br></br>
-                                    <a>Nick</a><br></br>
-                                    <a>Will</a><br></br>
+                                    <a href="https://www.linkedin.com/in/nicholas-delli-carpini-4a9400171/">Nick</a><br></br>
+                                    <a href="https://www.linkedin.com/in/william-c-32a424108/">Will</a><br></br>
                                 </ul>
                             </i>
                             <i class="iconStyled">
                                 <FontAwesomeIcon  icon={faInstagram} />
+                                <ul class="linkedInContent">
+                                    <a href="https://www.instagram.com/contrerasjosu/">Josue</a><br></br>
+                                    <a href="">Nick</a><br></br>
+                                    <a href="">Will</a><br></br>
+                                </ul>
                             </i>
                         </div>
                         <p class="contactInfo">Authors: Josue C, Nick D, Will C</p>

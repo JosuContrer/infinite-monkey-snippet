@@ -8,6 +8,7 @@ const LangDropDown = (props) => {
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
     // Languages can be added to list (GUI dropdown will dynamically adjust)
+    //  -> credits: ACE examples
     const languages = [
         "javascript",
         "java",
@@ -25,11 +26,16 @@ const LangDropDown = (props) => {
         "elixir",
         "typescript",
         "css"
-      ];
+    ];
+
+    languages.forEach(lang => {
+        require(`ace-builds/src-noconflict/mode-${lang}`);
+        require(`ace-builds/src-noconflict/snippets/${lang}`);
+     });
 
     return (
-        <Dropdown class="buttonDrop" isOpen={dropdownOpen} toggle={toggle}>
-            <DropdownToggle caret class="dropTitle">
+        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+            <DropdownToggle caret>
                 Language
             </DropdownToggle>
             <DropdownMenu>
