@@ -31,6 +31,7 @@ class Snippet extends Component {
             text: "",
 
             inputtedPass: "",
+            comments: {},
 
         };
 
@@ -47,6 +48,8 @@ class Snippet extends Component {
     }
 
     componentDidMount() {
+
+        // GET SNIPPET DATA
         let extThis = this;
         console.log(this.state.url);
         let xhr = new XMLHttpRequest();
@@ -78,6 +81,43 @@ class Snippet extends Component {
                 }
                 else if(xhr.status === 400){
                     alert("Unable to get Snippet");
+                }
+            }
+        }
+
+        // GET COMMENTS
+        const commentURl = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/comments/listCommentsBySnippet"
+        let xhrCom = new XMLHttpRequest();
+
+        xhrCom.open("POST", commentURl, true);
+
+        let data = {};
+        data["snippetID"] = this.state.snippetID;
+        console.log("bruh " + this.state.snippetID);
+
+        let json = JSON.stringify(data);
+
+        xhrCom.setRequestHeader("Content-Type", "application/json");
+
+        //send data as JSON
+        xhrCom.send(json);
+
+        // Process the response an update GUI
+        xhrCom.onloadend = function() {
+            console.log(xhrCom);
+            if(xhrCom.readyState === XMLHttpRequest.DONE){
+                if(xhrCom.status === 200){
+                    console.log("XHR: " + xhrCom.responseText);
+                    let jsonResponse = JSON.parse(xhrCom.responseText);
+                    extThis.setState({
+                        comments: jsonResponse["comments"]
+                    })
+
+                    console.log(extThis.state.comments);
+
+                }
+                else if(xhrCom.status === 400){
+                    alert("Unable to get Comments");
                 }
             }
         }
