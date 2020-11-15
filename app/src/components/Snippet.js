@@ -1,6 +1,12 @@
 import React, {Component} from "react";
 import ReactDOM from "react-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {  } from '@fortawesome/free-solid-svg-icons'
+import { faGithub, faLinkedin, faInstagram} from '@fortawesome/free-brands-svg-icons'
+
 import AceEditor from "react-ace";
+import NavBar from './NavBar';
+import LangDropdown from './LangDropDown';
 
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-monokai";
@@ -19,7 +25,7 @@ class Snippet extends Component {
             url: initURL,
             snippetID: snippetID,
             password: "",
-            languageText: "",
+            languageText: "java",
             timestampText: "",
             info: "",
             text: "",
@@ -27,6 +33,8 @@ class Snippet extends Component {
             inputtedPass: "",
 
         };
+
+        this.setLanguage = this.setLanguage.bind(this);
 
         this.infoChanged = this.infoChanged.bind(this);
         this.textChanged = this.textChanged.bind(this);
@@ -236,26 +244,49 @@ class Snippet extends Component {
         Snippet.textToDB(this.state.url + "/updateText", "text", this.state.text);
     }
 
+    // Set language from dropdown select
+    setLanguage(event){
+        let lang = event.currentTarget.textContent;
+        console.log("Language selected:" + lang);
+        this.setState({
+            languageText : lang,
+        });
+    }
+
+    // Create comment
+    createComment(){
+        // Get the selected lines on ACE
+
+        // let editor = document.getElementById('mainEditor');
+        let linesSelected = this.refs.mainEditor.getValue();
+        console.log(linesSelected);
+        // let start = linesSelected[0].start.row + 1;
+        // let end = linesSelected[0].end.row + 1;
+
+        // console.log("Start line: " + start);
+        // console.log("End line: " + end);
+               
+        // Get the text on the textbox
+
+        // Send the HTTP Request to DB
+    }
+
     render() {
         const reactStyle = {
           aceStyle: {
               borderRadius: "10px",
               padding: "0.5em",
           }
-        };
+        }; 
 
         return (
+            <>
+            <NavBar/>
             <div id="snippetpage">
                 <div className="column">
                     <div className="snippetsection">
-                        <div className="header">
-                            <h1>Infinite Monkey Snippet</h1>
-                            <h2 id="snippetId">Snippet ID: {this.state.snippetID}</h2>
-                        </div>
-                    </div>
-                    <div className="snippetsection">
                         <div id="infoDiv" className="leftCol">
-                            <h5>Info:</h5>
+                            <h2 class="infoTitle">Snippet Information:</h2>
                             <br/>
                             <form id="infoForm">
                                 <p id="infoArea">{this.state.info}</p>
@@ -264,18 +295,31 @@ class Snippet extends Component {
                         <div id="langDiv" className="rightCol">
                             <div id="accessory">
                                 <h5 id="languageText">Language: {this.state.languageText}</h5>
-                                <h5 id="timestampText">Timestamp: {this.state.timestampText}</h5>
-                            </div>
-                            <button id="infoButton" type="button" onClick={this.editInfo}>Edit Info</button>
+                           </div>
+                            {/* <button id="infoButton" type="button" onClick={this.editInfo}>Edit Info</button> */}
+                            <button id="infoButton" type="button" onClick={this.createComment}>Edit Info</button>
                         </div>
                     </div>
                     <div className="snippetsection">
+                        <div class="flexContainerBar">
+                            <div class="equalCol">
+                                <LangDropdown func={this.setLanguage} />
+                            </div>
+                            <div class="equalCol">
+                                <h3 id="snippetId">Snippet ID: {this.state.snippetID}</h3>
+                            </div>
+                            <div class="equalCol">
+                                <h3 class="timeTitle" id="timestampText">Created: {this.state.timestampText}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="snippetsection">
+                        <div class="break"></div>
                         <div id="textDiv" className="leftCol">
-                            <h5>Text:</h5>
-                            <br/>
                             <AceEditor
+                                ref="mainEditor"
                                 placeholder=""
-                                mode={"java"}
+                                mode={this.state.languageText}
                                 width={"100%"}
                                 theme={"monokai"}
                                 height={"600px"}
@@ -295,18 +339,40 @@ class Snippet extends Component {
                                 }}/>
                         </div>
                         <div id="commentDiv" className="rightCol">
-                            <h5>Comments:</h5>
+                            <h5 class="commentsTitle">Comments</h5>
                             <br/>
                             <div id="commentArea"></div>
                             <button type="button" onClick={this.textSubmit}>Save Text</button>
                         </div>
                     </div>
                     <div className="snippetsection" id="contactDiv">
-                        <h5>Contact Us</h5>
-                        <p>some text and links (github, linkedin, instagram, etc.)</p>
+                        <h2 class="contactTitle">Contact Us</h2>
+                        <div class="flexContainerBar">
+                            <a class="iconStyled" href="https://github.com/JosuContrer/infinite-monkey-snippet">
+                                <FontAwesomeIcon  icon={faGithub} />
+                            </a>
+                            <i class="iconStyled">
+                                <FontAwesomeIcon icon={faLinkedin} />
+                                <ul class="linkedInContent">
+                                    <a href="https://www.linkedin.com/in/josue-contreras-127238141/">Josue</a><br></br>
+                                    <a href="https://www.linkedin.com/in/nicholas-delli-carpini-4a9400171/">Nick</a><br></br>
+                                    <a href="https://www.linkedin.com/in/william-c-32a424108/">Will</a><br></br>
+                                </ul>
+                            </i>
+                            <i class="iconStyled">
+                                <FontAwesomeIcon  icon={faInstagram} />
+                                <ul class="linkedInContent">
+                                    <a href="https://www.instagram.com/contrerasjosu/">Josue</a><br></br>
+                                    <a href="">Nick</a><br></br>
+                                    <a href="">Will</a><br></br>
+                                </ul>
+                            </i>
+                        </div>
+                        <p class="contactInfo">Authors: Josue C, Nick D, Will C</p>
                     </div>
             </div>
             </div>
+            </>
         );
     }
 }
