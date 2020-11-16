@@ -17,155 +17,166 @@ const url = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/snippe
 /* ----------- Comments dynamic list Functional Component -----------*/
 const Comment = (props) => {
 
-    const [commentList, setCommentList] = useState([props.commentList]);
+    const [commentList, setCommentList] = useState([]);
     const [numComment, setNumComment] = useState(0);
     const [commentBoxToggle, setCommentBoxToggle] = useState(true);
-
-    // ----------------------- CREATE COMMENT ---------------------
-    // Send HTTP comment create request
-    // function createCommentHTTP(date, text, startS, endS){
-    //     // Create JSON comment
-    //     let data = {};
-    //     data["id"] = numComment;
-    //     data["snippetID"] = props.snipID;
-    //     data["timestamp"] = Math.round((date).getTime() / 1000);
-    //     data["text"] = text;
-    //     data["regionStart"] = startS;
-    //     data["regionEnd"] = endS;
-    //
-    //     let json = JSON.stringify(data);
-    //     console.log(json);
-    //
-    //     // Setup:Send the HTTP Request to AWS
-    //     let textURL = initURL + "/comments";
-    //     let xhr = new XMLHttpRequest();
-    //     xhr.open("POST", textURL, true);
-    //     console.log("JSON: " + json);
-    //     console.log(textURL);
-    //
-    //     xhr.setRequestHeader("Content-Type", "application/json");
-    //
-    //     // Send data as JSON
-    //     xhr.send(json);
-    //
-    //     // Process the response an update GUI
-    //     xhr.onloadend = function() {
-    //         console.log(xhr);
-    //         if(xhr.readyState === XMLHttpRequest.DONE){
-    //             if(xhr.status === 200){
-    //                 console.log("XHR: " + xhr.responseText);
-    //                 let jsonResponse = JSON.parse(xhr.responseText);
-    //                 console.log(jsonResponse);
-    //             }
-    //             else if(xhr.status === 400){
-    //                 alert("Unable to Add comment");
-    //             }
-    //         } else {
-    //             console.log("Didn't processes");
-    //         }
-    //     }
-    // }
-
-    // Add comment using the 'comment' button
-    const addCommentClick = e => {
-        // Spawn new textarea for new comment
-        if(commentBoxToggle){
-            setCommentBoxToggle(false);
-            console.log("Added Comment Box: " + numComment);
-            setCommentList(commentList.concat(
-                <Card body inverse color="success">
-                    <CardTitle id={"h" + numComment}>Time: </CardTitle>
-                    <p id={"l" +numComment}>Selected Lines: </p>
-                    <textarea id={"ta" + numComment}></textarea>
-                </Card>
-            ));
-        }else{
-            window.alert("Submit current comment before creating new one");
-        }
-    };
-
-    // Submit comment
-    const submitCommentClick = e => {
-        // Current Comment textarea disabled
-        let textAreaNum = "ta" + numComment;
-        let timeHeaderNum = "h" + numComment;
-        let linesNum = "l" + numComment;
-        let date = new Date();
-        document.getElementById(textAreaNum).readOnly = true;
-        document.getElementById(timeHeaderNum).innerHTML += date;
-        document.getElementById(linesNum).innerHTML += (props.startSel + ', ' + props.endSel);
-        let text = document.getElementById(textAreaNum).value;
-
-        // Submit HTTP request for creating new comment
-        //createCommentHTTP(date, text);
-
-        // Increase comment number
-        setNumComment(numComment + 1);
-        setCommentBoxToggle(true);
+    
+    if(props.comList !== commentList){
+        console.log("ldslkdslkflkjslkd" + props.comList);
+        setCommentList(props.comList.map(function(comment){
+            return(
+                        <Card body inverse color="success">
+                            <CardTitle id={"h" + numComment}>Time: {comment.timeSt}</CardTitle>
+                            <textarea readonly id={"ta" + numComment} >{comment.text}</textarea>
+                        </Card>
+                    )}));
     }
+   
+    // // ----------------------- CREATE COMMENT ---------------------
+    // // Send HTTP comment create request
+    // // function createCommentHTTP(date, text, startS, endS){
+    // //     // Create JSON comment
+    // //     let data = {};
+    // //     data["id"] = numComment;
+    // //     data["snippetID"] = props.snipID;
+    // //     data["timestamp"] = Math.round((date).getTime() / 1000);
+    // //     data["text"] = text;
+    // //     data["regionStart"] = startS;
+    // //     data["regionEnd"] = endS;
+    // //
+    // //     let json = JSON.stringify(data);
+    // //     console.log(json);
+    // //
+    // //     // Setup:Send the HTTP Request to AWS
+    // //     let textURL = initURL + "/comments";
+    // //     let xhr = new XMLHttpRequest();
+    // //     xhr.open("POST", textURL, true);
+    // //     console.log("JSON: " + json);
+    // //     console.log(textURL);
+    // //
+    // //     xhr.setRequestHeader("Content-Type", "application/json");
+    // //
+    // //     // Send data as JSON
+    // //     xhr.send(json);
+    // //
+    // //     // Process the response an update GUI
+    // //     xhr.onloadend = function() {
+    // //         console.log(xhr);
+    // //         if(xhr.readyState === XMLHttpRequest.DONE){
+    // //             if(xhr.status === 200){
+    // //                 console.log("XHR: " + xhr.responseText);
+    // //                 let jsonResponse = JSON.parse(xhr.responseText);
+    // //                 console.log(jsonResponse);
+    // //             }
+    // //             else if(xhr.status === 400){
+    // //                 alert("Unable to Add comment");
+    // //             }
+    // //         } else {
+    // //             console.log("Didn't processes");
+    // //         }
+    // //     }
+    // // }
 
-    // ----------------------- LOAD COMMENTS FROM REQUEST ---------------------
-    // Send HTTP request to load comments
-    // function loadCommentsHTTP(){
-    //     // Create JSON comment
-    //     let data = {};
-    //     data["snippetID"] = props.snipID;
-    //
-    //     let json = JSON.stringify(data);
-    //     console.log(json);
-    //
-    //     // Setup:Send the HTTP Request to AWS
-    //     let textURL = initURL + "/comments/listCommentsBySnippet";
-    //     let xhr = new XMLHttpRequest();
-    //     xhr.open("POST", textURL, true);
-    //     console.log("JSON: " + json);
-    //     console.log(textURL);
-    //
-    //     xhr.setRequestHeader("Content-Type", "application/json");
-    //
-    //     // Send data as JSON
-    //     xhr.send(json);
-    //
-    //     // Process the response an update GUI
-    //     xhr.onloadend = function() {
-    //         console.log(xhr);
-    //         if(xhr.readyState === XMLHttpRequest.DONE){
-    //             if(xhr.status === 200){
-    //                 console.log("XHR: " + xhr.responseText);
-    //                 let jsonResponse = JSON.parse(xhr.responseText);
-    //                 console.log(jsonResponse);
-    //                 var list = [];
-    //                 loadComments(list);
-    //             }
-    //             else if(xhr.status === 400){
-    //                 alert("Failed to get comments");
-    //             }
-    //         } else {
-    //             console.log("Didn't processes");
-    //         }
+    // // Add comment using the 'comment' button
+    // const addCommentClick = e => {
+    //     // Spawn new textarea for new comment
+    //     if(commentBoxToggle){
+    //         setCommentBoxToggle(false);
+    //         console.log("Added Comment Box: " + numComment);
+    //         setCommentList(commentList.concat(
+    //             <Card body inverse color="success">
+    //                 <CardTitle id={"h" + numComment}>Time: </CardTitle>
+    //                 <p id={"l" +numComment}>Selected Lines: </p>
+    //                 <textarea id={"ta" + numComment}></textarea>
+    //             </Card>
+    //         ));
+    //     }else{
+    //         window.alert("Submit current comment before creating new one");
     //     }
+    // };
+
+    // // Submit comment
+    // const submitCommentClick = e => {
+    //     // Current Comment textarea disabled
+    //     let textAreaNum = "ta" + numComment;
+    //     let timeHeaderNum = "h" + numComment;
+    //     let linesNum = "l" + numComment;
+    //     let date = new Date();
+    //     document.getElementById(textAreaNum).readOnly = true;
+    //     document.getElementById(timeHeaderNum).innerHTML += date;
+    //     document.getElementById(linesNum).innerHTML += (props.startSel + ', ' + props.endSel);
+    //     let text = document.getElementById(textAreaNum).value;
+
+    //     // Submit HTTP request for creating new comment
+    //     //createCommentHTTP(date, text);
+
+    //     // Increase comment number
+    //     setNumComment(numComment + 1);
+    //     setCommentBoxToggle(true);
     // }
 
-    // Function to load comments on GUI given a input list (TODO: Not sure if it works)
-    const loadComments = (commentsListHTTP) => {
-        commentsListHTTP.map((comment, index)=>{
-            setCommentList(commentList.concat(
-                <Card body inverse color="success">
-                    <CardTitle id={"h" + numComment}>Time: {comment.timeSt}</CardTitle>
-                    <textarea readonly id={"ta" + numComment} >{comment.text}</textarea>
-                </Card>
-            ));
-            setNumComment(numComment + 1);
-        })
-    };
+    // // ----------------------- LOAD COMMENTS FROM REQUEST ---------------------
+    // // Send HTTP request to load comments
+    // // function loadCommentsHTTP(){
+    // //     // Create JSON comment
+    // //     let data = {};
+    // //     data["snippetID"] = props.snipID;
+    // //
+    // //     let json = JSON.stringify(data);
+    // //     console.log(json);
+    // //
+    // //     // Setup:Send the HTTP Request to AWS
+    // //     let textURL = initURL + "/comments/listCommentsBySnippet";
+    // //     let xhr = new XMLHttpRequest();
+    // //     xhr.open("POST", textURL, true);
+    // //     console.log("JSON: " + json);
+    // //     console.log(textURL);
+    // //
+    // //     xhr.setRequestHeader("Content-Type", "application/json");
+    // //
+    // //     // Send data as JSON
+    // //     xhr.send(json);
+    // //
+    // //     // Process the response an update GUI
+    // //     xhr.onloadend = function() {
+    // //         console.log(xhr);
+    // //         if(xhr.readyState === XMLHttpRequest.DONE){
+    // //             if(xhr.status === 200){
+    // //                 console.log("XHR: " + xhr.responseText);
+    // //                 let jsonResponse = JSON.parse(xhr.responseText);
+    // //                 console.log(jsonResponse);
+    // //                 var list = [];
+    // //                 loadComments(list);
+    // //             }
+    // //             else if(xhr.status === 400){
+    // //                 alert("Failed to get comments");
+    // //             }
+    // //         } else {
+    // //             console.log("Didn't processes");
+    // //         }
+    // //     }
+    // // }
+
+    // // Function to load comments on GUI given a input list (TODO: Not sure if it works)
+    // const loadComments = (commentsListHTTP) => {
+    //     commentsListHTTP.map((comment, index)=>{
+    //         setCommentList(commentList.concat(
+    //             <Card body inverse color="success">
+    //                 <CardTitle id={"h" + numComment}>Time: {comment.timeSt}</CardTitle>
+    //                 <textarea readonly id={"ta" + numComment} >{comment.text}</textarea>
+    //             </Card>
+    //         ));
+    //         setNumComment(numComment + 1);
+    //     })
+    // };
 
     return(
         <>
             <div id="commentArea">
                 {commentList}
             </div>
-            <button onClick={addCommentClick}>Add Comment</button>
-            <button onClick={submitCommentClick}>Submit Comment</button>
+            {/* <button onClick={addCommentClick}>Add Comment</button>
+            <button onClick={submitCommentClick}>Submit Comment</button> */}
         </>
     );
 }
@@ -491,7 +502,7 @@ class Snippet extends Component {
                         <div id="commentDiv" className="rightCol">
                             <h5 class="commentsTitle">Comments</h5>
                             <br/>
-                            <Comment snipID={this.state.snippetID} startSel={this.state.startSelection} endSel={this.state.endSelection} commentList={this.state.comments}/>
+                            <Comment snipID={this.state.snippetID} startSel={this.state.startSelection} endSel={this.state.endSelection} comList={this.state.comments}/>
                             <button type="button" onClick={this.textSubmit}>Save Text</button>
                         </div>
                     </div>
