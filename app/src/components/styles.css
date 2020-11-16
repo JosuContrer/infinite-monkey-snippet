@@ -1,6 +1,31 @@
 /*--------- Fonts ---------------*/
 @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
 
+/* -------- Scroll Bar -------- */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px grey; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: grey; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FCCD04; 
+  }
+
+
+/* --------- Global ------------ */
 body {
     background-color: #FCCD04;
     height: 100%;
@@ -240,6 +265,7 @@ html {
     color: white;
     background: #272822;
     margin-block-end: 0;
+    overflow-y: scroll;
 }
 
 #snippetpage .snippetsection #langDiv #accessory {
@@ -293,7 +319,9 @@ html {
 	background: #495057;
 	padding: 0.5em;
     border-radius: 10px;
-	min-height: 540px;
+    min-height: 580px;
+    max-height: 580px;
+    overflow-y: scroll;
 }
 
 #snippetpage #contactDiv {
