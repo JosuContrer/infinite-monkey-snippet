@@ -1,8 +1,8 @@
 package com.amazonaws;
 
-import com.amazonaws.http.GetRequest;
-import com.amazonaws.http.GetResponse;
 import com.amazonaws.db.SnippetDAO;
+import com.amazonaws.http.snippet.GetRequest;
+import com.amazonaws.http.snippet.GetResponse;
 import com.amazonaws.model.Snippet;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
