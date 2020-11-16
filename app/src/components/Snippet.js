@@ -20,25 +20,26 @@ const Comment = (props) => {
     const [commentList, setCommentList] = useState([]);
     const [numComment, setNumComment] = useState(0);
     const [commentBoxToggle, setCommentBoxToggle] = useState(true); 
+    var initURL = url + props.snipID;
     console.log(props.snipID);
 
     // ----------------------- CREATE COMMENT ---------------------
     // Send HTTP comment create request
-    function createCommentHTTP(date, text){
+    function createCommentHTTP(date, text, startS, endS){
         // Create JSON comment 
         let data = {};
         data["id"] = numComment;
         data["snippetID"] = props.snipID;
         data["timestamp"] = Math.round((date).getTime() / 1000);
         data["text"] = text;
-        data["regionStart"] = 1;
-        data["regionEnd"] = 2;
+        data["regionStart"] = startS;
+        data["regionEnd"] = endS;
 
         let json = JSON.stringify(data);
         console.log(json);
 
         // Setup:Send the HTTP Request to AWS
-        let textURL = url + "/comments";
+        let textURL = initURL + "/comments";
         let xhr = new XMLHttpRequest();
         xhr.open("POST", textURL, true);
         console.log("JSON: " + json);
@@ -76,6 +77,7 @@ const Comment = (props) => {
             setCommentList(commentList.concat(
                 <Card body inverse color="success">
                     <CardTitle id={"h" + numComment}>Time: </CardTitle>
+                    <p id={"l" +numComment}>Selected Lines: </p>
                     <textarea id={"ta" + numComment}></textarea>
                 </Card>
             ));
@@ -89,9 +91,11 @@ const Comment = (props) => {
         // Current Comment textarea disabled
         let textAreaNum = "ta" + numComment;
         let timeHeaderNum = "h" + numComment;
+        let linesNum = "l" + numComment;
         let date = new Date();
         document.getElementById(textAreaNum).readOnly = true;
         document.getElementById(timeHeaderNum).innerHTML += date;
+        document.getElementById(linesNum).innerHTML += (props.startSel + ', ' + props.endSel);
         let text = document.getElementById(textAreaNum).value;
 
         // Submit HTTP request for creating new comment
@@ -102,7 +106,7 @@ const Comment = (props) => {
         setCommentBoxToggle(true);
     }
 
-    // ----------------------- LOAD COMMENTS FORM REQUEST ---------------------
+    // ----------------------- LOAD COMMENTS FROM REQUEST ---------------------
     // Send HTTP request to load comments
     function loadCommentsHTTP(){
         // Create JSON comment 
@@ -113,7 +117,7 @@ const Comment = (props) => {
         console.log(json);
 
         // Setup:Send the HTTP Request to AWS
-        let textURL = url + "/comments/listCommentsBySnippet";
+        let textURL = initURL + "/comments/listCommentsBySnippet";
         let xhr = new XMLHttpRequest();
         xhr.open("POST", textURL, true);
         console.log("JSON: " + json);
@@ -188,12 +192,15 @@ class Snippet extends Component {
 
             inputtedPass: "",
             commentNum: 0,
+            startSelection: 0,
+            endSelection: 0,
         };
 
         this.setLanguage = this.setLanguage.bind(this);
 
         this.infoChanged = this.infoChanged.bind(this);
         this.textChanged = this.textChanged.bind(this);
+        this.onSelectionChanged = this.onSelectionChanged.bind(this);
 
         this.textSubmit = this.textSubmit.bind(this);
         this.infoSubmit = this.infoSubmit.bind(this);
@@ -393,6 +400,17 @@ class Snippet extends Component {
         });
     }
 
+    onSelectionChanged(editor){
+        let startRow = editor.anchor.row + 1;
+        let endRow = editor.cursor.row + 1;
+        
+        this.setState({
+            startSelection: startRow,
+            endSelection: endRow,
+        });
+        console.log("Cursor: " + this.state.startSelection + ", " + this.state.endSelection);
+    }
+
     infoSubmit(event) {
         Snippet.textToDB(this.state.url + "/updateInfo", "info", this.state.info, this.state.inputtedPass);
     }
@@ -462,6 +480,7 @@ class Snippet extends Component {
                                 theme={"monokai"}
                                 height={"600px"}
                                 onChange={this.textChanged}
+                                onSelectionChange={this.onSelectionChanged}
                                 fontSize={14}
                                 showPrintMargin={true}
                                 showGutter={true}
@@ -479,7 +498,7 @@ class Snippet extends Component {
                         <div id="commentDiv" className="rightCol">
                             <h5 class="commentsTitle">Comments</h5>
                             <br/>
-                            <Comment snipID={this.state.snippetID}/>
+                            <Comment snipID={this.state.snippetID} startSel={this.state.startSelection} endSel={this.state.endSelection}/>
                             <button type="button" onClick={this.textSubmit}>Save Text</button>
                         </div>
                     </div>
