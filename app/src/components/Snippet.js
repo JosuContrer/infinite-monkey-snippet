@@ -17,56 +17,54 @@ const url = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/snippe
 /* ----------- Comments dynamic list Functional Component -----------*/
 const Comment = (props) => {
 
-    const [commentList, setCommentList] = useState([]);
+    const [commentList, setCommentList] = useState([props.commentList]);
     const [numComment, setNumComment] = useState(0);
-    const [commentBoxToggle, setCommentBoxToggle] = useState(true); 
-    var initURL = url + props.snipID;
-    console.log(props.snipID);
+    const [commentBoxToggle, setCommentBoxToggle] = useState(true);
 
     // ----------------------- CREATE COMMENT ---------------------
     // Send HTTP comment create request
-    function createCommentHTTP(date, text, startS, endS){
-        // Create JSON comment 
-        let data = {};
-        data["id"] = numComment;
-        data["snippetID"] = props.snipID;
-        data["timestamp"] = Math.round((date).getTime() / 1000);
-        data["text"] = text;
-        data["regionStart"] = startS;
-        data["regionEnd"] = endS;
-
-        let json = JSON.stringify(data);
-        console.log(json);
-
-        // Setup:Send the HTTP Request to AWS
-        let textURL = initURL + "/comments";
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", textURL, true);
-        console.log("JSON: " + json);
-        console.log(textURL);
-
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        // Send data as JSON
-        xhr.send(json);
-
-        // Process the response an update GUI
-        xhr.onloadend = function() {
-            console.log(xhr);
-            if(xhr.readyState === XMLHttpRequest.DONE){
-                if(xhr.status === 200){
-                    console.log("XHR: " + xhr.responseText);
-                    let jsonResponse = JSON.parse(xhr.responseText);
-                    console.log(jsonResponse);
-                }
-                else if(xhr.status === 400){
-                    alert("Unable to Add comment");
-                }
-            } else {
-                console.log("Didn't processes");
-            }
-        }
-    }
+    // function createCommentHTTP(date, text, startS, endS){
+    //     // Create JSON comment
+    //     let data = {};
+    //     data["id"] = numComment;
+    //     data["snippetID"] = props.snipID;
+    //     data["timestamp"] = Math.round((date).getTime() / 1000);
+    //     data["text"] = text;
+    //     data["regionStart"] = startS;
+    //     data["regionEnd"] = endS;
+    //
+    //     let json = JSON.stringify(data);
+    //     console.log(json);
+    //
+    //     // Setup:Send the HTTP Request to AWS
+    //     let textURL = initURL + "/comments";
+    //     let xhr = new XMLHttpRequest();
+    //     xhr.open("POST", textURL, true);
+    //     console.log("JSON: " + json);
+    //     console.log(textURL);
+    //
+    //     xhr.setRequestHeader("Content-Type", "application/json");
+    //
+    //     // Send data as JSON
+    //     xhr.send(json);
+    //
+    //     // Process the response an update GUI
+    //     xhr.onloadend = function() {
+    //         console.log(xhr);
+    //         if(xhr.readyState === XMLHttpRequest.DONE){
+    //             if(xhr.status === 200){
+    //                 console.log("XHR: " + xhr.responseText);
+    //                 let jsonResponse = JSON.parse(xhr.responseText);
+    //                 console.log(jsonResponse);
+    //             }
+    //             else if(xhr.status === 400){
+    //                 alert("Unable to Add comment");
+    //             }
+    //         } else {
+    //             console.log("Didn't processes");
+    //         }
+    //     }
+    // }
 
     // Add comment using the 'comment' button
     const addCommentClick = e => {
@@ -86,7 +84,7 @@ const Comment = (props) => {
         }
     };
 
-    // Submit comment 
+    // Submit comment
     const submitCommentClick = e => {
         // Current Comment textarea disabled
         let textAreaNum = "ta" + numComment;
@@ -99,7 +97,7 @@ const Comment = (props) => {
         let text = document.getElementById(textAreaNum).value;
 
         // Submit HTTP request for creating new comment
-        createCommentHTTP(date, text);
+        //createCommentHTTP(date, text);
 
         // Increase comment number
         setNumComment(numComment + 1);
@@ -108,45 +106,45 @@ const Comment = (props) => {
 
     // ----------------------- LOAD COMMENTS FROM REQUEST ---------------------
     // Send HTTP request to load comments
-    function loadCommentsHTTP(){
-        // Create JSON comment 
-        let data = {};
-        data["snippetID"] = props.snipID;
-
-        let json = JSON.stringify(data);
-        console.log(json);
-
-        // Setup:Send the HTTP Request to AWS
-        let textURL = initURL + "/comments/listCommentsBySnippet";
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", textURL, true);
-        console.log("JSON: " + json);
-        console.log(textURL);
-
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        // Send data as JSON
-        xhr.send(json);
-
-        // Process the response an update GUI
-        xhr.onloadend = function() {
-            console.log(xhr);
-            if(xhr.readyState === XMLHttpRequest.DONE){
-                if(xhr.status === 200){
-                    console.log("XHR: " + xhr.responseText);
-                    let jsonResponse = JSON.parse(xhr.responseText);
-                    console.log(jsonResponse);
-                    var list = [];
-                    loadComments(list);
-                }
-                else if(xhr.status === 400){
-                    alert("Failed to get comments");
-                }
-            } else {
-                console.log("Didn't processes");
-            }
-        }
-    }
+    // function loadCommentsHTTP(){
+    //     // Create JSON comment
+    //     let data = {};
+    //     data["snippetID"] = props.snipID;
+    //
+    //     let json = JSON.stringify(data);
+    //     console.log(json);
+    //
+    //     // Setup:Send the HTTP Request to AWS
+    //     let textURL = initURL + "/comments/listCommentsBySnippet";
+    //     let xhr = new XMLHttpRequest();
+    //     xhr.open("POST", textURL, true);
+    //     console.log("JSON: " + json);
+    //     console.log(textURL);
+    //
+    //     xhr.setRequestHeader("Content-Type", "application/json");
+    //
+    //     // Send data as JSON
+    //     xhr.send(json);
+    //
+    //     // Process the response an update GUI
+    //     xhr.onloadend = function() {
+    //         console.log(xhr);
+    //         if(xhr.readyState === XMLHttpRequest.DONE){
+    //             if(xhr.status === 200){
+    //                 console.log("XHR: " + xhr.responseText);
+    //                 let jsonResponse = JSON.parse(xhr.responseText);
+    //                 console.log(jsonResponse);
+    //                 var list = [];
+    //                 loadComments(list);
+    //             }
+    //             else if(xhr.status === 400){
+    //                 alert("Failed to get comments");
+    //             }
+    //         } else {
+    //             console.log("Didn't processes");
+    //         }
+    //     }
+    // }
 
     // Function to load comments on GUI given a input list (TODO: Not sure if it works)
     const loadComments = (commentsListHTTP) => {
@@ -191,9 +189,8 @@ class Snippet extends Component {
             text: "",
 
             inputtedPass: "",
-            comments: {},
-          
-            commentNum: 0,
+            comments: [],
+
             startSelection: 0,
             endSelection: 0,
         };
@@ -214,80 +211,46 @@ class Snippet extends Component {
     componentDidMount() {
 
         // GET SNIPPET DATA
-        let extThis = this;
-        console.log(this.state.url);
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", this.state.url, true);
+        Snippet.callLambda(this, this.state.url, "GET")
+            .then(response => {
+                let timestampNum = response["timestamp"];
+                let unixDate = new Date(timestampNum);
 
-        //send data as JSON
-        xhr.send();
+                this.setState({
+                    password: response["password"],
+                    languageText: response["language"],
+                    timestampText: unixDate.toLocaleString(),
+                    info: response["info"],
+                    text: response["text"],
+                });
+            })
+            .catch(error => {
+                console.log(error);
+            });
 
-        // Process the response an update GUI
-        xhr.onloadend = function() {
-            console.log(xhr);
-            if(xhr.readyState === XMLHttpRequest.DONE){
-                if(xhr.status === 200){
-                    console.log("XHR: " + xhr.responseText);
-                    let jsonResponse = JSON.parse(xhr.responseText);
-                    console.log(jsonResponse);
-
-                    let timestampNum = jsonResponse["timestamp"];
-                    let unixDate = new Date(timestampNum);
-
-                    extThis.setState({
-                        password: jsonResponse["password"],
-                        languageText: jsonResponse["language"],
-                        timestampText: unixDate.toLocaleString(),
-                        info: jsonResponse["info"],
-                        text: jsonResponse["text"],
-                    });
-
-                }
-                else if(xhr.status === 400){
-                    alert("Unable to get Snippet");
-                }
-            }
-        }
 
         // GET COMMENTS
         const commentURl = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/comments/listCommentsBySnippet"
-        let xhrCom = new XMLHttpRequest();
-
-        xhrCom.open("POST", commentURl, true);
-
         let data = {};
+        console.log(this.state.snippetID);
         data["snippetID"] = this.state.snippetID;
-        console.log("bruh " + this.state.snippetID);
 
-        let json = JSON.stringify(data);
+        Snippet.callLambda(this, commentURl, "POST", data)
+            .then(response => {
+                this.setState({
+                    comments: response["comments"]
+                });
 
-        xhrCom.setRequestHeader("Content-Type", "application/json");
+                console.log(this.state.comments);
 
-        //send data as JSON
-        xhrCom.send(json);
+            })
+            .catch(error => {
+                console.log(error);
+            });
 
-        // Process the response an update GUI
-        xhrCom.onloadend = function() {
-            console.log(xhrCom);
-            if(xhrCom.readyState === XMLHttpRequest.DONE){
-                if(xhrCom.status === 200){
-                    console.log("XHR: " + xhrCom.responseText);
-                    let jsonResponse = JSON.parse(xhrCom.responseText);
-                    extThis.setState({
-                        comments: jsonResponse["comments"]
-                    })
-
-                    console.log(extThis.state.comments);
-
-                }
-                else if(xhrCom.status === 400){
-                    alert("Unable to get Comments");
-                }
-            }
-        }
     }
 
-    static textToDB(textURL, fieldName, snipText, password="") {
+    static sanitizeText(text) {
         const backspace = String.fromCharCode(8);
         const formfeed = String.fromCharCode(12);
         const newline = String.fromCharCode(10);
@@ -299,90 +262,50 @@ class Snippet extends Component {
         let cursedArray = [backslash, backspace, formfeed, newline, carriage, tab, quote];
         let blessedArray = ['\\', '\\b', '\\f', '\\n', '\\r', '\\t', '\\"']
 
-        snipText = snipText.replace(/[\x5c\x08\x0c\x0a\x0d\x09\x22]/g, function(x) {
+        let snipText = text.replace(/[\x5c\x08\x0c\x0a\x0d\x09\x22]/g, function(x) {
             let i = cursedArray.indexOf(x);
 
             return blessedArray[i];
         });
 
-        let data = {};
-
-        data[fieldName] = snipText;
-
-        if (fieldName === "info") {
-            data["password"] = password;
-        }
-
-        let json = JSON.stringify(data);
-
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", textURL, true);
-
-        console.log("JSON: " + json);
-        console.log(textURL);
-
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        //send data as JSON
-        xhr.send(json);
-
-        // Process the response an update GUI
-        xhr.onloadend = function() {
-            console.log(xhr);
-            if(xhr.readyState === XMLHttpRequest.DONE){
-                if(xhr.status === 200){
-                    console.log("XHR: " + xhr.responseText);
-                    let jsonResponse = JSON.parse(xhr.responseText);
-                    console.log(jsonResponse);
-                }
-                else if(xhr.status === 404){
-                    alert("Unable to update" + fieldName);
-                }
-            } else {
-                console.log("Didn't processes");
-            }
-        }
+        return snipText;
     }
 
-    deleteSnippet(event) {
-        let textURL = this.state.url + "/deleteSnippet"
+    static callLambda(extThis, url, type, data=null, password=null) {
+        console.log("Request " + type + " @ " + url);
 
-        let data = {};
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.open(type, url, true);
 
-        data["password"] = this.state.inputtedPass;
-        let json = JSON.stringify(data);
-
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", textURL, true);
-
-        console.log("JSON: " + json);
-        console.log(textURL);
-
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        //send data as JSON
-        xhr.send(json);
-
-        // Process the response an update GUI
-        xhr.onloadend = function() {
-            console.log(xhr);
-            if(xhr.readyState === XMLHttpRequest.DONE){
-                if(xhr.status === 200){
-                    console.log("XHR: " + xhr.responseText);
-                    let jsonResponse = JSON.parse(xhr.responseText);
-                    console.log(jsonResponse);
-
-                    window.open("/", "_self");
-                }
-                else if(xhr.status === 404){
-                    alert("Unable to delete Snippet");
-                }
-            } else {
-                console.log("Didn't processes");
+            if (password !== null) {
+                data["password"] = password;
             }
-        }
 
-        event.preventDefault();
+            xhr.onload = () => {
+                if(xhr.status >= 200 && xhr.status < 300){
+                    console.log("XHR: " + xhr.responseText);
+
+                    resolve(JSON.parse(xhr.responseText));
+                }
+                else {
+                    console.log("    Request Failed: " + xhr.status);
+
+                    reject(xhr.statusText);
+                }
+            };
+
+            xhr.onerror = () => reject(xhr.statusText);
+
+            if (data !== null) {
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                xhr.send(JSON.stringify(data));
+            }
+            else {
+                xhr.send();
+            }
+        });
     }
 
     editInfo(event) {
@@ -441,23 +364,52 @@ class Snippet extends Component {
         });
     }
 
+    infoSubmit(event) {
+        let infoText = Snippet.sanitizeText(this.state.info);
+
+        let data = {};
+        data["info"] = infoText;
+        Snippet.callLambda(this, this.state.url + "/updateInfo", "POST",  data, this.state.inputtedPass)
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    textSubmit(event) {
+        let textText = Snippet.sanitizeText(this.state.text);
+
+        let data = {};
+        data["text"] = textText;
+        Snippet.callLambda(this, this.state.url + "/updateText", "POST", data)
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    deleteSnippet(event) {
+        let delURL = this.state.url + "/deleteSnippet"
+        Snippet.callLambda(this, delURL, "POST", {}, this.state.inputtedPass)
+            .then(response => {
+                if (response !== null) {
+                    window.open("/", "_self");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        event.preventDefault();
+    }
+
     onSelectionChanged(editor){
         let startRow = editor.anchor.row + 1;
         let endRow = editor.cursor.row + 1;
-        
+
         this.setState({
             startSelection: startRow,
             endSelection: endRow,
         });
         console.log("Cursor: " + this.state.startSelection + ", " + this.state.endSelection);
-    }
-
-    infoSubmit(event) {
-        Snippet.textToDB(this.state.url + "/updateInfo", "info", this.state.info, this.state.inputtedPass);
-    }
-
-    textSubmit(event) {
-        Snippet.textToDB(this.state.url + "/updateText", "text", this.state.text);
     }
 
     // Set language from dropdown select
@@ -484,7 +436,7 @@ class Snippet extends Component {
                 <div className="column">
                     <div className="snippetsection">
                         <div id="infoDiv" className="leftCol">
-                            <h2 class="infoTitle">Snippet Information:</h2>
+                            <h2 className="infoTitle">Snippet Information:</h2>
                             <br/>
                             <form id="infoForm">
                                 <p id="infoArea">{this.state.info}</p>
@@ -498,20 +450,20 @@ class Snippet extends Component {
                         </div>
                     </div>
                     <div className="snippetsection">
-                        <div class="flexContainerBar">
-                            <div class="equalCol">
+                        <div className="flexContainerBar">
+                            <div className="equalCol">
                                 <LangDropdown func={this.setLanguage} />
                             </div>
-                            <div class="equalCol">
+                            <div className="equalCol">
                                 <h3 id="snippetId">Snippet ID: {this.state.snippetID}</h3>
                             </div>
-                            <div class="equalCol">
-                                <h3 class="timeTitle" id="timestampText">Created: {this.state.timestampText}</h3>
+                            <div className="equalCol">
+                                <h3 className="timeTitle" id="timestampText">Created: {this.state.timestampText}</h3>
                             </div>
                         </div>
                     </div>
                     <div className="snippetsection">
-                        <div class="break"></div>
+                        <div className="break"></div>
                         <div id="textDiv" className="leftCol">
                             <AceEditor
                                 ref="mainEditor"
@@ -539,34 +491,34 @@ class Snippet extends Component {
                         <div id="commentDiv" className="rightCol">
                             <h5 class="commentsTitle">Comments</h5>
                             <br/>
-                            <Comment snipID={this.state.snippetID} startSel={this.state.startSelection} endSel={this.state.endSelection}/>
+                            <Comment snipID={this.state.snippetID} startSel={this.state.startSelection} endSel={this.state.endSelection} commentList={this.state.comments}/>
                             <button type="button" onClick={this.textSubmit}>Save Text</button>
                         </div>
                     </div>
                     <div className="snippetsection" id="contactDiv">
-                        <h2 class="contactTitle">Contact Us</h2>
-                        <div class="flexContainerBar">
-                            <a class="iconStyled" href="https://github.com/JosuContrer/infinite-monkey-snippet">
+                        <h2 className="contactTitle">Contact Us</h2>
+                        <div className="flexContainerBar">
+                            <a className="iconStyled" href="https://github.com/JosuContrer/infinite-monkey-snippet">
                                 <FontAwesomeIcon  icon={faGithub} />
                             </a>
-                            <i class="iconStyled">
+                            <i className="iconStyled">
                                 <FontAwesomeIcon icon={faLinkedin} />
-                                <ul class="linkedInContent">
+                                <ul className="linkedInContent">
                                     <a href="https://www.linkedin.com/in/josue-contreras-127238141/">Josue</a><br></br>
                                     <a href="https://www.linkedin.com/in/nicholas-delli-carpini-4a9400171/">Nick</a><br></br>
                                     <a href="https://www.linkedin.com/in/william-c-32a424108/">Will</a><br></br>
                                 </ul>
                             </i>
-                            <i class="iconStyled">
+                            <i className="iconStyled">
                                 <FontAwesomeIcon  icon={faInstagram} />
-                                <ul class="linkedInContent">
+                                <ul className="linkedInContent">
                                     <a href="https://www.instagram.com/contrerasjosu/">Josue</a><br></br>
                                     <a href="">Nick</a><br></br>
                                     <a href="">Will</a><br></br>
                                 </ul>
                             </i>
                         </div>
-                        <p class="contactInfo">Authors: Josue C, Nick D, Will C</p>
+                        <p className="contactInfo">Authors: Josue C, Nick D, Will C</p>
                     </div>
             </div>
             </div>
