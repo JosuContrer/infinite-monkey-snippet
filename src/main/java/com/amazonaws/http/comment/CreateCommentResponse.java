@@ -1,4 +1,4 @@
-package com.amazonaws.http;
+package com.amazonaws.http.comment;
 
 public class CreateCommentResponse {
 	
