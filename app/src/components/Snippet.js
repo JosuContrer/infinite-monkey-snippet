@@ -21,15 +21,17 @@ const Comment = (props) => {
     const [numComment, setNumComment] = useState(0);
     const [commentBoxToggle, setCommentBoxToggle] = useState(true);
     
-    if(props.comList !== commentList){
+    const loadCommentsClick = e => {
         console.log("ldslkdslkflkjslkd" + props.comList);
-        setCommentList(props.comList.map(function(comment){
+        const c = props.comList.map(function(comment){
             return(
-                        <Card body inverse color="success">
-                            <CardTitle id={"h" + numComment}>Time: {comment.timeSt}</CardTitle>
-                            <textarea readonly id={"ta" + numComment} >{comment.text}</textarea>
-                        </Card>
-                    )}));
+                    <Card body inverse color="success">
+                        <CardTitle id={"h" + comment.ID}>Time: {comment.timestamp}</CardTitle>
+                        <p id={"l" + comment.ID}>Selected Lines: {comment.regionStart + ", " + comment.regionEnd} </p>
+                        <textarea id={"ta" + comment.ID} readonly>{ comment.text}</textarea>
+                    </Card>
+                    )})
+        setCommentList(commentList.concat(c));
     }
    
     // // ----------------------- CREATE COMMENT ---------------------
@@ -77,43 +79,43 @@ const Comment = (props) => {
     // //     }
     // // }
 
-    // // Add comment using the 'comment' button
-    // const addCommentClick = e => {
-    //     // Spawn new textarea for new comment
-    //     if(commentBoxToggle){
-    //         setCommentBoxToggle(false);
-    //         console.log("Added Comment Box: " + numComment);
-    //         setCommentList(commentList.concat(
-    //             <Card body inverse color="success">
-    //                 <CardTitle id={"h" + numComment}>Time: </CardTitle>
-    //                 <p id={"l" +numComment}>Selected Lines: </p>
-    //                 <textarea id={"ta" + numComment}></textarea>
-    //             </Card>
-    //         ));
-    //     }else{
-    //         window.alert("Submit current comment before creating new one");
-    //     }
-    // };
+    // Add comment using the 'comment' button
+    const addCommentClick = e => {
+        // Spawn new textarea for new comment
+        if(commentBoxToggle){
+            setCommentBoxToggle(false);
+            console.log("Added Comment Box: " + numComment);
+            setCommentList(commentList.concat(
+                <Card body inverse color="success">
+                    <CardTitle id={"h" + numComment}>Time: </CardTitle>
+                    <p id={"l" +numComment}>Selected Lines: </p>
+                    <textarea id={"ta" + numComment}></textarea>
+                </Card>
+            ));
+        }else{
+            window.alert("Submit current comment before creating new one");
+        }
+    };
 
-    // // Submit comment
-    // const submitCommentClick = e => {
-    //     // Current Comment textarea disabled
-    //     let textAreaNum = "ta" + numComment;
-    //     let timeHeaderNum = "h" + numComment;
-    //     let linesNum = "l" + numComment;
-    //     let date = new Date();
-    //     document.getElementById(textAreaNum).readOnly = true;
-    //     document.getElementById(timeHeaderNum).innerHTML += date;
-    //     document.getElementById(linesNum).innerHTML += (props.startSel + ', ' + props.endSel);
-    //     let text = document.getElementById(textAreaNum).value;
+    // Submit comment
+    const submitCommentClick = e => {
+        // Current Comment textarea disabled
+        let textAreaNum = "ta" + numComment;
+        let timeHeaderNum = "h" + numComment;
+        let linesNum = "l" + numComment;
+        let date = new Date();
+        document.getElementById(textAreaNum).readOnly = true;
+        document.getElementById(timeHeaderNum).innerHTML += date;
+        document.getElementById(linesNum).innerHTML += (props.startSel + ', ' + props.endSel);
+        let text = document.getElementById(textAreaNum).value;
 
-    //     // Submit HTTP request for creating new comment
-    //     //createCommentHTTP(date, text);
+        // Submit HTTP request for creating new comment
+        //createCommentHTTP(date, text);
 
-    //     // Increase comment number
-    //     setNumComment(numComment + 1);
-    //     setCommentBoxToggle(true);
-    // }
+        // Increase comment number
+        setNumComment(numComment + 1);
+        setCommentBoxToggle(true);
+    }
 
     // // ----------------------- LOAD COMMENTS FROM REQUEST ---------------------
     // // Send HTTP request to load comments
@@ -175,8 +177,9 @@ const Comment = (props) => {
             <div id="commentArea">
                 {commentList}
             </div>
-            {/* <button onClick={addCommentClick}>Add Comment</button>
-            <button onClick={submitCommentClick}>Submit Comment</button> */}
+            <button onClick={loadCommentsClick}>Load Comments</button>
+            <button onClick={addCommentClick}>Add Comment</button>
+            <button onClick={submitCommentClick}>Submit Comment</button>
         </>
     );
 }
