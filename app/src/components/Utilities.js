@@ -33,7 +33,7 @@ export const callLambda = function(extThis, url, type, data=null, password=null)
 
         xhr.onload = () => {
             if(xhr.status >= 200 && xhr.status < 300){
-                console.log("XHR: " + xhr.responseText);
+                //console.log("XHR: " + xhr.responseText);
 
                 resolve(JSON.parse(xhr.responseText));
             }

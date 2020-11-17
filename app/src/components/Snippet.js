@@ -62,7 +62,7 @@ class Snippet extends Component {
 
                 this.setState({
                     password: response["password"],
-                    languageText: response["language"],
+                    languageText: response["language"].toString(),
                     timestampText: unixDate.toLocaleString(),
                     info: response["info"],
                     text: response["text"],
@@ -219,8 +219,9 @@ class Snippet extends Component {
                     <div className="snippetsection">
                         <div className="break"></div>
                         <div id="textDiv" className="leftCol">
+                            <h5 className="commentsTitle">Text</h5>
+                            <br/>
                             <AceEditor
-                                ref="mainEditor"
                                 placeholder=""
                                 mode={this.state.languageText}
                                 width={"100%"}
@@ -234,9 +235,9 @@ class Snippet extends Component {
                                 value={this.state.text}
                                 style={reactStyle.aceStyle}
                                 setOptions={{
-                                    enableBasicAutocompletion: false,
-                                    enableLiveAutocompletion: false,
-                                    enableSnippets: false,
+                                    // enableBasicAutocompletion: false,
+                                    // enableLiveAutocompletion: false,
+                                    // enableSnippets: false,
                                     showLineNumbers: true,
                                     tabSize: 2,
                                 }}/>

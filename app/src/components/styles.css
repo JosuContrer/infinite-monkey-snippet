@@ -296,17 +296,20 @@ html {
     border-radius: 10px;
 }
 
-#snippetpage .snippetsection #langDiv #buttDiv {
+#snippetpage .snippetsection #langDiv #buttDiv,
+#snippetpage .snippetsection #commentArea #newComDiv{
     display: flex;
     justify-content: space-between;
 }
 
-#snippetpage .snippetsection #langDiv #buttDiv button {
+#snippetpage .snippetsection #langDiv #buttDiv button,
+#snippetpage .snippetsection #commentArea #newComDiv button{
     max-width: 48%;
     min-width: 48%;
 }
 
-#snippetpage .snippetsection #langDiv #buttDiv #deleteButton {
+#snippetpage .snippetsection #langDiv #buttDiv #deleteButton,
+#snippetpage .snippetsection #commentArea #newComDiv #cancelButt {
     background-color: red;
 }
 

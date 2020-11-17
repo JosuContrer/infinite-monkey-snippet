@@ -1,7 +1,6 @@
-import React, {Component, useState} from "react";
-import { Card, CardTitle, Button} from 'reactstrap';
-import { callLambda } from "./Utilities";
-import AceEditor from "react-ace";
+import React, { Component } from "react";
+import { Card, CardTitle } from 'reactstrap';
+import {callLambda, sanitizeText} from "./Utilities";
 
 const url = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/comments/"
 
@@ -25,7 +24,8 @@ class CommentList extends Component {
         }
 
         this.addComment = this.addComment.bind(this);
-        this.submitCommentClick = this.submitCommentClick.bind(this);
+        this.submitComment = this.submitComment.bind(this);
+        this.cancelComment = this.cancelComment.bind(this);
         this.loadComments = this.loadComments.bind(this);
 
         this.newComUpdate = this.newComUpdate.bind(this);
@@ -37,36 +37,47 @@ class CommentList extends Component {
 
         this.loadComments();
 
-
         let extThis = this;
         // Load comments on set interval
-        // setInterval(function() {
-        //     if(!extThis.state.commentInProgress) {
-        //         extThis.loadComments();
-        //     }
-        // }, extThis.state.loadCommentInterval);
+        setInterval(function() {
+            if(!extThis.state.commentInProgress) {
+                extThis.loadComments();
+            }
+        }, extThis.state.loadCommentInterval);
 
     }
 
     // Add comment by clicking on the 'comment' button
     addComment(event) {
+        this.setState({
+            commentInProgress: true,
+        })
+
         let ace = document.getElementById("ace-editor");
         let start = ace.env.editor.selection.anchor.row + 1;
         let end = ace.env.editor.selection.cursor.row + 1;
 
+        if (start > end) {
+            let temp = start;
+            start = end;
+            end = temp;
+        }
+
         // Spawn new textarea for new comment
         if(!this.state.commentInProgress){
-            const ca = this.state.commentCardList.concat(
-                <Card id="comInProg" body inverse color="success">
+            const c = (
+                <Card key="comInProg" id="comInProg" body inverse color="success">
                     <p>Selected Lines: {start + ", " + end}</p>
-                    <textarea id="taInProg" onChange={this.newComUpdate}></textarea>
-                    <button onClick={this.submitCommentClick}>Submit Comment</button>
+                    <textarea onChange={this.newComUpdate}></textarea>
+                    <div id="newComDiv">
+                        <button onClick={this.submitComment}>Submit Comment</button>
+                        <button id="cancelButt" onClick={this.cancelComment}>Cancel Comment</button>
+                    </div>
                 </Card>
             );
 
             this.setState({
-                commentCardList: ca,
-                commentInProgress: true,
+                commentCardList: this.state.commentCardList.concat(c),
                 startSelection: start,
                 endSelection: end,
             });
@@ -76,17 +87,29 @@ class CommentList extends Component {
         }
     };
 
-    submitCommentClick(event) {
+    cancelComment(event) {
+        this.setState({
+            commentInProgress: false,
+            commentCardList: this.state.commentCardList
+                .filter(x => x.props.id !== "comInProg"),
+        });
+    }
+
+    submitComment(event) {
+
         let extThis = this;
 
         let data = {};
         data["snippetID"] = this.state.snippetID;
-        data["text"] = this.state.newComText;
+        data["text"] = sanitizeText(this.state.newComText);
         data["regionStart"] = this.state.startSelection;
         data["regionEnd"] = this.state.endSelection;
 
         callLambda(extThis, url, "POST", data)
             .then(response => {
+                // this.setState({
+                //     commentCardList: [],
+                // })
                 extThis.loadComments();
             })
             .catch(error => {
@@ -99,21 +122,6 @@ class CommentList extends Component {
             endSelection: 0,
             newComText: "",
         });
-        // // Current Comment textarea disabled
-        // let textAreaNum = "ta" + numComment;
-        // let timeHeaderNum = "h" + numComment;
-        // let linesNum = "l" + numComment;
-        // let date = new Date();
-        // document.getElementById(textAreaNum).readOnly = true;
-        // document.getElementById(timeHeaderNum).innerHTML += date;
-        // document.getElementById(linesNum).innerHTML += (props.startSel + ', ' + props.endSel);
-        // let text = document.getElementById(textAreaNum).value;
-        //
-        // // Submit HTTP request for creating new comment
-        // //createCommentHTTP(date, text);
-        // //props.func(date, text)
-        //
-        // setCommentBoxToggle(true);
 
     }
 
@@ -123,19 +131,30 @@ class CommentList extends Component {
     loadComments(event){
         console.log("Loading comments ...");
 
+        let extThis = this;
         const commentURl = url + "listCommentsBySnippet"
         let data = {};
         data["snippetID"] = this.state.snippetID;
 
         callLambda(this, commentURl, "POST", data)
             .then(response => {
+                let idArray = this.state.commentList.map((comment) => comment.ID);
 
-                let c = response["comments"].map(function(comment){
+                let newArray = response["comments"].filter((comment) => {
+                    if (!idArray.includes(comment.ID)) {
+                        return comment;
+                    }
+                    return null;
+                });
+
+                newArray.sort((a, b) => ((a.regionStart + a.regionEnd) > (b.regionStart + b.regionEnd)) ? 1:-1);
+
+                let c = newArray.map(function(comment){
                     let timestampNum = comment.timestamp;
                     let unixDate = new Date(timestampNum);
-                    console.log(comment);
+
                     return(
-                        <Card id={comment.ID} body inverse color="success">
+                        <Card key={comment.ID} id={comment.ID} body inverse color="success">
                             <CardTitle>Time: {unixDate.toLocaleString()}</CardTitle>
                             <p> Selected Lines: {comment.regionStart + ", " + comment.regionEnd} </p>
                             <textarea readOnly="readonly">{comment.text}</textarea>
@@ -143,10 +162,12 @@ class CommentList extends Component {
                     )
                 });
 
-                this.setState({
-                    commentList: response["comments"],
-                    commentCardList: c,
+                extThis.setState({
+                    commentList: this.state.commentList.concat(newArray),
+                    commentCardList: this.state.commentCardList.concat(c)
+                        .filter(x => x.props.id !== "comInProg"),
                 });
+
             })
             .catch(error => {
                 console.log(error);
@@ -165,9 +186,7 @@ class CommentList extends Component {
                 <div id="commentArea">
                     {this.state.commentCardList}
                 </div>
-                <button onClick={this.loadComments}>Load Comments</button>
                 <button onClick={this.addComment}>Add Comment</button>
-                {/* */}
             </>
         );
     }
