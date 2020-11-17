@@ -6,132 +6,13 @@ import { Card, CardTitle, Button} from 'reactstrap';
 import AceEditor from "react-ace";
 import NavBar from './NavBar';
 import LangDropdown from './LangDropDown';
+import CommentList from './CommentList';
 
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-monokai";
 
 /** GLOBAL URL **/
 const url = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/snippets/";
-
-/* ----------- Comments dynamic list Functional Component -----------*/
-const Comment = (props) => {
-
-    const [commentList, setCommentList] = useState([]);
-    const [numComment, setNumComment] = useState(0);
-    const [commentBoxToggle, setCommentBoxToggle] = useState(true);
-   
-    // // ----------------------- CREATE COMMENT ---------------------
-    // // Send HTTP comment create request
-    // // function createCommentHTTP(date, text, startS, endS){
-    // //     // Create JSON comment
-    // //     let data = {};
-    // //     data["id"] = numComment;
-    // //     data["snippetID"] = props.snipID;
-    // //     data["timestamp"] = Math.round((date).getTime() / 1000);
-    // //     data["text"] = text;
-    // //     data["regionStart"] = startS;
-    // //     data["regionEnd"] = endS;
-    // //
-    // //     let json = JSON.stringify(data);
-    // //     console.log(json);
-    // //
-    // //     // Setup:Send the HTTP Request to AWS
-    // //     let textURL = initURL + "/comments";
-    // //     let xhr = new XMLHttpRequest();
-    // //     xhr.open("POST", textURL, true);
-    // //     console.log("JSON: " + json);
-    // //     console.log(textURL);
-    // //
-    // //     xhr.setRequestHeader("Content-Type", "application/json");
-    // //
-    // //     // Send data as JSON
-    // //     xhr.send(json);
-    // //
-    // //     // Process the response an update GUI
-    // //     xhr.onloadend = function() {
-    // //         console.log(xhr);
-    // //         if(xhr.readyState === XMLHttpRequest.DONE){
-    // //             if(xhr.status === 200){
-    // //                 console.log("XHR: " + xhr.responseText);
-    // //                 let jsonResponse = JSON.parse(xhr.responseText);
-    // //                 console.log(jsonResponse);
-    // //             }
-    // //             else if(xhr.status === 400){
-    // //                 alert("Unable to Add comment");
-    // //             }
-    // //         } else {
-    // //             console.log("Didn't processes");
-    // //         }
-    // //     }
-    // // }
-
-    // Add comment by clicking on the 'comment' button
-    const addCommentClick = e => {
-        // Spawn new textarea for new comment
-        if(commentBoxToggle){
-            setCommentBoxToggle(false);
-            console.log("Added Comment Box: " + numComment);
-            setCommentList(commentList.concat(
-                <Card body inverse color="success">
-                    <CardTitle id={"h" + numComment}>Time: </CardTitle>
-                    <p id={"l" +numComment}>Selected Lines: </p>
-                    <textarea id={"ta" + numComment}></textarea>
-                </Card>
-            ));
-        }else{
-            window.alert("Submit current comment before creating new one");
-        }
-    };
-
-    // On comment submission: 
-    //  display time, snippet selection lines, make box not editable, make HTTP request
-    const submitCommentClick = e => {
-        // Current Comment textarea disabled
-        let textAreaNum = "ta" + numComment;
-        let timeHeaderNum = "h" + numComment;
-        let linesNum = "l" + numComment;
-        let date = new Date();
-        document.getElementById(textAreaNum).readOnly = true;
-        document.getElementById(timeHeaderNum).innerHTML += date;
-        document.getElementById(linesNum).innerHTML += (props.startSel + ', ' + props.endSel);
-        let text = document.getElementById(textAreaNum).value;
-
-        // Submit HTTP request for creating new comment
-        //createCommentHTTP(date, text);
-        //props.func(date, text)
-
-        // Increase comment number
-        setNumComment(numComment + 1);
-        setCommentBoxToggle(true);
-    }
-
-    // ----------------------- LOAD COMMENTS FROM REQUEST ---------------------
-
-    // Function to load comments on GUI given a input list (TODO: Make it work onload of document and heartbeat?)
-    const loadCommentsClick = e => {
-        console.log("ldslkdslkflkjslkd" + props.comList);
-        const c = props.comList.map(function(comment){
-            return(
-                    <Card body inverse color="success">
-                        <CardTitle id={"h" + comment.ID}>Time: {comment.timestamp}</CardTitle>
-                        <p id={"l" + comment.ID}>Selected Lines: {comment.regionStart + ", " + comment.regionEnd} </p>
-                        <textarea readonly id={"ta" + comment.ID}>{ comment.text}</textarea>
-                    </Card>
-                    )})
-        setCommentList(commentList.concat(c));
-    }
-
-    return(
-        <>
-            <div id="commentArea">
-                {commentList}
-            </div>
-            <button onClick={loadCommentsClick}>Load Comments</button>
-            <button onClick={addCommentClick}>Add Comment</button>
-            <button onClick={submitCommentClick}>Submit Comment</button>
-        </>
-    );
-}
 
 /* ------------------ Main Class ----------------- */
 class Snippet extends Component {
@@ -190,27 +71,6 @@ class Snippet extends Component {
             .catch(error => {
                 console.log(error);
             });
-
-
-        // GET COMMENTS
-        const commentURl = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/comments/listCommentsBySnippet"
-        let data = {};
-        console.log(this.state.snippetID);
-        data["snippetID"] = this.state.snippetID;
-
-        Snippet.callLambda(this, commentURl, "POST", data)
-            .then(response => {
-                this.setState({
-                    comments: response["comments"]
-                });
-
-                console.log(this.state.comments);
-
-            })
-            .catch(error => {
-                console.log(error);
-            });
-
     }
 
     static sanitizeText(text) {
@@ -372,7 +232,7 @@ class Snippet extends Component {
             startSelection: startRow,
             endSelection: endRow,
         });
-        console.log("Cursor: " + this.state.startSelection + ", " + this.state.endSelection);
+        console.log("Cursor Selection: " + this.state.startSelection + ", " + this.state.endSelection);
     }
 
     // Set language from dropdown select
@@ -454,7 +314,7 @@ class Snippet extends Component {
                         <div id="commentDiv" className="rightCol">
                             <h5 class="commentsTitle">Comments</h5>
                             <br/>
-                            <Comment snipID={this.state.snippetID} startSel={this.state.startSelection} endSel={this.state.endSelection} comList={this.state.comments}/>
+                            <CommentList snipID={this.state.snippetID} startSel={this.state.startSelection} endSel={this.state.endSelection}/>
                             <button type="button" onClick={this.textSubmit}>Save Text</button>
                         </div>
                     </div>
