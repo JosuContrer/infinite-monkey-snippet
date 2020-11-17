@@ -49,22 +49,19 @@ class CommentList extends Component {
 
     // Add comment by clicking on the 'comment' button
     addComment(event) {
-        this.setState({
-            commentInProgress: true,
-        })
+        if (this.state.commentInProgress) {
+            window.alert("Submit or cancel current comment before creating new one");
+        } else {
+            let ace = document.getElementById("ace-editor");
+            let start = ace.env.editor.selection.anchor.row + 1;
+            let end = ace.env.editor.selection.cursor.row + 1;
 
-        let ace = document.getElementById("ace-editor");
-        let start = ace.env.editor.selection.anchor.row + 1;
-        let end = ace.env.editor.selection.cursor.row + 1;
+            if (start > end) {
+                let temp = start;
+                start = end;
+                end = temp;
+            }
 
-        if (start > end) {
-            let temp = start;
-            start = end;
-            end = temp;
-        }
-
-        // Spawn new textarea for new comment
-        if(!this.state.commentInProgress){
             const c = (
                 <Card key="comInProg" id="comInProg" body inverse color="success">
                     <p>Selected Lines: {start + ", " + end}</p>
@@ -76,16 +73,18 @@ class CommentList extends Component {
                 </Card>
             );
 
+            // thank you react, very cool
             this.setState({
-                commentCardList: this.state.commentCardList.concat(c),
-                startSelection: start,
-                endSelection: end,
+                commentInProgress: true,
+            }, () => {
+               this.setState({
+                    commentCardList: this.state.commentCardList.concat(c),
+                    startSelection: start,
+                    endSelection: end,
+                });
             });
-
-        }else{
-            window.alert("Submit current comment before creating new one");
         }
-    };
+    }
 
     cancelComment(event) {
         this.setState({
@@ -96,7 +95,6 @@ class CommentList extends Component {
     }
 
     submitComment(event) {
-
         let extThis = this;
 
         let data = {};
@@ -122,7 +120,6 @@ class CommentList extends Component {
             endSelection: 0,
             newComText: "",
         });
-
     }
 
     // ----------------------- LOAD COMMENTS FROM REQUEST ---------------------
