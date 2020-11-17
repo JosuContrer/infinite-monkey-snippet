@@ -91,25 +91,29 @@ class CommentList extends Component {
         }, comP.state.loadCommentInterval);
     }
 
-    // // Add comment by clicking on the 'comment' button
-    // addCommentClick(event) {
-    //     // Spawn new textarea for new comment
-    //     if(!this.state.commentInProgress){
-    //         this.setState({
-    //             commentInProgress: true,
-    //         });
+    // Add comment by clicking on the 'comment' button
+    addCommentClick(event) {
+        // Spawn new textarea for new comment
+        if(!this.state.commentInProgress){
+            this.setState({
+                commentInProgress: true,
+            });
         
-    //         this.state.commentList = commentList.concat(
-    //             <Card body inverse color="success">
-    //                 <CardTitle id={"h" + numComment}>Time: </CardTitle>
-    //                 <p id={"l" +numComment}>Selected Lines: </p>
-    //                 <textarea id={"ta" + numComment}></textarea>
-    //             </Card>
-    //         );
-    //     }else{
-    //         window.alert("Submit current comment before creating new one");
-    //     }
-    // };
+            const ca = this.state.commentCardList.concat(
+                <Card id="Load" body inverse color="success">
+                    <CardTitle id="hLoad">Time: </CardTitle>
+                    <p id="pLoad">Selected Lines: </p>
+                    <textarea id="tLoad"></textarea>
+                </Card>
+            );
+
+            this.setState({
+                commentCardList: ca,
+            });
+        }else{
+            window.alert("Submit current comment before creating new one");
+        }
+    };
 
     // On comment submission: 
     //  display time, snippet selection lines, make box not editable, make HTTP request
