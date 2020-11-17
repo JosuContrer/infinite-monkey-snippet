@@ -1,22 +1,25 @@
-import React, {Component} from "react";
-import ReactDOM from "react-dom";
+import React, {Component, useState} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {  } from '@fortawesome/free-solid-svg-icons'
 import { faGithub, faLinkedin, faInstagram} from '@fortawesome/free-brands-svg-icons'
+import { Card, CardTitle, Button} from 'reactstrap';
 
 import AceEditor from "react-ace";
 import NavBar from './NavBar';
 import LangDropdown from './LangDropDown';
+import CommentList from './CommentList';
+import { callLambda, sanitizeText } from "./Utilities";
 
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-monokai";
 
+/** GLOBAL URL **/
+const url = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/snippets/";
 
+/* ------------------ Main Class ----------------- */
 class Snippet extends Component {
     constructor(props) {
         super(props);
 
-        const url = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/snippets/";
         const snippetID = window.location.hash.substring(1);
 
         let initURL = url + snippetID;
@@ -31,7 +34,10 @@ class Snippet extends Component {
             text: "",
 
             inputtedPass: "",
+            comments: [],
 
+            startSelection: 0,
+            endSelection: 0,
         };
 
         this.setLanguage = this.setLanguage.bind(this);
@@ -47,138 +53,24 @@ class Snippet extends Component {
     }
 
     componentDidMount() {
-        let extThis = this;
-        console.log(this.state.url);
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", this.state.url, true);
 
-        //send data as JSON
-        xhr.send();
+        // GET SNIPPET DATA
+        callLambda(this, this.state.url, "GET")
+            .then(response => {
+                let timestampNum = response["timestamp"];
+                let unixDate = new Date(timestampNum);
 
-        // Process the response an update GUI
-        xhr.onloadend = function() {
-            console.log(xhr);
-            if(xhr.readyState === XMLHttpRequest.DONE){
-                if(xhr.status === 200){
-                    console.log("XHR: " + xhr.responseText);
-                    let jsonResponse = JSON.parse(xhr.responseText);
-                    console.log(jsonResponse);
-
-                    let timestampNum = jsonResponse["timestamp"];
-                    let unixDate = new Date(timestampNum);
-
-                    extThis.setState({
-                        password: jsonResponse["password"],
-                        languageText: jsonResponse["language"],
-                        timestampText: unixDate.toLocaleString(),
-                        info: jsonResponse["info"],
-                        text: jsonResponse["text"],
-                    });
-
-                }
-                else if(xhr.status === 400){
-                    alert("Unable to get Snippet");
-                }
-            }
-        }
-    }
-
-    static textToDB(textURL, fieldName, snipText, password="") {
-        const backspace = String.fromCharCode(8);
-        const formfeed = String.fromCharCode(12);
-        const newline = String.fromCharCode(10);
-        const carriage = String.fromCharCode(13);
-        const tab = String.fromCharCode(9);
-        const quote = String.fromCharCode(34);
-        const backslash = String.fromCharCode(92);
-
-        let cursedArray = [backslash, backspace, formfeed, newline, carriage, tab, quote];
-        let blessedArray = ['\\', '\\b', '\\f', '\\n', '\\r', '\\t', '\\"']
-
-        snipText = snipText.replace(/[\x5c\x08\x0c\x0a\x0d\x09\x22]/g, function(x) {
-            let i = cursedArray.indexOf(x);
-
-            return blessedArray[i];
-        });
-
-        let data = {};
-
-        data[fieldName] = snipText;
-
-        if (fieldName === "info") {
-            data["password"] = password;
-        }
-
-        let json = JSON.stringify(data);
-
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", textURL, true);
-
-        console.log("JSON: " + json);
-        console.log(textURL);
-
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        //send data as JSON
-        xhr.send(json);
-
-        // Process the response an update GUI
-        xhr.onloadend = function() {
-            console.log(xhr);
-            if(xhr.readyState === XMLHttpRequest.DONE){
-                if(xhr.status === 200){
-                    console.log("XHR: " + xhr.responseText);
-                    let jsonResponse = JSON.parse(xhr.responseText);
-                    console.log(jsonResponse);
-                }
-                else if(xhr.status === 404){
-                    alert("Unable to update" + fieldName);
-                }
-            } else {
-                console.log("Didn't processes");
-            }
-        }
-    }
-
-    deleteSnippet(event) {
-        let textURL = this.state.url + "/deleteSnippet"
-
-        let data = {};
-
-        data["password"] = this.state.inputtedPass;
-        let json = JSON.stringify(data);
-
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", textURL, true);
-
-        console.log("JSON: " + json);
-        console.log(textURL);
-
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        //send data as JSON
-        xhr.send(json);
-
-        // Process the response an update GUI
-        xhr.onloadend = function() {
-            console.log(xhr);
-            if(xhr.readyState === XMLHttpRequest.DONE){
-                if(xhr.status === 200){
-                    console.log("XHR: " + xhr.responseText);
-                    let jsonResponse = JSON.parse(xhr.responseText);
-                    console.log(jsonResponse);
-
-                    window.open("/", "_self");
-                }
-                else if(xhr.status === 404){
-                    alert("Unable to delete Snippet");
-                }
-            } else {
-                console.log("Didn't processes");
-            }
-        }
-
-        event.preventDefault();
+                this.setState({
+                    password: response["password"],
+                    languageText: response["language"].toString(),
+                    timestampText: unixDate.toLocaleString(),
+                    info: response["info"],
+                    text: response["text"],
+                });
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     editInfo(event) {
@@ -186,6 +78,7 @@ class Snippet extends Component {
 
         let extThis = this;
 
+        // TODO this is bad bad should be done in the backend
         if (promptResp === this.state.password) {
             this.setState({
                 inputtedPass: promptResp,
@@ -237,11 +130,40 @@ class Snippet extends Component {
     }
 
     infoSubmit(event) {
-        Snippet.textToDB(this.state.url + "/updateInfo", "info", this.state.info, this.state.inputtedPass);
+        let infoText = sanitizeText(this.state.info);
+
+        let data = {};
+        data["info"] = infoText;
+        callLambda(this, this.state.url + "/updateInfo", "POST",  data, this.state.inputtedPass)
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     textSubmit(event) {
-        Snippet.textToDB(this.state.url + "/updateText", "text", this.state.text);
+        let textText = sanitizeText(this.state.text);
+
+        let data = {};
+        data["text"] = textText;
+        callLambda(this, this.state.url + "/updateText", "POST", data)
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    deleteSnippet(event) {
+        let delURL = this.state.url + "/deleteSnippet"
+        callLambda(this, delURL, "POST", {}, this.state.inputtedPass)
+            .then(response => {
+                if (response !== null) {
+                    window.open("/", "_self");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        event.preventDefault();
     }
 
     // Set language from dropdown select
@@ -251,24 +173,6 @@ class Snippet extends Component {
         this.setState({
             languageText : lang,
         });
-    }
-
-    // Create comment
-    createComment(){
-        // Get the selected lines on ACE
-
-        // let editor = document.getElementById('mainEditor');
-        let linesSelected = this.refs.mainEditor.getValue();
-        console.log(linesSelected);
-        // let start = linesSelected[0].start.row + 1;
-        // let end = linesSelected[0].end.row + 1;
-
-        // console.log("Start line: " + start);
-        // console.log("End line: " + end);
-               
-        // Get the text on the textbox
-
-        // Send the HTTP Request to DB
     }
 
     render() {
@@ -286,7 +190,7 @@ class Snippet extends Component {
                 <div className="column">
                     <div className="snippetsection">
                         <div id="infoDiv" className="leftCol">
-                            <h2 class="infoTitle">Snippet Information:</h2>
+                            <h2 className="infoTitle">Snippet Information:</h2>
                             <br/>
                             <form id="infoForm">
                                 <p id="infoArea">{this.state.info}</p>
@@ -296,28 +200,28 @@ class Snippet extends Component {
                             <div id="accessory">
                                 <h5 id="languageText">Language: {this.state.languageText}</h5>
                            </div>
-                            {/* <button id="infoButton" type="button" onClick={this.editInfo}>Edit Info</button> */}
-                            <button id="infoButton" type="button" onClick={this.createComment}>Edit Info</button>
+                            <button id="infoButton" type="button" onClick={this.editInfo}>Edit Info</button>
                         </div>
                     </div>
                     <div className="snippetsection">
-                        <div class="flexContainerBar">
-                            <div class="equalCol">
+                        <div className="flexContainerBar">
+                            <div className="equalCol">
                                 <LangDropdown func={this.setLanguage} />
                             </div>
-                            <div class="equalCol">
+                            <div className="equalCol">
                                 <h3 id="snippetId">Snippet ID: {this.state.snippetID}</h3>
                             </div>
-                            <div class="equalCol">
-                                <h3 class="timeTitle" id="timestampText">Created: {this.state.timestampText}</h3>
+                            <div className="equalCol">
+                                <h3 className="timeTitle" id="timestampText">Created: {this.state.timestampText}</h3>
                             </div>
                         </div>
                     </div>
                     <div className="snippetsection">
-                        <div class="break"></div>
+                        <div className="break"></div>
                         <div id="textDiv" className="leftCol">
+                            <h5 className="commentsTitle">Text</h5>
+                            <br/>
                             <AceEditor
-                                ref="mainEditor"
                                 placeholder=""
                                 mode={this.state.languageText}
                                 width={"100%"}
@@ -331,44 +235,44 @@ class Snippet extends Component {
                                 value={this.state.text}
                                 style={reactStyle.aceStyle}
                                 setOptions={{
-                                    enableBasicAutocompletion: false,
-                                    enableLiveAutocompletion: false,
-                                    enableSnippets: false,
+                                    // enableBasicAutocompletion: false,
+                                    // enableLiveAutocompletion: false,
+                                    // enableSnippets: false,
                                     showLineNumbers: true,
                                     tabSize: 2,
                                 }}/>
                         </div>
                         <div id="commentDiv" className="rightCol">
-                            <h5 class="commentsTitle">Comments</h5>
+                            <h5 className="commentsTitle">Comments</h5>
                             <br/>
-                            <div id="commentArea"></div>
+                            <CommentList snipID={this.state.snippetID}/>
                             <button type="button" onClick={this.textSubmit}>Save Text</button>
                         </div>
                     </div>
                     <div className="snippetsection" id="contactDiv">
-                        <h2 class="contactTitle">Contact Us</h2>
-                        <div class="flexContainerBar">
-                            <a class="iconStyled" href="https://github.com/JosuContrer/infinite-monkey-snippet">
+                        <h2 className="contactTitle">Contact Us</h2>
+                        <div className="flexContainerBar">
+                            <a className="iconStyled" href="https://github.com/JosuContrer/infinite-monkey-snippet">
                                 <FontAwesomeIcon  icon={faGithub} />
                             </a>
-                            <i class="iconStyled">
+                            <i className="iconStyled">
                                 <FontAwesomeIcon icon={faLinkedin} />
-                                <ul class="linkedInContent">
+                                <ul className="linkedInContent">
                                     <a href="https://www.linkedin.com/in/josue-contreras-127238141/">Josue</a><br></br>
                                     <a href="https://www.linkedin.com/in/nicholas-delli-carpini-4a9400171/">Nick</a><br></br>
                                     <a href="https://www.linkedin.com/in/william-c-32a424108/">Will</a><br></br>
                                 </ul>
                             </i>
-                            <i class="iconStyled">
+                            <i className="iconStyled">
                                 <FontAwesomeIcon  icon={faInstagram} />
-                                <ul class="linkedInContent">
+                                <ul className="linkedInContent">
                                     <a href="https://www.instagram.com/contrerasjosu/">Josue</a><br></br>
                                     <a href="">Nick</a><br></br>
                                     <a href="">Will</a><br></br>
                                 </ul>
                             </i>
                         </div>
-                        <p class="contactInfo">Authors: Josue C, Nick D, Will C</p>
+                        <p className="contactInfo">Authors: Josue C, Nick D, Will C</p>
                     </div>
             </div>
             </div>

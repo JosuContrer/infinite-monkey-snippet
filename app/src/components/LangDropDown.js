@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import './LangDropDown.css';
 
 const LangDropDown = (props) => {
     
@@ -41,7 +40,7 @@ const LangDropDown = (props) => {
             <DropdownMenu>
                 <DropdownItem header>Supported</DropdownItem>
                 {languages.map((languages, index)=>{
-                    return <DropdownItem class="languageDropdown" onClick={props.func}>{languages}</DropdownItem>
+                    return <DropdownItem className="languageDropdown" onClick={props.func}>{languages}</DropdownItem>
                 })}
             </DropdownMenu>
         </Dropdown>

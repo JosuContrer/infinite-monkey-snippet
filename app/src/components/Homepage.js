@@ -115,11 +115,11 @@ class Homepage extends Component {
             // className="block-example border border-dark"
             <div id="homepage">
                
-                    <div class="column">
+                    <div className="column">
                         <h1>Infinite Monkey Snippet</h1>
                         <img className="main_logo" src={logo} alt="Logo"/>
                     </div>
-                    <div class="column">
+                    <div className="column">
                         <ul>
                         <Form>
                             <FormGroup className="input_group">

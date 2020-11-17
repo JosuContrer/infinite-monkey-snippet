@@ -1,13 +1,12 @@
-import React, {useState} from 'react'
+import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faKeyboard, faTimes, faBars } from '@fortawesome/free-solid-svg-icons'
-import "./NavBar.css";
+import { faKeyboard,} from '@fortawesome/free-solid-svg-icons'
 
 function NavBar() {
-    const [click, setClick] = useState(false);
-
-    const toggleMenu = () => setClick(!click);
-    const goHome = () => {window.open("/", "_self");}
+    // const [click, setClick] = useState(false);
+    //
+    // const toggleMenu = () => setClick(!click);
+    // const goHome = () => {window.open("/", "_self");}
 
     // Responsive Navbar to scroll 
     //      -waits for document to be loaded
@@ -15,8 +14,8 @@ function NavBar() {
     document.addEventListener('DOMContentLoaded', function(){
 
         window.addEventListener('scroll', responsiveNavBar);
-        var navbar = document.getElementById('navBar');
-        var logo = document.getElementById('mainLogo');
+        let navbar = document.getElementById('navBar');
+        let logo = document.getElementById('mainLogo');
 
         function responsiveNavBar(){
             if(window.scrollY > 30){
@@ -31,9 +30,9 @@ function NavBar() {
 
     return (
         <>
-            <div id='navBar' class='navbar'>
-                <div class='navbar-container'>
-                    <a id='mainLogo' class='navbar-logo' href='/'>
+            <div id='navBar' className='navbar'>
+                <div className='navbar-container'>
+                    <a id='mainLogo' className='navbar-logo' href='/'>
                        <FontAwesomeIcon icon={faKeyboard}/> Infinite Monkey Snippet 
                     </a>
                     {/* <div class='menu-icon' onClick={toggleMenu}>

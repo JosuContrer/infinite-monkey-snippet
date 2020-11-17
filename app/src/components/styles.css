@@ -1,6 +1,30 @@
 /*--------- Fonts ---------------*/
 @import url('https://fonts.googleapis.com/css2?family=Shrikhand&display=swap');
 
+/* -------- Scroll Bar -------- */
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 3px grey; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: grey; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FCCD04; 
+  }
+
+/* --------- Global ------------ */
 body {
     background-color: #FCCD04;
     height: 100%;
@@ -10,6 +34,60 @@ html {
     height: 100%;
 }
 
+/* ---------- NAVBAR ---------- */
+.navbar{
+    background-color: #FCCD04;
+    height: 80px;
+    transition: 0.8s;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    bottom: 0;
+}
+
+.navbar .navbar-container{
+    display: flex;
+    height: 100%;
+    justify-content: baseline;
+    flex-wrap: nowrap;
+    align-items: baseline;
+}
+
+.navbar .navbar-container .navbar-logo {
+    color: #A63A50;
+    font-family: 'Shrikhand', cursive;
+    font-size: 35px;
+    align-items: flex-start;
+    margin-top: 10px;
+    margin-left: 10px;
+    transition: 0.8s;
+}
+
+.navbar .navbar-container .navbar-logo {
+    color: #A63A50;
+    font-family: 'Shrikhand', cursive;
+    font-size: 35px;
+    align-items: flex-start;
+    margin-top: 10px;
+    margin-left: 10px;
+    transition: 0.8s;
+}
+
+.navbar .navbar-container .menu-icon{
+    color: white;
+    font-size: 40px;
+    position: absolute;
+    align-self: end;
+    top: 0;
+    right: 0;
+    margin-top: 10px;
+    margin-right: 20px;
+}
+
+.navbar .navbar-container a:hover {
+    color: white; /*the default color*/
+}
 /* ---------- HOMEPAGE ---------- */
 
 #homepage {
@@ -240,6 +318,7 @@ html {
     color: white;
     background: #272822;
     margin-block-end: 0;
+    overflow-y: scroll;
 }
 
 #snippetpage .snippetsection #langDiv #accessory {
@@ -270,17 +349,21 @@ html {
     border-radius: 10px;
 }
 
-#snippetpage .snippetsection #langDiv #buttDiv {
+#snippetpage .snippetsection #langDiv #buttDiv,
+#snippetpage .snippetsection #commentArea #newComDiv{
     display: flex;
     justify-content: space-between;
 }
 
-#snippetpage .snippetsection #langDiv #buttDiv button {
+#snippetpage .snippetsection #langDiv #buttDiv button,
+#snippetpage .snippetsection #commentArea #newComDiv button{
     max-width: 48%;
     min-width: 48%;
+    font-size: 15px;
 }
 
-#snippetpage .snippetsection #langDiv #buttDiv #deleteButton {
+#snippetpage .snippetsection #langDiv #buttDiv #deleteButton,
+#snippetpage .snippetsection #commentArea #newComDiv #cancelButt {
     background-color: red;
 }
 
@@ -293,7 +376,9 @@ html {
 	background: #495057;
 	padding: 0.5em;
     border-radius: 10px;
-	min-height: 540px;
+    min-height: 580px;
+    max-height: 580px;
+    overflow-y: scroll;
 }
 
 #snippetpage #contactDiv {

@@ -61,6 +61,23 @@ public class CommentDAO {
 		return retList;
 	}
 	
+	public ArrayList<Comment> getAllComments() throws Exception {
+		ArrayList<Comment> retList = new ArrayList<Comment>();
+		
+		PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + table + ";");
+		
+		ResultSet result = ps.executeQuery();
+		
+		while(result.next()) {
+			retList.add(SQLToComment(result));
+		}
+		
+		result.close();
+		ps.close();
+		
+		return retList;
+	}
+	
 	public boolean deleteComment(Snippet snip, String id, String password) throws Exception {	
 		int numUpdated = 2;
 		
