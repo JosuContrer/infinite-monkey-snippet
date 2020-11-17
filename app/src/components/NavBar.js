@@ -31,9 +31,9 @@ function NavBar() {
 
     return (
         <>
-            <div id='navBar' class='navbar'>
-                <div class='navbar-container'>
-                    <a id='mainLogo' class='navbar-logo' href='/'>
+            <div id='navBar' className='navbar'>
+                <div className='navbar-container'>
+                    <a id='mainLogo' className='navbar-logo' href='/'>
                        <FontAwesomeIcon icon={faKeyboard}/> Infinite Monkey Snippet 
                     </a>
                     {/* <div class='menu-icon' onClick={toggleMenu}>
