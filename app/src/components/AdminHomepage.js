@@ -1,0 +1,29 @@
+import React, {Component} from "react";
+import './AdminStyles.css';
+import { Button} from "reactstrap";
+
+class AdminHomepage extends Component{
+    // constructor(props) {
+    //     super(props);
+    // }
+
+    render() {
+        return(
+            <div id="AdminPage">
+                <h1 className="page-title">Welcome Administrator</h1>
+                <div class="form-container">
+                    <input class="input-container" type="text" required/>
+                    <label class="input-label">
+                        <span class="input-name">Password</span>
+                    </label>
+                </div>
+                <div class="button-container">
+                <Button id="pass-button" outline color="primary">Hello</Button>
+                </div>
+            </div>
+
+        );
+    }
+}
+
+export default AdminHomepage;

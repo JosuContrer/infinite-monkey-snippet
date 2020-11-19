@@ -1,8 +1,5 @@
 import React, {Component} from "react";
-import {Form, FormGroup, Label, Input, FormFeedback, FormText,
-        Col, Row, Container,
-        Jumbotron, Button
-} from "reactstrap"
+import {Form, FormGroup, Input, FormFeedback, FormText, Button} from "reactstrap"
 import logo from './images/logo.png'
 
 class Homepage extends Component {
