@@ -1,0 +1,10 @@
+#AdminMainPage{
+    display: flex;
+    background-color: white;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.admin-menu-bar{
+    align-self: flex-start;
+}
