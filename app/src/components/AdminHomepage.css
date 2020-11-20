@@ -1,3 +1,4 @@
+/* Administrators Home Page Style Sheet */
 #AdminPage{
     display: flex;
     height: 100vh;
@@ -10,16 +11,19 @@
 .page-title {
     position: absolute;
     text-align: center;
+    font-size: 70px;
     width: 100%;
     left: 0;
     top: 10%;
-    padding: 5px;
+    padding: 10px;
 }
 
+/* Password form */
 .form-container{
-    width: 15%;
+    width: 20vw;
     position: relative;
     height: 60px;
+
 }
 
 .input-container {
@@ -45,7 +49,7 @@
 }
 
 .input-container:hover{
-    border-bottom: 3px solid royalblue;
+    border-bottom: 3px solid limegreen;
 }
 
 .input-name{
@@ -59,10 +63,11 @@
 
 .form-container .input-container:focus + .input-label .input-name,
 .form-container .input-container:valid +.input-label .input-name{
-    transform: translateY(-90%);
-    color: royalblue;
+    transform: translateY(-140%);
+    color: limegreen;
 }
 
+/* Submit Password Button */
 #pass-button{
     width: 200px;
     left: 100px;
@@ -77,9 +82,14 @@
     left: 0;
 }
 
+/* Mobile Version */
 @media only screen and (max-width: 600px) {
+    .page-title {
+        font-size: 50px;
+    }
+
     .form-container {
-        width: 50%;
+        width: 50vw;
     }
 }
 

@@ -1,10 +1,118 @@
+/* Administrators Main Page Style Sheet */
 #AdminMainPage{
     display: flex;
     background-color: white;
     flex-direction: column;
     height: 100vh;
+    min-width: 100vw;
 }
 
+/* Menu Bar Division */
 .admin-menu-bar{
     align-self: flex-start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: seagreen;
+    color: white;
+    width: 100vw;
+    min-height: fit-content;
+}
+
+.admin-menu-title{
+    font-weight: bold;
+    font-size: 40px;
+    text-align: center;
+    line-height: normal;
+    margin: 30px;
+}
+
+.admin-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    min-height: 90vh;
+}
+
+/* Stale Date Selector Division */
+.date-select-container{
+    margin-top: 10vh;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: baseline;
+}
+
+.date-select-title{
+    margin: 5px 5px 5px 10px;
+    font-size: 20px;
+    font-weight: bold;
+    align-self: baseline;
+}
+
+.date-select-calendar{
+    margin: 5px;
+}
+
+.date-select-button{
+    margin: 5px 10px 5px 5px;
+}
+
+/* List of Snippets Division */
+.snippet-list-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(68, 168, 112, 0.6);
+    margin-top: 5vh;
+    padding: 10px;
+    border-radius: 15px;
+    width: max-content;
+}
+
+.snippet-list-title{
+    margin: 10px;
+    font-size: 30px;
+    font-weight: bold;
+    color: black;
+}
+
+.snippet-list{
+    background-color: white;
+    overflow: auto;
+    min-height: 50vh;
+    max-height: 200px;
+    max-width: 800px;
+    min-width: 800px;
+    border-radius: 15px;
+    padding: 10px;
+    margin: 10px;
+    border: solid 2px #4b565f;
+
+    font-size: 25px;
+}
+
+/* Mobile Version */
+@media only screen and (max-width: 900px) {
+
+    .admin-menu-bar{
+        min-height: fit-content;
+    }
+
+    .snippet-list{
+        background-color: white;
+        overflow: auto;
+        min-height: 50vh;
+        max-height: 200px;
+        max-width: 80vw;
+        min-width: 80vw;
+        border-radius: 15px;
+        padding: 10px;
+        margin: 10px;
+        border: solid 2px #4b565f;
+
+        font-size: 18px;
+    }
 }

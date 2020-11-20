@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import './AdminStyles.css';
+import './AdminHomepage.css';
 import { Button} from "reactstrap";
 
 class AdminHomepage extends Component{
@@ -18,7 +18,7 @@ class AdminHomepage extends Component{
                     </label>
                 </div>
                 <div class="button-container">
-                <Button id="pass-button" outline color="primary">Hello</Button>
+                <Button id="pass-button" outline color="primary">Enter</Button>
                 </div>
             </div>
 
