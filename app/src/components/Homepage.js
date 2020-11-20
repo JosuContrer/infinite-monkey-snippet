@@ -1,6 +1,7 @@
 import React, {Component} from "react";
-import {Form, FormGroup, Input, FormFeedback, FormText, Button} from "reactstrap"
-import logo from './images/logo.png'
+import {Form, FormGroup, Input, FormFeedback, FormText, Button} from "reactstrap";
+import logo from './images/logo.png';
+import './styles.css';
 
 class Homepage extends Component {
     constructor(props) {
@@ -110,15 +111,18 @@ class Homepage extends Component {
     render() {
         return (
             // className="block-example border border-dark"
-            <div id="homepage">
-               
-                    <div className="column">
-                        <h1>Infinite Monkey Snippet</h1>
-                        <img className="main_logo" src={logo} alt="Logo"/>
+            <div id="homepage" className="homepage">
+                    <div className="l-column">
+                        <div className="homepage-title-container">
+                            <h1>Infinite Monkey Snippet</h1>
+                        </div>
+                        <div className="homepage-title-container">
+                            <img className="main_logo" src={logo} alt="Logo"/>
+                        </div>
                     </div>
-                    <div className="column">
+                    <div className="r-column">
                         <ul>
-                        <Form>
+                        <Form className="input-form">
                             <FormGroup className="input_group">
                                 <h4>Create a Snippet</h4>
                                 <Input valid  type="text" value={this.state.password} onChange={this.passChanged} />

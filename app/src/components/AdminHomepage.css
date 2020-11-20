@@ -85,7 +85,7 @@
 /* Mobile Version */
 @media only screen and (max-width: 600px) {
     .page-title {
-        font-size: 50px;
+        font-size: 40px;
     }
 
     .form-container {

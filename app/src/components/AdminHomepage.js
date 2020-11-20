@@ -12,13 +12,13 @@ class AdminHomepage extends Component{
             <div id="AdminPage">
                 <h1 className="page-title">Welcome Administrator</h1>
                 <div class="form-container">
-                    <input class="input-container" type="text" required/>
+                    <input class="input-container" type="password" required/>
                     <label class="input-label">
                         <span class="input-name">Password</span>
                     </label>
                 </div>
                 <div class="button-container">
-                <Button id="pass-button" outline color="primary">Enter</Button>
+                    <Button id="pass-button" outline color="primary">Enter</Button>
                 </div>
             </div>
 
