@@ -8,7 +8,7 @@
     font-family: sans-serif;
 }
 
-.page-title {
+#AdminPage .page-title {
     position: absolute;
     text-align: center;
     font-size: 70px;
@@ -19,14 +19,14 @@
 }
 
 /* Password form */
-.form-container{
+#AdminPage .form-container{
     width: 20vw;
     position: relative;
     height: 60px;
 
 }
 
-.input-container {
+#AdminPage .input-container {
     height: 100%;
     width: 100%;
     color: slategrey;
@@ -38,7 +38,7 @@
     border-bottom: 3px solid black;
 }
 
-.input-label{
+#AdminPage .input-label{
     position: absolute;
     left: 0;
     bottom: 0;
@@ -48,11 +48,11 @@
     pointer-events: none;
 }
 
-.input-container:hover{
+#AdminPage .input-container:hover{
     border-bottom: 3px solid limegreen;
 }
 
-.input-name{
+#AdminPage .input-name{
     position: absolute;
     bottom: 0;
     left: 0;
@@ -61,19 +61,19 @@
     transition: 0.3s;
 }
 
-.form-container .input-container:focus + .input-label .input-name,
-.form-container .input-container:valid +.input-label .input-name{
+#AdminPage .form-container .input-container:focus + .input-label .input-name,
+#AdminPage .form-container .input-container:valid +.input-label .input-name{
     transform: translateY(-140%);
     color: limegreen;
 }
 
 /* Submit Password Button */
-#pass-button{
+#AdminPage #pass-button{
     width: 200px;
     left: 100px;
 }
 
-.button-container{
+#AdminPage .button-container{
     position: absolute;
     display: flex;
     justify-content: center;
@@ -84,11 +84,11 @@
 
 /* Mobile Version */
 @media only screen and (max-width: 600px) {
-    .page-title {
+    #AdminPage .page-title {
         font-size: 40px;
     }
 
-    .form-container {
+    #AdminPage .form-container {
         width: 50vw;
     }
 }

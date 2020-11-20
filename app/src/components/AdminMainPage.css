@@ -8,7 +8,7 @@
 }
 
 /* Menu Bar Division */
-.admin-menu-bar{
+#AdminMainPage .admin-menu-bar{
     align-self: flex-start;
     display: flex;
     justify-content: center;
@@ -19,7 +19,7 @@
     min-height: fit-content;
 }
 
-.admin-menu-title{
+#AdminMainPage .admin-menu-title{
     font-weight: bold;
     font-size: 40px;
     text-align: center;
@@ -27,7 +27,7 @@
     margin: 30px;
 }
 
-.admin-container{
+#AdminMainPage .admin-container{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -36,7 +36,7 @@
 }
 
 /* Stale Date Selector Division */
-.date-select-container{
+#AdminMainPage .date-select-container{
     margin-top: 10vh;
     display: flex;
     justify-content: center;
@@ -45,23 +45,23 @@
     align-items: baseline;
 }
 
-.date-select-title{
+#AdminMainPage .date-select-title{
     margin: 5px 5px 5px 10px;
     font-size: 20px;
     font-weight: bold;
     align-self: baseline;
 }
 
-.date-select-calendar{
+#AdminMainPage .date-select-calendar{
     margin: 5px;
 }
 
-.date-select-button{
+#AdminMainPage .date-select-button{
     margin: 5px 10px 5px 5px;
 }
 
 /* List of Snippets Division */
-.snippet-list-container{
+#AdminMainPage .snippet-list-container{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -72,14 +72,14 @@
     width: max-content;
 }
 
-.snippet-list-title{
+#AdminMainPage .snippet-list-title{
     margin: 10px;
     font-size: 30px;
     font-weight: bold;
     color: black;
 }
 
-.snippet-list{
+#AdminMainPage .snippet-list{
     background-color: white;
     overflow: auto;
     min-height: 50vh;
@@ -97,11 +97,11 @@
 /* Mobile Version */
 @media only screen and (max-width: 900px) {
 
-    .admin-menu-bar{
+    #AdminMainPage .admin-menu-bar{
         min-height: fit-content;
     }
 
-    .snippet-list{
+    #AdminMainPage .snippet-list{
         background-color: white;
         overflow: auto;
         min-height: 50vh;
