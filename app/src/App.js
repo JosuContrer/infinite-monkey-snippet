@@ -4,7 +4,8 @@ import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Homepage from "./components/Homepage";
 import Snippet from "./components/Snippet";
 import Error from "./components/Error";
-import Testing from "./components/NavBar";
+import AdminHomepage from "./components/AdminHomepage";
+import AdminMainPage from "./components/AdminMainPage";
 
 import 'loaders.css/src/animations/pacman.scss';
 
@@ -16,7 +17,8 @@ class App extends Component {
                     <Switch>
                         <Route path="/" component={Homepage} exact/>
                         <Route path="/snippet" component={Snippet} exact/>
-                        <Route path="/test" component={Testing} exact/>
+                        <Route path="/admin" component={AdminHomepage} exact/>
+                        <Route path="/admin/main" component={AdminMainPage} exact/>
                         <Route component={Error}/>
                     </Switch>
                 </div>
