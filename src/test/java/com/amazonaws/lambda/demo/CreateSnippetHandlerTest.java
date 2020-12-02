@@ -24,13 +24,33 @@ public class CreateSnippetHandlerTest {
 		CreateResponse response = handler.handleRequest(request, createContext("createSnippet"));
 		
 		assertNotNull(response.id);
-		assertEquals("200", response.statusCode);
+		assertEquals(200, response.statusCode);
+	}
+	
+	void testCreateFail(String incoming) {
+		CreateSnippetHandler handler = new CreateSnippetHandler();
+		CreateRequest request = new Gson().fromJson(incoming, CreateRequest.class);
+		CreateResponse response = handler.handleRequest(request, createContext("createSnippet"));
+
+		assertEquals(404, response.statusCode);
 	}
 	
 	@Test
 	public void testCreateSnippet() {
 		String samplePW = "{\"password\": \"testPW\"}";
 		testCreate(samplePW);
+	}
+	
+	@Test
+	public void testCreateNoPW() {
+		String samplePW = "{\"password\": \"\"}";
+		testCreate(samplePW);
+	}
+	
+	@Test
+	public void testCreatePWTooLong() {
+		String samplePW = "{\"password\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}";
+		testCreateFail(samplePW);
 	}
 }
 
