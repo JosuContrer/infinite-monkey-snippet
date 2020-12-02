@@ -7,6 +7,8 @@ import Error from "./components/Error";
 import AdminHomepage from "./components/AdminHomepage";
 import AdminMainPage from "./components/AdminMainPage";
 
+import 'loaders.css/src/animations/pacman.scss';
+
 class App extends Component {
     render() {
         return (
