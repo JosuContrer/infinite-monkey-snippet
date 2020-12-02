@@ -26,7 +26,7 @@ class Snippet extends Component {
             url: initURL,
             snippetID: snippetID,
             password: "",
-            languageText: "java",
+            languageText: "",
             timestampText: "",
             info: "",
             text: "",
@@ -56,16 +56,22 @@ class Snippet extends Component {
         // GET SNIPPET DATA
         Snippet.callLambda(this, this.state.url, "GET")
             .then(response => {
-                let timestampNum = response["timestamp"];
-                let unixDate = new Date(timestampNum);
+                if (Object.keys(response).length === 6) {
+                    let timestampNum = response["timestamp"];
+                    let unixDate = new Date(timestampNum);
 
-                this.setState({
-                    password: response["password"],
-                    languageText: response["language"],
-                    timestampText: unixDate.toLocaleString(),
-                    info: response["info"],
-                    text: response["text"],
-                });
+                    this.setState({
+                        password: response["password"],
+                        languageText: response["language"],
+                        timestampText: unixDate.toLocaleString(),
+                        info: response["info"],
+                        text: response["text"],
+                    });
+                }
+                else {
+                    alert("Loaded an invalid Snippet - Returning to Homepage")
+                    window.open("/", "_self");
+                }
             })
             .catch(error => {
                 console.log(error);
@@ -191,6 +197,7 @@ class Snippet extends Component {
 
         let data = {};
         data["info"] = infoText;
+        data["lang"] = this.state.languageText;
         Snippet.callLambda(this, this.state.url + "/updateInfo", "POST",  data, this.state.inputtedPass)
             .catch(error => {
                 console.log(error);
@@ -236,10 +243,9 @@ class Snippet extends Component {
 
     // Set language from dropdown select
     setLanguage(event){
-        let lang = event.currentTarget.textContent;
-        console.log("Language selected:" + lang);
+        console.log("Language selected:" + event["value"]);
         this.setState({
-            languageText : lang,
+            languageText : event["value"],
         });
     }
 
@@ -311,7 +317,7 @@ class Snippet extends Component {
                                 }}/>
                         </div>
                         <div id="commentDiv" className="rightCol">
-                            <h5 class="commentsTitle">Comments</h5>
+                            <h5 className="commentsTitle">Comments</h5>
                             <br/>
                             <CommentList snipID={this.state.snippetID} startSel={this.state.startSelection} endSel={this.state.endSelection}/>
                             <button type="button" onClick={this.textSubmit}>Save Text</button>

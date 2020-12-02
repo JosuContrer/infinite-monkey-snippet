@@ -113,8 +113,11 @@ class Homepage extends Component {
                     let jsonResponse = JSON.parse(xhr.responseText);
                     console.log(jsonResponse);
 
-                    if (Object.keys(jsonResponse).length === 6){
+                    if (Object.keys(jsonResponse).length === 6) {
                         window.open("snippet#" + extThis.state.snippetID, "_self");
+                    }
+                    else {
+                        alert("Please enter a valid Snippet ID");
                     }
 
                 }else if(xhr.status === 400 || xhr.status === 0){
