@@ -9,10 +9,10 @@ public class GetResponse {
 	private String text;
 	private String info;
 	private String password; // TODO: Wait a second do we want to get this!!! maybe we have to change the REST API
-	private int language;
+	private String language;
 	private long timestamp;
 	
-	public GetResponse(int sc, String i, String tx, String io, String pass, int lang, long ts) {
+	public GetResponse(int sc, String i, String tx, String io, String pass, String lang, long ts) {
 		this.statusCode = sc;
 		this.id = i;
 		this.text = tx;
@@ -28,7 +28,7 @@ public class GetResponse {
 		this.text = s.getText();
 		this.info = s.getInfo();
 		this.password = s.getPassword();
-		this.language = s.getLangAsInt();
+		this.language = s.getLang();
 		this.timestamp = s.getTimestamp();
 	}
 	
@@ -66,15 +66,18 @@ public class GetResponse {
 		this.password = password;
 	}
 	
-	public int getLanguage() {
+	public String getLanguage() {
 		return language;
 	}
-	public void setLanguage(int language) {
+	
+	public void setLanguage(String language) {
 		this.language = language;
 	}
+	
 	public long getTimestamp() {
 		return timestamp;
 	}
+	
 	public void setTimestamp(int timestamp) {
 		this.timestamp = timestamp;
 	}

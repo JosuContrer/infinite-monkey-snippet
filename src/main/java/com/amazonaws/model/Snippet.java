@@ -11,7 +11,7 @@ public class Snippet {
 	String password;
 	String info;
 	String text;
-	Language lang;
+	String lang;
 	
 	public Snippet(ArrayList<Snippet> DBSnippets, String password) {
 		this.id = generateNewID(DBSnippets);
@@ -19,16 +19,16 @@ public class Snippet {
 		this.password = password;
 		this.info = "";
 		this.text = "";
-		this.lang = null;
+		this.lang = "";
 	}
 	
-	public Snippet(String id, long timestamp, String password, String info, String text, int lang) {
+	public Snippet(String id, long timestamp, String password, String info, String text, String lang) {
 		this.id = id;
 		this.timestamp = timestamp;
 		this.password = password;
 		this.info = info;
 		this.text = text;
-		this.lang = Language.intToLang(lang);
+		this.lang = lang;
 	}
 	
 	public String getID() {
@@ -63,25 +63,12 @@ public class Snippet {
 		this.text = text;
 	}
 	
-	public Language getLang() {
+	public String getLang() {
 		return this.lang;
 	}
 	
-	public int getLangAsInt() {
-		if (this.lang == null) {
-			return -1;
-		}
-		else {
-			return this.lang.langToInt();
-		}
-	}
-	
-	public void setLang(Language lang) {
+	public void setLang(String lang) {
 		this.lang = lang;
-	}
-	
-	public void setLang(int langInt) {
-		this.lang = Language.intToLang(langInt);
 	}
 	
 	private String generateID() {
