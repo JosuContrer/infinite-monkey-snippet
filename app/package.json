@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.1.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
@@ -13,9 +14,13 @@
     "@testing-library/user-event": "^12.1.10",
     "ace-builds": "^1.4.12",
     "bootstrap": "^4.5.3",
+    "loaders.css": "^0.1.2",
+    "node-sass": "^4.0.0",
+    "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-ace": "^9.2.0",
     "react-dom": "^17.0.1",
+    "react-loaders": "^3.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.0",
     "reactstrap": "^8.7.1",
@@ -44,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@emotion/core": "^11.0.0"
   }
 }

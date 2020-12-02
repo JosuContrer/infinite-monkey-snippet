@@ -3,7 +3,8 @@ import {Form, FormGroup, Label, Input, FormFeedback, FormText,
         Col, Row, Container,
         Jumbotron, Button
 } from "reactstrap"
-import logo from './images/logo.png'
+import logo from './images/logo.png';
+import Loader from 'react-loaders';
 
 class Homepage extends Component {
     constructor(props) {
@@ -14,7 +15,10 @@ class Homepage extends Component {
         this.state = {
             url: url,
             password: "",
-            snippetID: ""
+            snippetID: "",
+
+            createLoading: false,
+            loadLoading: false,
         };
 
         this.passChanged = this.passChanged.bind(this);
@@ -49,10 +53,18 @@ class Homepage extends Component {
         //send data as JSON
         xhr.send(json);
 
+        this.setState({
+            createLoading: true,
+        });
+
         // Process the response an update GUI
         xhr.onloadend = function() {
             console.log(xhr);
             if(xhr.readyState === XMLHttpRequest.DONE){
+                extThis.setState({
+                    createLoading: false,
+                });
+
                 if(xhr.status === 200){
                     console.log("XHR: " + xhr.responseText);
                     let jsonResponse = JSON.parse(xhr.responseText);
@@ -65,7 +77,7 @@ class Homepage extends Component {
                     //window.location.href = window.location.href + "snippet#" + extThis.state.snippetID;
 
                 }
-                else if(xhr.status === 400){
+                else if(xhr.status === 400 || xhr.status === 0){
                     alert("Unable to create Snippet");
 
                 }
@@ -86,10 +98,18 @@ class Homepage extends Component {
         //send data as JSON
         xhr.send();
 
+        this.setState({
+            loadLoading: true,
+        });
+
         // Process the response an update GUI
         xhr.onloadend = function() {
             console.log(xhr);
             if(xhr.readyState === XMLHttpRequest.DONE){
+                extThis.setState({
+                    loadLoading: false,
+                });
+
                 if(xhr.status === 200){
                     console.log("XHR: " + xhr.responseText);
                     let jsonResponse = JSON.parse(xhr.responseText);
@@ -99,8 +119,8 @@ class Homepage extends Component {
                         window.open("snippet#" + extThis.state.snippetID, "_self");
                     }
 
-                }else if(xhr.status === 400){
-                    alert("Unable to create Snippet");
+                }else if(xhr.status === 400 || xhr.status === 0){
+                    alert("Please enter a valid Snippet ID");
                 }
             } else {
                 alert("What happened?")
@@ -127,7 +147,12 @@ class Homepage extends Component {
                                 <Input valid  type="text" value={this.state.password} onChange={this.passChanged} />
                                 <FormFeedback  className="formF">Good Password My Dude!</FormFeedback>
                                 <FormText className="formF">Note: Password is Optional</FormText>
-                                <Button outline color="primary" onClick={this.createSnippet}>Create Snippet</Button>
+                                { this.state.createLoading
+                                    ? <div className="loaderDiv">
+                                        <Loader type={"pacman"} />
+                                    </div>
+                                    : <Button outline color="primary" onClick={this.createSnippet}>Create Snippet</Button>
+                                }
                             </FormGroup>
                             
                             <FormGroup className="input_group">
@@ -135,7 +160,12 @@ class Homepage extends Component {
                                 <Input type="text" value={this.state.snippetID} onChange={this.idChanged}/>
                                 <FormFeedback valid className="formF">Nice Snippet ID</FormFeedback>
                                 <br></br>
-                                <Button outline color="primary" onClick={this.loadSnippet}>Enter</Button>
+                                { this.state.loadLoading
+                                    ? <div className="loaderDiv">
+                                        <Loader type={"pacman"} />
+                                    </div>
+                                    : <Button outline color="primary" onClick={this.loadSnippet}>Enter</Button>
+                                }
                             </FormGroup>
                         </Form>
                         </ul>

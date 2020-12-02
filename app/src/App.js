@@ -6,6 +6,8 @@ import Snippet from "./components/Snippet";
 import Error from "./components/Error";
 import Testing from "./components/NavBar";
 
+import 'loaders.css/src/animations/pacman.scss';
+
 class App extends Component {
     render() {
         return (
