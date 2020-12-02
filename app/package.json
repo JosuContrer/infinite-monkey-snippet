@@ -19,7 +19,6 @@
     "prop-types": "^15.7.2",
     "input-moment": "^0.4.0",
     "moment": "^2.29.1",
-    "node-sass": "^5.0.0",
     "react": "^17.0.1",
     "react-ace": "^9.2.0",
     "react-calendar": "^3.2.1",
@@ -58,8 +57,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@emotion/core": "^11.0.0"
   }
 }

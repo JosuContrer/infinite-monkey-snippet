@@ -36,14 +36,14 @@ html {
     height: 100%;
 }
 
-#root {
-    background-color: #212529;
-}
-
 .loaderDiv {
-    display: grid;
+    display: inline-block;
     padding-top: 20px;
     transform: scale(1.5);
+}
+
+#root {
+    background-color: #212529;
 }
 
 /* ---------- NAVBAR ---------- */
