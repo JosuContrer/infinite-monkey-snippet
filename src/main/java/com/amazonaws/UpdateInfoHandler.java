@@ -30,6 +30,7 @@ public class UpdateInfoHandler implements RequestHandler<UpdateInfoRequest, Upda
 			
 			Snippet snippet = snipdao.getSnippet(input.id);
 			snippet.setInfo(input.info);
+			snippet.setLang(input.lang);
 			if (snipdao.updateSnippetInfo(snippet, input.password)){
 				response = new UpdateInfoResponse(200);
 			} else {
