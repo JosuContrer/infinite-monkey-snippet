@@ -20,7 +20,7 @@ public class SnippetDAO {
 		long timestamp = result.getLong("timestamp");
 		String password = result.getString("password");
 		String info = result.getString("info");
-		int lang = result.getInt("lang");
+		String lang = result.getString("lang");
 		Blob textBlob = result.getBlob("text");
 		String text = new String(textBlob.getBytes(1L, (int) textBlob.length()));
 		
@@ -74,9 +74,10 @@ public class SnippetDAO {
 		int numUpdated = 2;
 		
 		if (snip.isPassword(password)) {
-			PreparedStatement ps = conn.prepareStatement("UPDATE " + table + " SET info=? WHERE id=?;");
+			PreparedStatement ps = conn.prepareStatement("UPDATE " + table + " SET info=?, lang=? WHERE id=?;");
 			ps.setString(1, snip.getInfo());
-			ps.setString(2, snip.getID());
+			ps.setString(2, snip.getLang());
+			ps.setString(3, snip.getID());
 			
 			numUpdated = ps.executeUpdate();
 			ps.close();
@@ -114,7 +115,7 @@ public class SnippetDAO {
 		ps.setLong(2, snip.getTimestamp());
 		ps.setString(3,  snip.getPassword());
 		ps.setString(4, snip.getInfo());
-		ps.setInt(5, snip.getLangAsInt());
+		ps.setString(5, snip.getLang());
 		ps.setBlob(6, snipTextToBlob(snip));
 		
 		ps.execute();

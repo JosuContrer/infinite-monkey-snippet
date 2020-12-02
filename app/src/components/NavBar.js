@@ -32,7 +32,7 @@ function NavBar() {
         <>
             <div id='navBar' className='navbar'>
                 <div className='navbar-container'>
-                    <a id='mainLogo' className='navbar-logo' href='/'>
+                    <a className='navbar-logo' id='mainLogo' href='/'>
                        <FontAwesomeIcon icon={faKeyboard}/> Infinite Monkey Snippet 
                     </a>
                     {/* <div class='menu-icon' onClick={toggleMenu}>
