@@ -469,14 +469,16 @@ html {
 #snippetpage .snippetsection #langDiv #buttDiv,
 #snippetpage .snippetsection #commentArea #newComDiv{
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
 }
 
 #snippetpage .snippetsection #langDiv #buttDiv button,
 #snippetpage .snippetsection #commentArea #newComDiv button{
-    max-width: 48%;
-    min-width: 48%;
+    min-width: min-content;
     font-size: 15px;
+    flex-grow: 1;
+    margin-left: 4px;
 }
 
 #snippetpage .snippetsection #langDiv #buttDiv #deleteButton,
