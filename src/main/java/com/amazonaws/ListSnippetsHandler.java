@@ -22,7 +22,7 @@ public class ListSnippetsHandler implements RequestHandler<ListRequest, ListResp
 			context.getLogger();
 		}
 		
-		// Admin Pass
+		// Check for admin privileges
 		String aPass = System.getenv("snippetAdminPass");
 		
 		if(aPass == null) {

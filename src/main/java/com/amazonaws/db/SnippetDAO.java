@@ -77,6 +77,19 @@ public class SnippetDAO {
 		return (numUpdated == 1);
 	}
 	
+	public boolean deleteStaleSnippets(long staleTime) throws Exception {
+		
+		int numUpdated = 2;
+		
+		PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE timestamp < ?;");
+		ps.setLong(1, staleTime);	
+		numUpdated = ps.executeUpdate();
+		ps.close();
+	
+		return (numUpdated == 1);
+	}
+	
+	
 	public boolean updateSnippetInfo(Snippet snip, String password) throws Exception {
 		
 		int numUpdated = 2;
