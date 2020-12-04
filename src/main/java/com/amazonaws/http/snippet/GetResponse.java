@@ -37,7 +37,13 @@ public class GetResponse {
 		this.id = i;
 	}
 	
-	
+	public int getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
+	}
 	
 	public String getId() { return id;	}
 	public void setId(String id) {
