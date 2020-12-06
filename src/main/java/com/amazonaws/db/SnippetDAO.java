@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import com.amazonaws.model.Snippet;
+import com.amazonaws.model.SnippetDescriptor;
 
 public class SnippetDAO {
 	java.sql.Connection conn;
@@ -25,6 +26,13 @@ public class SnippetDAO {
 		String text = new String(textBlob.getBytes(1L, (int) textBlob.length()));
 		
 		return new Snippet(id, timestamp, password, info, text, lang);
+	}
+	
+	public SnippetDescriptor SQLToSnippetDescriptor(ResultSet result) throws Exception{
+		String id = result.getString("id");
+		long timestamp = result.getLong("timestamp");
+		
+		return new SnippetDescriptor(id, timestamp);
 	}
 	
 	public Blob snipTextToBlob(Snippet snip) throws Exception {
@@ -68,6 +76,19 @@ public class SnippetDAO {
 		
 		return (numUpdated == 1);
 	}
+	
+	public boolean deleteStaleSnippets(long staleTime) throws Exception {
+		
+		int numUpdated = 2;
+		
+		PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE timestamp < ?;");
+		ps.setLong(1, staleTime);	
+		numUpdated = ps.executeUpdate();
+		ps.close();
+	
+		return (numUpdated == 1);
+	}
+	
 	
 	public boolean updateSnippetInfo(Snippet snip, String password) throws Exception {
 		
@@ -127,6 +148,11 @@ public class SnippetDAO {
 		return true;
 	}
 	
+	/**
+	 * Gets all Snippets in Database with all fields using the Snippet Model.
+	 * @return Array List of Snippets
+	 * @throws Exception
+	 */
 	public ArrayList<Snippet> getAllSnippets() throws Exception {
 		ArrayList<Snippet> retList = new ArrayList<Snippet>();
 
@@ -136,6 +162,29 @@ public class SnippetDAO {
 		
 		while(result.next()) {
 			retList.add(SQLToSnippet(result));
+		}
+		
+		result.close();
+		ps.close();
+		
+		return retList;
+	}
+	
+	/**
+	 * Gets all Snippets in Database with only the snippet ID and timestamp.
+	 * Uses the SnippetDescriptor Model.
+	 * @return Array List of SnippetDescriptors
+	 * @throws Exception
+	 */
+	public ArrayList<SnippetDescriptor> getAllSnippetsDescriptors() throws Exception {
+		ArrayList<SnippetDescriptor> retList = new ArrayList<SnippetDescriptor>();
+
+		PreparedStatement ps = conn.prepareStatement("SELECT id, timestamp FROM " + table + "ORDER BY timestamp ASC;");
+		
+		ResultSet result = ps.executeQuery();
+		
+		while(result.next()) {
+			retList.add(SQLToSnippetDescriptor(result));
 		}
 		
 		result.close();
