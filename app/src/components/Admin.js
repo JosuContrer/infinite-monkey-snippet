@@ -48,8 +48,9 @@ class Admin extends Component{
             data["adminPass"] = this.state.password;
             callLambda(extThis, list_url, "POST", data)
                 .then(response => {
+                    console.log(response);
+
                     if (response["statusCode"] === 200) {
-                        console.log(response);
                         extThis.setState({
                            snippetList: response["snippetList"],
                         });
@@ -74,12 +75,44 @@ class Admin extends Component{
     }
 
     removeStale(e){
-        console.log(this.state.removeDate);
+        let extThis = this;
+        const promptResp = prompt("Would you like to delete all Snippets created before:\n\n" + this.state.removeDate.toLocaleString()
+        + "\n\nEnter 'delete' to confirm");
+
+        if (promptResp != null && promptResp.includes("delete")) {
+            const rm_url = url + "removeStaleSnippets"
+            let data = {};
+            data["adminPass"] = this.state.password;
+            data["staleTime"] = this.state.removeDate.getTime();
+
+            callLambda(extThis, rm_url, "POST", data)
+                .then(response => {
+                    console.log(response);
+
+                    if (response["statusCode"] === 200) {
+                        extThis.setState({
+                            snippetList: response["snippetList"],
+                        });
+
+                        alert("Snippets successfully deleted");
+                    }
+                    else {
+                        alert("Could not delete snippets");
+                    }
+                })
+                .catch(error => {
+                    alert("Something went wrong");
+                    console.log(error);
+                });
+        }
+        else {
+            alert("Please input 'delete' to delete Snippets")
+        }
     }
 
     renderItem(listItem) {
         let unixDate = new Date(listItem["timestamp"]);
-        return <List.Item>
+        return <List.Item key={listItem["id"]}>
             <List.Content href={"snippet#" + listItem["id"]}>
                 <List.Header as='a'>Snippet ID: {listItem["id"]}</List.Header>
                 <List.Description as='a'>Time Created: {unixDate.toLocaleString()}</List.Description>
