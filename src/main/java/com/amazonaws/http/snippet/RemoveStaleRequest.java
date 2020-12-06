@@ -6,11 +6,11 @@ import java.util.Date;
 public class RemoveStaleRequest implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	public String aPass = null;
+	public String adminPass = null;
 	public long staleTime = 0;
 	
 	public String getaPass() {
-		return aPass;
+		return adminPass;
 	}
 	
 	public long getStaleUnixTime() {
@@ -18,7 +18,7 @@ public class RemoveStaleRequest implements Serializable{
 	}
 	
 	public Date getStaleDateTime() {
-		return new Date((long)this.staleTime*1000);
+		return new Date(this.staleTime);
 	}
 	
 	public String toString() {

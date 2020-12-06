@@ -23,7 +23,7 @@ public class ListSnippetsHandler implements RequestHandler<ListRequest, ListResp
 		}
 		
 		// Check for admin privileges
-		String aPass = System.getenv("snippetAdminPass");
+		String aPass = System.getenv("adminPass");
 		
 		if(aPass == null) {
 			logger.log("Env var does not exist for Admin");
@@ -44,7 +44,8 @@ public class ListSnippetsHandler implements RequestHandler<ListRequest, ListResp
 			}
 			
 		}catch(Exception e) {
-			logger.log("Error happened in getting List of Snippets for Admin");
+			logger.log(e.getLocalizedMessage());
+			logger.log("admin pass " + input.getAdminPass());
 			return new ListResponse(404, "Error list snippets");
 		}
 		

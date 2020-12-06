@@ -20,7 +20,7 @@ public class RemoveStaleSnippets implements RequestHandler<RemoveStaleRequest, R
 			logger = context.getLogger();
 		}
 		
-		String aPass = System.getenv("snippetAdminPass");
+		String aPass = System.getenv("adminPass");
 		RemoveStaleResponse response = new RemoveStaleResponse(400);
 		
 		try {
