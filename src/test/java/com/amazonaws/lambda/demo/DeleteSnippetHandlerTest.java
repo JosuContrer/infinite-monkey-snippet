@@ -48,10 +48,12 @@ public class DeleteSnippetHandlerTest {
 	
 	@Test
 	public void testDeleteSnippet() {
+		// create a snippet to delete
 		CreateSnippetHandler handler = new CreateSnippetHandler();
 		CreateRequest req = new Gson().fromJson("{\"password\": \"password\"}", CreateRequest.class);
 		CreateResponse response = handler.handleRequest(req, createContext("createSnippet"));
 		
+		// test that it gets deleted successfully
 		String sample = "{\"id\": \"" + response.id + "\", \"password\": \"password\"}";
 		int sc = 200;
 		testDelete(sample, sc);
@@ -59,14 +61,17 @@ public class DeleteSnippetHandlerTest {
 	
 	@Test
 	public void testDeleteWrongPW() {
+		// create a snippet to delete
 		CreateSnippetHandler handler = new CreateSnippetHandler();
 		CreateRequest req = new Gson().fromJson("{\"password\": \"password\"}", CreateRequest.class);
 		CreateResponse response = handler.handleRequest(req, createContext("createSnippet"));
 		
+		// make sure it doesn't delete if you give it the wrong pw
 		String sample = "{\"id\": \"" + response.id + "\", \"password\": \"pasword\"}";
 		int sc = 405;
 		testDeleteFail(sample, sc);
 		
+		// delete it to clean up
 		String sample2 = "{\"id\": \"" + response.id + "\", \"password\": \"password\"}";
 		int sc2 = 200;
 		testDelete(sample2, sc2);
@@ -74,6 +79,7 @@ public class DeleteSnippetHandlerTest {
 	
 	@Test
 	public void testDeleteWrongID() {
+		// can't delete a snippet whose id is invalid
 		String sample = "{\"id\": \".........\", \"password\": \"password\"}";
 		int sc = 404;
 		testDeleteFail(sample, sc);
