@@ -198,7 +198,7 @@ public class SnippetDAO {
 	public ArrayList<SnippetDescriptor> getAllSnippetsDescriptors() throws Exception {
 		ArrayList<SnippetDescriptor> retList = new ArrayList<SnippetDescriptor>();
 
-		PreparedStatement ps = conn.prepareStatement("SELECT id, timestamp FROM " + table + " ORDER BY timestamp ASC;");
+		PreparedStatement ps = conn.prepareStatement("SELECT id, timestamp FROM " + table + " ORDER BY timestamp DESC;");
 		
 		ResultSet result = ps.executeQuery();
 		

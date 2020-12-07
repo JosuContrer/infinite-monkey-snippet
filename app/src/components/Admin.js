@@ -30,6 +30,7 @@ class Admin extends Component{
 
         this.renderItem = this.renderItem.bind(this);
         this.checkAdminPass = this.checkAdminPass.bind(this);
+        this.deleteSnippet = this.deleteSnippet.bind(this);
     }
 
     componentDidMount() {
@@ -74,7 +75,7 @@ class Admin extends Component{
         });
     }
 
-    removeStale(e){
+    removeStale(e) {
         let extThis = this;
         const promptResp = prompt("Would you like to delete all Snippets created before:\n\n" + this.state.removeDate.toLocaleString()
         + "\n\nEnter 'delete' to confirm");
@@ -110,12 +111,70 @@ class Admin extends Component{
         }
     }
 
+    // TODO - this is unironically the grossest code ive ever written
+    deleteSnippet(snippetID) {
+        let extThis = this;
+        return function(e) {
+            const list_url = url + "listSnippets";
+            const snip_url = url +  snippetID;
+            const del_url = snip_url + "/deleteSnippet";
+            let password = "";
+
+            callLambda(extThis, snip_url, "GET")
+                .then(response => {
+                    if (Object.keys(response).length === 6) {
+                        password = response["password"];
+
+                        callLambda(extThis, del_url, "POST", {}, password)
+                            .then(response => {
+                                if (response !== null) {
+                                    let data = {};
+                                    data["adminPass"] = extThis.state.password;
+
+                                    callLambda(extThis, list_url, "POST", data)
+                                        .then(response => {
+                                            if (response["statusCode"] === 200) {
+                                                extThis.setState({
+                                                    snippetList: response["snippetList"],
+                                                });
+                                            }
+                                            else {
+                                                alert("Could not get Snippets after deletion");
+                                            }
+                                        })
+                                        .catch(error => {
+                                            alert("Something went wrong");
+                                            console.log(error);
+                                        });
+
+                                }
+                            })
+                            .catch(error => {
+                                alert("Something went wrong");
+                                console.log(error);
+                            });
+
+                    }
+                    else {
+                        alert("Could not delete Snippet - Doesn't Exist?")
+                    }
+                })
+                .catch(error => {
+                    alert("Something went wrong");
+                    console.log(error);
+                });
+
+            e.preventDefault();
+        }
+    }
+
     renderItem(listItem) {
         let unixDate = new Date(listItem["timestamp"]);
         return <List.Item key={listItem["id"]}>
-            <List.Content href={"snippet#" + listItem["id"]}>
-                <List.Header as='a'>Snippet ID: {listItem["id"]}</List.Header>
+            <List.Content>
+                <List.Header as='a' href={"snippet#" + listItem["id"]}>Snippet ID: {listItem["id"]}</List.Header>
                 <List.Description as='a'>Time Created: {unixDate.toLocaleString()}</List.Description>
+                <Button color="red" onClick={this.deleteSnippet(listItem["id"])}>X</Button>
             </List.Content>
         </List.Item>;
     }
