@@ -6,27 +6,27 @@ public class DeleteCommentRequest implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	public String snippetId;
-	public String commentId;
+	public String snippetID;
+	public String id;
 	public String password;
 	
 	public String getSnippetId() {
-		return snippetId;
+		return snippetID;
 	}
 	public void setSnippetId(String snippetId) {
-		this.snippetId = snippetId;
+		this.snippetID = snippetId;
 	}
 	public String getCommentId() {
-		return commentId;
+		return id;
 	}
 	public void setCommentId(String commentId) {
-		this.commentId = commentId;
+		this.id = commentId;
 	}
 	public String getPassword() {
 		return password;
 	}
 
 	public String toString() {
-		return "DeleteCommentRequest(" + this.snippetId + ", " + this.commentId + ")";
+		return "DeleteCommentRequest(" + this.snippetID + ", " + this.id + ")";
 	}
 }

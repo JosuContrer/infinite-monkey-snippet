@@ -23,10 +23,10 @@ public class DeleteCommentHandler implements RequestHandler<DeleteCommentRequest
 		
 		try {
 			SnippetDAO snipdao = new SnippetDAO();
-			Snippet snip = snipdao.getSnippet(input.snippetId);
+			Snippet snip = snipdao.getSnippet(input.snippetID);
 			
 			CommentDAO comdao = new CommentDAO();
-			comdao.deleteComment(snip, input.commentId, input.getPassword());
+			comdao.deleteComment(snip, input.id, input.getPassword());
 			response.setStatusCode(200);
 			response.setStatusMessage("Comment deleted!");
 			
