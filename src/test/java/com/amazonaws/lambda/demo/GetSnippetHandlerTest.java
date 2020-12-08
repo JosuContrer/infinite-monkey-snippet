@@ -31,7 +31,7 @@ public class GetSnippetHandlerTest {
 	public void testGetSnippet() {
 		String incoming = "{\"id\": \"78vylcev\"}";
 		int sc = 200;
-		String snipString = "GetSnippet(78vylcev,,,,,1607107682460)";
+		String snipString = "GetSnippet(78vylcev,test,test,,,1607107682460)";
 		testGet(incoming, sc, snipString);
 
 	}

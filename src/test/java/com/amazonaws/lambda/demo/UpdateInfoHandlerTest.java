@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import com.amazonaws.GetSnippetHandler;
 import com.amazonaws.UpdateInfoHandler;
-import com.amazonaws.http.snippet.DeleteSnippetRequest;
 import com.amazonaws.http.snippet.GetRequest;
 import com.amazonaws.http.snippet.GetResponse;
 import com.amazonaws.http.snippet.UpdateInfoRequest;
