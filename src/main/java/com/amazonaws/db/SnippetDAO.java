@@ -77,16 +77,35 @@ public class SnippetDAO {
 		return (numUpdated == 1);
 	}
 	
-	public boolean deleteStaleSnippets(long staleTime) throws Exception {
+	public boolean deleteSnippetNoPass(String id) throws Exception {
 		
 		int numUpdated = 2;
+
+		PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE id=?;");
+		ps.setString(1, id);
 		
-		PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE timestamp < ?;");
-		ps.setLong(1, staleTime);	
 		numUpdated = ps.executeUpdate();
 		ps.close();
-	
+		
 		return (numUpdated == 1);
+	}
+	
+	public ArrayList<String> getStaleSnippetIDs(long staleTime) throws Exception {
+		ArrayList<String> retList = new ArrayList<String>();
+		
+		PreparedStatement ps = conn.prepareStatement("SELECT id FROM " + table + " WHERE timestamp < ?;");
+		ps.setLong(1, staleTime);
+		
+		ResultSet result = ps.executeQuery();
+		
+		while(result.next()) {
+			retList.add(result.getString("id"));
+		}
+		
+		result.close();
+		ps.close();
+		
+		return retList;
 	}
 	
 	
@@ -179,7 +198,7 @@ public class SnippetDAO {
 	public ArrayList<SnippetDescriptor> getAllSnippetsDescriptors() throws Exception {
 		ArrayList<SnippetDescriptor> retList = new ArrayList<SnippetDescriptor>();
 
-		PreparedStatement ps = conn.prepareStatement("SELECT id, timestamp FROM " + table + "ORDER BY timestamp ASC;");
+		PreparedStatement ps = conn.prepareStatement("SELECT id, timestamp FROM " + table + " ORDER BY timestamp DESC;");
 		
 		ResultSet result = ps.executeQuery();
 		

@@ -6,6 +6,7 @@ import AceEditor from "react-ace";
 import NavBar from './NavBar';
 import LangDropdown from './LangDropDown';
 import CommentList from './CommentList';
+import {callLambda, sanitizeText} from "./Utilities";
 
 import "ace-builds/src-noconflict/mode-java";
 import "ace-builds/src-noconflict/theme-monokai";
@@ -54,7 +55,7 @@ class Snippet extends Component {
     componentDidMount() {
 
         // GET SNIPPET DATA
-        Snippet.callLambda(this, this.state.url, "GET")
+        callLambda(this, this.state.url, "GET")
             .then(response => {
                 if (Object.keys(response).length === 6) {
                     let timestampNum = response["timestamp"];
@@ -76,64 +77,6 @@ class Snippet extends Component {
             .catch(error => {
                 console.log(error);
             });
-    }
-
-    static sanitizeText(text) {
-        const backspace = String.fromCharCode(8);
-        const formfeed = String.fromCharCode(12);
-        const newline = String.fromCharCode(10);
-        const carriage = String.fromCharCode(13);
-        const tab = String.fromCharCode(9);
-        const quote = String.fromCharCode(34);
-        const backslash = String.fromCharCode(92);
-
-        let cursedArray = [backslash, backspace, formfeed, newline, carriage, tab, quote];
-        let blessedArray = ['\\', '\\b', '\\f', '\\n', '\\r', '\\t', '\\"']
-
-        let snipText = text.replace(/[\x5c\x08\x0c\x0a\x0d\x09\x22]/g, function(x) {
-            let i = cursedArray.indexOf(x);
-
-            return blessedArray[i];
-        });
-
-        return snipText;
-    }
-
-    static callLambda(extThis, url, type, data=null, password=null) {
-        console.log("Request " + type + " @ " + url);
-
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            xhr.open(type, url, true);
-
-            if (password !== null) {
-                data["password"] = password;
-            }
-
-            xhr.onload = () => {
-                if(xhr.status >= 200 && xhr.status < 300){
-                    console.log("XHR: " + xhr.responseText);
-
-                    resolve(JSON.parse(xhr.responseText));
-                }
-                else {
-                    console.log("    Request Failed: " + xhr.status);
-
-                    reject(xhr.statusText);
-                }
-            };
-
-            xhr.onerror = () => reject(xhr.statusText);
-
-            if (data !== null) {
-                xhr.setRequestHeader("Content-Type", "application/json");
-
-                xhr.send(JSON.stringify(data));
-            }
-            else {
-                xhr.send();
-            }
-        });
     }
 
     editInfo(event) {
@@ -193,23 +136,23 @@ class Snippet extends Component {
     }
 
     infoSubmit(event) {
-        let infoText = Snippet.sanitizeText(this.state.info);
+        let infoText = sanitizeText(this.state.info);
 
         let data = {};
         data["info"] = infoText;
         data["lang"] = this.state.languageText;
-        Snippet.callLambda(this, this.state.url + "/updateInfo", "POST",  data, this.state.inputtedPass)
+        callLambda(this, this.state.url + "/updateInfo", "POST",  data, this.state.inputtedPass)
             .catch(error => {
                 console.log(error);
             });
     }
 
     textSubmit(event) {
-        let textText = Snippet.sanitizeText(this.state.text);
+        let textText = sanitizeText(this.state.text);
 
         let data = {};
         data["text"] = textText;
-        Snippet.callLambda(this, this.state.url + "/updateText", "POST", data)
+        callLambda(this, this.state.url + "/updateText", "POST", data)
             .catch(error => {
                 console.log(error);
             });
@@ -217,7 +160,7 @@ class Snippet extends Component {
 
     deleteSnippet(event) {
         let delURL = this.state.url + "/deleteSnippet"
-        Snippet.callLambda(this, delURL, "POST", {}, this.state.inputtedPass)
+        callLambda(this, delURL, "POST", {}, this.state.inputtedPass)
             .then(response => {
                 if (response !== null) {
                     window.open("/", "_self");

@@ -5,10 +5,10 @@ import java.io.Serializable;
 public class ListRequest implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	public String aPass = null;
+	public String adminPass = null;
 	
 	public String getAdminPass() {
-		return this.aPass;
+		return this.adminPass;
 	}
 	
 	public String toString() {

@@ -110,6 +110,18 @@ public class CommentDAO {
 		return (numUpdated >= 1);
 	}
 	
+	public boolean deleteCommentsBySnippetNoPass(String snippetID) throws Exception {	
+		int numUpdated = -1;
+		
+		PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE snippetID=?;");
+		ps.setString(1, snippetID);
+		
+		numUpdated = ps.executeUpdate();
+		ps.close();
+		
+		return (numUpdated >= 1);
+	}
+	
 	public boolean addComment(Comment com) throws Exception {
 		PreparedStatement ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE id=?;");
 		ps.setString(1, com.getID());

@@ -3,6 +3,7 @@ import {Form, FormGroup, Input, FormFeedback, FormText, Button} from "reactstrap
 import Loader from 'react-loaders';
 import logo from './images/logo.png';
 import './styles.css';
+import {callLambda, sanitizeText} from "./Utilities";
 
 class Homepage extends Component {
     constructor(props) {
@@ -28,61 +29,41 @@ class Homepage extends Component {
 
     passChanged(event) {
         this.setState({
-            password: event.target.value,
+            password: sanitizeText(event.target.value),
         });
     }
     idChanged(event) {
         this.setState({
-            snippetID: event.target.value,
+            snippetID: sanitizeText(event.target.value),
         });
     }
 
     createSnippet(event) {
         let extThis = this;
         let data = {};
-
         data["password"] = this.state.password;
-        let json = JSON.stringify(data);
-        console.log("JSON: " + json);
-
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", this.state.url, true);
-
-        //send data as JSON
-        xhr.send(json);
 
         this.setState({
             createLoading: true,
         });
 
-        // Process the response an update GUI
-        xhr.onloadend = function() {
-            console.log(xhr);
-            if(xhr.readyState === XMLHttpRequest.DONE){
+        callLambda(this, this.state.url, "POST", data)
+            .then(response => {
+                let snipID = response["id"]
+
                 extThis.setState({
                     createLoading: false,
+                    snippetID: snipID,
                 });
 
-                if(xhr.status === 200){
-                    console.log("XHR: " + xhr.responseText);
-                    let jsonResponse = JSON.parse(xhr.responseText);
-                    let snipID = jsonResponse["id"]
+                window.open("snippet#" + extThis.state.snippetID, "_self");
 
-                    extThis.setState({
-                        snippetID: snipID,
-                    });
-                    window.open("snippet#" + extThis.state.snippetID, "_self");
-                    //window.location.href = window.location.href + "snippet#" + extThis.state.snippetID;
+            })
+            .catch(error => {
+                alert("Unable to create Snippet");
+                console.log(error);
+            });
 
-                }
-                else if(xhr.status === 400 || xhr.status === 0){
-                    alert("Unable to create Snippet");
-
-                }
-            } else {
-                alert("What happened?")
-            }
-        }
         event.preventDefault();
     }
 
@@ -90,43 +71,28 @@ class Homepage extends Component {
         let extThis = this;
         const exist_url = this.state.url + "/" + this.state.snippetID;
 
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", exist_url, true);
-
-        //send data as JSON
-        xhr.send();
-
         this.setState({
             loadLoading: true,
         });
 
-        // Process the response an update GUI
-        xhr.onloadend = function() {
-            console.log(xhr);
-            if(xhr.readyState === XMLHttpRequest.DONE){
+        callLambda(this, exist_url, "GET")
+            .then(response => {
                 extThis.setState({
                     loadLoading: false,
                 });
 
-                if(xhr.status === 200){
-                    console.log("XHR: " + xhr.responseText);
-                    let jsonResponse = JSON.parse(xhr.responseText);
-                    console.log(jsonResponse);
-
-                    if (Object.keys(jsonResponse).length === 6) {
-                        window.open("snippet#" + extThis.state.snippetID, "_self");
-                    }
-                    else {
-                        alert("Please enter a valid Snippet ID");
-                    }
-
-                }else if(xhr.status === 400 || xhr.status === 0){
+                if (Object.keys(response).length === 6) {
+                    window.open("snippet#" + extThis.state.snippetID, "_self");
+                }
+                else {
                     alert("Please enter a valid Snippet ID");
                 }
-            } else {
-                alert("What happened?")
-            }
-        }
+
+            })
+            .catch(error => {
+                alert("Unable to load Snippet");
+                console.log(error);
+            });
 
         event.preventDefault();
     }
