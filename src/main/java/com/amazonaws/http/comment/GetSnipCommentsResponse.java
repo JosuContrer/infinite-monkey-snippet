@@ -12,13 +12,13 @@ public class GetSnipCommentsResponse {
 	private ArrayList<Comment> comments;
 	
 	public GetSnipCommentsResponse(int sc, String snippetID, ArrayList<Comment> comments) {
-		this.statusCode = sc;
+		this.setStatusCode(sc);
 		this.snippetID = snippetID;
 		this.comments = comments;
 	}
 	
 	public GetSnipCommentsResponse(int sc, String i) {
-		this.statusCode = sc;
+		this.setStatusCode(sc);
 		this.snippetID = i;
 	}
 	
@@ -40,6 +40,14 @@ public class GetSnipCommentsResponse {
 	
 	public String toString() {
 		return "GetSnipComments(" + this.comments.size() + ")";
+	}
+
+	public int getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
 	}
 	
 
