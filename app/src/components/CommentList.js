@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Card, CardTitle } from 'reactstrap';
 import {callLambda, sanitizeText} from "./Utilities";
+import "./styles.css";
 
 const url = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/comments/"
 
@@ -11,6 +12,7 @@ class CommentList extends Component {
 
         this.state = {
             snippetID: props.snipID,
+            password: props.snipPassword,
             commentList: [],
             commentCardList: [],
             numComment: 0,
@@ -27,6 +29,7 @@ class CommentList extends Component {
         this.submitComment = this.submitComment.bind(this);
         this.cancelComment = this.cancelComment.bind(this);
         this.loadComments = this.loadComments.bind(this);
+        this.deleteComment = this.deleteComment.bind(this);
 
         this.newComUpdate = this.newComUpdate.bind(this);
     }
@@ -67,8 +70,8 @@ class CommentList extends Component {
                     <p>Selected Lines: {start + ", " + end}</p>
                     <textarea onChange={this.newComUpdate}></textarea>
                     <div id="newComDiv">
-                        <button onClick={this.submitComment}>Submit Comment</button>
-                        <button id="cancelButt" onClick={this.cancelComment}>Cancel Comment</button>
+                        <button className="monkeyButton" onClick={this.submitComment}>Submit Comment</button>
+                        <button className="monkeyButton" id="cancelButt" onClick={this.cancelComment}>Cancel Comment</button>
                     </div>
                 </Card>
             );
@@ -96,7 +99,7 @@ class CommentList extends Component {
 
     submitComment(event) {
         let extThis = this;
-
+        
         let data = {};
         data["snippetID"] = this.state.snippetID;
         data["text"] = sanitizeText(this.state.newComText);
@@ -121,6 +124,33 @@ class CommentList extends Component {
             newComText: "",
         });
     }
+
+    deleteComment(commentID){
+        return function(e) {
+            let extThis = this;
+
+            let data = {};
+            data["snippetID"] = this.state.snippetID;
+            data["commentID"] = commentID;
+            data["password"] = this.state.password;
+
+            callLambda(extThis, url + "deleteComment", "POST", data)
+                .then(response => {
+                   
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+            this.setState({
+                commentInProgress: false,
+                startSelection: 0,
+                endSelection: 0,
+                newComText: "",
+            });
+        }
+    }
+
 
     // ----------------------- LOAD COMMENTS FROM REQUEST ---------------------
 
@@ -152,6 +182,7 @@ class CommentList extends Component {
 
                     return(
                         <Card key={comment.ID} id={comment.ID} body inverse color="success">
+                            <button id="commentDeleteButton" onClick={this.deleteComment}>x</button>
                             <CardTitle>Time: {unixDate.toLocaleString()}</CardTitle>
                             <p> Selected Lines: {comment.regionStart + ", " + comment.regionEnd} </p>
                             <textarea readOnly="readonly">{comment.text}</textarea>
@@ -183,7 +214,7 @@ class CommentList extends Component {
                 <div id="commentArea">
                     {this.state.commentCardList}
                 </div>
-                <button onClick={this.addComment}>Add Comment</button>
+                <button className="monkeyButton" onClick={this.addComment}>Add Comment</button>
             </>
         );
     }

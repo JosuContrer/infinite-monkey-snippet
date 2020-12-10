@@ -49,7 +49,7 @@ class Snippet extends Component {
         this.infoSubmit = this.infoSubmit.bind(this);
 
         this.editInfo = this.editInfo.bind(this);
-        this.deleteSnippet = this.deleteSnippet.bind(this);
+        // this.deleteSnippet = this.deleteSnippet.bind(this);
     }
 
     componentDidMount() {
@@ -99,14 +99,16 @@ class Snippet extends Component {
             buttDiv.id = "buttDiv";
 
             let infoButton = document.createElement("button");
-            infoButton.id = "infoButton"
-            infoButton.type = "button"
+            infoButton.className = "monkeyButton";
+            infoButton.id = "infoButton";
+            infoButton.type = "button";
             infoButton.onclick = this.infoSubmit;
             infoButton.innerText = "Save Info";
 
             let deleteButton = document.createElement("button");
-            deleteButton.id = "deleteButton"
-            deleteButton.type = "button"
+            deleteButton.className="monkeyButton";
+            deleteButton.id = "deleteButton";
+            deleteButton.type = "button";
             deleteButton.onclick = extThis.deleteSnippet;
             deleteButton.innerText = "Delete Snippet";
 
@@ -217,13 +219,15 @@ class Snippet extends Component {
                             <div id="accessory">
                                 <h5 id="languageText" className="languageTitle">Language: {this.state.languageText}</h5>
                            </div>
-                            <button id="infoButton" type="button" onClick={this.editInfo}>Edit Info</button>
+                            <button className="monkeyButton" id="infoButton" type="button" onClick={this.editInfo}>Edit Info</button>
                         </div>
                     </div>
                     <div className="snippetsection">
                         <div className="flexContainerBar">
                             <div className="equalCol">
-                                <LangDropdown func={this.setLanguage} />
+                                <div className="langDropDown">
+                                    <LangDropdown func={this.setLanguage} />
+                                </div>
                             </div>
                             <div className="equalCol">
                                 <h3 className="idTitle" id="snippetId">Snippet ID: {this.state.snippetID}</h3>
@@ -262,8 +266,8 @@ class Snippet extends Component {
                         <div id="commentDiv" className="rightCol">
                             <h5 className="commentsTitle">Comments</h5>
                             <br/>
-                            <CommentList snipID={this.state.snippetID} startSel={this.state.startSelection} endSel={this.state.endSelection}/>
-                            <button type="button" onClick={this.textSubmit}>Save Text</button>
+                            <CommentList snipID={this.state.snippetID} snipPassword={this.state.password} startSel={this.state.startSelection} endSel={this.state.endSelection}/>
+                            <button className="monkeyButton" type="button" onClick={this.textSubmit}>Save Text</button>
                         </div>
                     </div>
                     <div className="snippetsection" id="contactDiv">
