@@ -10,6 +10,7 @@ import './Admin.css'
 import 'semantic-ui-css/semantic.min.css'
 import "react-datetime/css/react-datetime.css";
 import {callLambda} from "./Utilities";
+import Loader from "react-loaders";
 
 const url = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/snippets/";
 
@@ -23,6 +24,8 @@ class Admin extends Component{
             removeDate: new Date(),
             password: "",
             snippetList: null,
+
+            isLoading: false,
         }
 
         this.onGetDate = this.onGetDate.bind(this);
@@ -42,6 +45,7 @@ class Admin extends Component{
         let extThis = this;
         const promptResp = prompt("Please Enter Admin Password:");
         this.setState({
+            isLoading: true,
             password: promptResp,
         }, () => {
             const list_url = url + "listSnippets"
@@ -50,6 +54,10 @@ class Admin extends Component{
             callLambda(extThis, list_url, "POST", data)
                 .then(response => {
                     console.log(response);
+
+                    extThis.setState({
+                        isLoading: false,
+                    });
 
                     if (response["statusCode"] === 200) {
                         extThis.setState({
@@ -64,6 +72,10 @@ class Admin extends Component{
                 .catch(error => {
                     alert("Something went wrong");
                     console.log(error);
+
+                    extThis.setState({
+                        isLoading: false,
+                    });
                 });
         });
     }
@@ -81,6 +93,10 @@ class Admin extends Component{
         + "\n\nEnter 'delete' to confirm");
 
         if (promptResp != null && promptResp.includes("delete")) {
+            this.setState({
+                isLoading: true,
+            });
+
             const rm_url = url + "removeStaleSnippets"
             let data = {};
             data["adminPass"] = this.state.password;
@@ -89,6 +105,9 @@ class Admin extends Component{
             callLambda(extThis, rm_url, "POST", data)
                 .then(response => {
                     console.log(response);
+                    extThis.setState({
+                        isLoading: false,
+                    });
 
                     if (response["statusCode"] === 200) {
                         extThis.setState({
@@ -98,10 +117,14 @@ class Admin extends Component{
                         alert("Snippets successfully deleted");
                     }
                     else {
-                        alert("Could not delete snippets");
+                        alert("Could not delete snippets\n\nLikely no Snippets created before:\n" + this.state.removeDate.toLocaleString());
                     }
                 })
                 .catch(error => {
+                    extThis.setState({
+                        isLoading: false,
+                    });
+
                     alert("Something went wrong");
                     console.log(error);
                 });
@@ -115,6 +138,10 @@ class Admin extends Component{
     deleteSnippet(snippetID) {
         let extThis = this;
         return function(e) {
+            extThis.setState({
+                isLoading: true,
+            });
+
             const list_url = url + "listSnippets";
             const snip_url = url +  snippetID;
             const del_url = snip_url + "/deleteSnippet";
@@ -133,6 +160,10 @@ class Admin extends Component{
 
                                     callLambda(extThis, list_url, "POST", data)
                                         .then(response => {
+                                            extThis.setState({
+                                                isLoading: false,
+                                            });
+
                                             if (response["statusCode"] === 200) {
                                                 extThis.setState({
                                                     snippetList: response["snippetList"],
@@ -143,13 +174,28 @@ class Admin extends Component{
                                             }
                                         })
                                         .catch(error => {
+                                            extThis.setState({
+                                                isLoading: false,
+                                            });
+
                                             alert("Something went wrong");
                                             console.log(error);
                                         });
 
                                 }
+                                else {
+                                    alert("huh?")
+
+                                    extThis.setState({
+                                        isLoading: false,
+                                    });
+                                }
                             })
                             .catch(error => {
+                                extThis.setState({
+                                    isLoading: false,
+                                });
+
                                 alert("Something went wrong");
                                 console.log(error);
                             });
@@ -157,24 +203,39 @@ class Admin extends Component{
                     }
                     else {
                         alert("Could not delete Snippet - Doesn't Exist?")
+
+                        extThis.setState({
+                            isLoading: false,
+                        });
                     }
                 })
                 .catch(error => {
+                    extThis.setState({
+                        isLoading: false,
+                    });
+
                     alert("Something went wrong");
                     console.log(error);
                 });
 
             e.preventDefault();
         }
+        
     }
 
     renderItem(listItem) {
         let unixDate = new Date(listItem["timestamp"]);
         return <List.Item key={listItem["id"]}>
             <List.Content>
-                <List.Header as='a' href={"snippet#" + listItem["id"]}>Snippet ID: {listItem["id"]}</List.Header>
-                <List.Description as='a'>Time Created: {unixDate.toLocaleString()}</List.Description>
-                <Button color="red" onClick={this.deleteSnippet(listItem["id"])}>X</Button>
+                <div className="listItem">
+                    <div className="listLeft">
+                        <List.Header as='a' href={"snippet#" + listItem["id"]}>Snippet ID: {listItem["id"]}</List.Header>
+                        <List.Description as='a'>Time Created: {unixDate.toLocaleString()}</List.Description>
+                    </div>
+                    <div className="listRight">
+                        <Button className="delButt" onClick={this.deleteSnippet(listItem["id"])}>X</Button>
+                    </div>
+                </div>
             </List.Content>
         </List.Item>;
     }
@@ -183,7 +244,11 @@ class Admin extends Component{
         return(
             <div id="AdminMainPage">
                 <div className="admin-menu-bar">
-                    <h1 className="admin-menu-title">Infinite Monkey Snippet</h1>
+                    <h1 className="admin-menu-title">Infinite Monkey Administrator</h1>
+                    {this.state.isLoading ?
+                        <div className="loaderDiv"><Loader type={"pacman"} /></div>
+                        : <div className="loaderDiv"></div>
+                    }
                 </div>
                 <div className="admin-container">
                     <div className="date-select-container">

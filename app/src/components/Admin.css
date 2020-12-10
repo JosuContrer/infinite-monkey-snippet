@@ -9,22 +9,26 @@
 
 /* Menu Bar Division */
 #AdminMainPage .admin-menu-bar{
-    align-self: flex-start;
     display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: seagreen;
     color: white;
     width: 100vw;
     min-height: fit-content;
+    justify-content: space-between;
 }
 
 #AdminMainPage .admin-menu-title{
     font-weight: bold;
     font-size: 40px;
-    text-align: center;
     line-height: normal;
+    max-width: 80%;
     margin: 30px;
+}
+
+#AdminMainPage .loaderDiv {
+    max-width: 5%;
+    min-width: 5%;
+    margin: 10px;
 }
 
 #AdminMainPage .admin-container{
@@ -92,6 +96,30 @@
     border: solid 2px #4b565f;
 
     font-size: 25px;
+}
+
+#AdminMainPage .listItem {
+    display: flex;
+    min-width: 100%;
+}
+
+#AdminMainPage .listLeft {
+    min-width: 87%;
+    margin-right: 5%;
+}
+
+#AdminMainPage .listRight {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 8%;
+}
+
+#AdminMainPage .listRight .delButt {
+    min-width: 80%;
+    min-height: 80%;
+    font-size: 20px;
+    background: red;
 }
 
 /* Mobile Version */
