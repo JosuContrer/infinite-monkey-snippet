@@ -4,6 +4,7 @@ import com.amazonaws.db.CommentDAO;
 import com.amazonaws.db.SnippetDAO;
 import com.amazonaws.http.comment.DeleteCommentRequest;
 import com.amazonaws.http.comment.DeleteCommentResponse;
+import com.amazonaws.http.snippet.DeleteSnippetResponse;
 import com.amazonaws.model.Snippet;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
@@ -26,9 +27,16 @@ public class DeleteCommentHandler implements RequestHandler<DeleteCommentRequest
 			Snippet snip = snipdao.getSnippet(input.snippetID);
 			
 			CommentDAO comdao = new CommentDAO();
-			comdao.deleteComment(snip, input.id, input.getPassword());
-			response.setStatusCode(200);
-			response.setStatusMessage("Comment deleted!");
+			int statusCode = 200;
+			
+			if (comdao.deleteComment(snip, input.id, input.getPassword())) {
+				response.setStatusCode(statusCode);
+				response.setStatusMessage("Comment deleted!");
+			} 
+			else {
+				statusCode = 405;
+				response = new DeleteCommentResponse(statusCode, "Comment not deleted");
+			}
 			
 		}catch(Exception e) {
 			return new DeleteCommentResponse(400, "Comment not deleted");

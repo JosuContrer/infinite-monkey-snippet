@@ -24,7 +24,7 @@ public class GetSnippetHandler implements RequestHandler<GetRequest, GetResponse
 		try {
 			// Check Database for Snippet with given ID
 			SnippetDAO snipdao = new SnippetDAO();
-			Snippet snippet = snipdao.getSnippet(input.id);
+			Snippet snippet = snipdao.getSnippetNoPass(input.id);
 
 			// Create snippet response
 			response = new GetResponse(200, snippet);

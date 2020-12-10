@@ -16,16 +16,24 @@ public class SnippetDAO {
 		conn = DBConnection.connect();
 	}
 	
-	public Snippet SQLToSnippet(ResultSet result) throws Exception {
+	public Snippet SQLToSnippetNoPass(ResultSet result) throws Exception {
 		String id = result.getString("id");
 		long timestamp = result.getLong("timestamp");
-		String password = result.getString("password");
 		String info = result.getString("info");
 		String lang = result.getString("lang");
 		Blob textBlob = result.getBlob("text");
 		String text = new String(textBlob.getBytes(1L, (int) textBlob.length()));
 		
+		String password = "this isn't a real password now is it";
+		
 		return new Snippet(id, timestamp, password, info, text, lang);
+	}
+	
+	public Snippet SQLToSnippet(ResultSet result) throws Exception {
+		Snippet snip = SQLToSnippetNoPass(result);
+		snip.setPassword(result.getString("password"));
+		
+		return snip;
 	}
 	
 	public SnippetDescriptor SQLToSnippetDescriptor(ResultSet result) throws Exception{
@@ -51,6 +59,23 @@ public class SnippetDAO {
 		
 		while(result.next()) {
 			retSnip = SQLToSnippet(result);
+		}
+		
+		result.close();
+		ps.close();
+		
+		return retSnip;
+	}
+	
+	public Snippet getSnippetNoPass(String id) throws Exception {
+		Snippet retSnip = null;
+		
+		PreparedStatement ps = conn.prepareStatement("SELECT id,timestamp,info,lang,text FROM " + table + " WHERE id=?;");
+		ps.setString(1, id);
+		ResultSet result = ps.executeQuery();
+		
+		while(result.next()) {
+			retSnip = SQLToSnippetNoPass(result);
 		}
 		
 		result.close();
