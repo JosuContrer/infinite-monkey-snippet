@@ -465,9 +465,18 @@ html {
 	color: white;
 }
 
-#snippetpage .langDropDown{
+#snippetpage .langDropDown {
+    display: flex;
+    margin-top: 5%;
+    margin-bottom: 5px;
+    justify-content: space-between;
     z-index: 999;
     position: relative;
+}
+
+#snippetpage .langDropDown #langSelector {
+    width: 75%;
+    margin-top: 5px;
 }
 
 #snippetpage .snippetsection .monkeyButton{
@@ -481,6 +490,14 @@ html {
     text-align: center;
     font-size: 20px;
     border-radius: 10px;
+}
+
+#snippetpage .not_textarea {
+    background: white;
+    color: black;
+    padding: 0.5em 0.25em 0.5em 0.5em;
+    border-radius: 10px;
+    max-height: 200px;
 }
 
 #snippetpage #commentDeleteButton{

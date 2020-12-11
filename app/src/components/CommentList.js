@@ -14,13 +14,9 @@ class CommentList extends Component {
             snippetID: props.snipID,
             password: props.snipPassword,
             commentList: [],
-            commentCardList: [],
-            numComment: 0,
-            commentInProgress: false,
 
-            startSelection: 0,
-            endSelection: 0,
-            newComText: "",
+            inProgCom: null,
+            inProgText: "",
 
             loadCommentInterval: 5000,
         }
@@ -52,7 +48,7 @@ class CommentList extends Component {
 
     // Add comment by clicking on the 'comment' button
     addComment(event) {
-        if (this.state.commentInProgress) {
+        if (this.state.inProgCom !== null) {
             window.alert("Submit or cancel current comment before creating new one");
         } else {
             let ace = document.getElementById("ace-editor");
@@ -65,35 +61,20 @@ class CommentList extends Component {
                 end = temp;
             }
 
-            const c = (
-                <Card key="comInProg" id="comInProg" body inverse color="success">
-                    <p>Selected Lines: {start + ", " + end}</p>
-                    <textarea onChange={this.newComUpdate}></textarea>
-                    <div id="newComDiv">
-                        <button className="monkeyButton" onClick={this.submitComment}>Submit Comment</button>
-                        <button className="monkeyButton" id="cancelButt" onClick={this.cancelComment}>Cancel Comment</button>
-                    </div>
-                </Card>
-            );
-
-            // thank you react, very cool
             this.setState({
-                commentInProgress: true,
-            }, () => {
-               this.setState({
-                    commentCardList: this.state.commentCardList.concat(c),
-                    startSelection: start,
-                    endSelection: end,
-                });
+                inProgCom: {
+                    text: "",
+                    regionStart: start,
+                    regionEnd: end,
+                }
             });
+
         }
     }
 
     cancelComment(event) {
         this.setState({
-            commentInProgress: false,
-            commentCardList: this.state.commentCardList
-                .filter(x => x.props.id !== "comInProg"),
+            inProgCom: null,
         });
     }
 
@@ -102,15 +83,12 @@ class CommentList extends Component {
         
         let data = {};
         data["snippetID"] = this.state.snippetID;
-        data["text"] = sanitizeText(this.state.newComText);
-        data["regionStart"] = this.state.startSelection;
-        data["regionEnd"] = this.state.endSelection;
+        data["text"] = sanitizeText(this.state.inProgCom["text"]);
+        data["regionStart"] = this.state.inProgCom["regionStart"];
+        data["regionEnd"] = this.state.inProgCom["regionEnd"];
 
         callLambda(extThis, url, "POST", data)
             .then(response => {
-                // this.setState({
-                //     commentCardList: [],
-                // })
                 extThis.loadComments();
             })
             .catch(error => {
@@ -118,36 +96,29 @@ class CommentList extends Component {
             });
 
         this.setState({
-            commentInProgress: false,
-            startSelection: 0,
-            endSelection: 0,
-            newComText: "",
+            inProgCom: null,
         });
     }
 
     deleteComment(commentID){
+        let extThis = this;
         return function(e) {
-            let extThis = this;
+
+            console.log(commentID);
 
             let data = {};
-            data["snippetID"] = this.state.snippetID;
+            data["snippetID"] = extThis.state.snippetID;
             data["commentID"] = commentID;
-            data["password"] = this.state.password;
+            data["password"] = extThis.state.password;
 
-            callLambda(extThis, url + "deleteComment", "POST", data)
+            callLambda(extThis, url +  commentID + "/deleteComment", "POST", data)
                 .then(response => {
-                   
+                   console.log(response);
+                    extThis.loadComments();
                 })
                 .catch(error => {
                     console.log(error);
                 });
-
-            this.setState({
-                commentInProgress: false,
-                startSelection: 0,
-                endSelection: 0,
-                newComText: "",
-            });
         }
     }
 
@@ -165,54 +136,67 @@ class CommentList extends Component {
 
         callLambda(this, commentURl, "POST", data)
             .then(response => {
-                let idArray = this.state.commentList.map((comment) => comment.ID);
-
-                let newArray = response["comments"].filter((comment) => {
-                    if (!idArray.includes(comment.ID)) {
-                        return comment;
-                    }
-                    return null;
-                });
-
+                let newArray = response["comments"];
                 newArray.sort((a, b) => ((a.regionStart + a.regionEnd) > (b.regionStart + b.regionEnd)) ? 1:-1);
 
-                let c = newArray.map(function(comment){
-                    let timestampNum = comment.timestamp;
-                    let unixDate = new Date(timestampNum);
-
-                    return(
-                        <Card key={comment.ID} id={comment.ID} body inverse color="success">
-                            <button id="commentDeleteButton" onClick={this.deleteComment}>x</button>
-                            <CardTitle>Time: {unixDate.toLocaleString()}</CardTitle>
-                            <p> Selected Lines: {comment.regionStart + ", " + comment.regionEnd} </p>
-                            <textarea readOnly="readonly">{comment.text}</textarea>
-                        </Card>
-                    )
-                });
-
                 extThis.setState({
-                    commentList: this.state.commentList.concat(newArray),
-                    commentCardList: this.state.commentCardList.concat(c)
-                        .filter(x => x.props.id !== "comInProg"),
+                    commentList: newArray,
                 });
-
             })
             .catch(error => {
                 console.log(error);
             });
     }
 
+    renderItem(listItem) {
+        let extThis = this;
+        let unixDate = new Date(listItem["timestamp"])
+        return(
+            <Card key={listItem["ID"]} id={listItem["ID"]} body inverse color="success">
+                {extThis.props.creatorMode ?
+                    <button id="commentDeleteButton" onClick={extThis.deleteComment(listItem["ID"])}>x</button>
+                    : <div></div>
+                }
+                <CardTitle>Time: {unixDate.toLocaleString()}</CardTitle>
+                <p> Selected Lines: {listItem["regionStart"] + ", " + listItem["regionEnd"]} </p>
+                <p className="not_textarea">{listItem["text"]}</p>
+            </Card>
+        )
+    }
+
+    renderProg() {
+        let extThis = this;
+        return <Card key="comInProg" id="comInProg" body inverse color="success">
+            <p>Selected Lines: {extThis.state.inProgCom["regionStart"] + ", " + extThis.state.inProgCom["regionEnd"]}</p>
+            <textarea onChange={extThis.newComUpdate}></textarea>
+            <div id="newComDiv">
+                <button className="monkeyButton" onClick={extThis.submitComment}>Submit Comment</button>
+                <button className="monkeyButton" id="cancelButt" onClick={extThis.cancelComment}>Cancel Comment</button>
+            </div>
+        </Card>
+    }
+
     newComUpdate(event) {
+        let extThis = this;
         this.setState({
-            newComText: event.target.value,
-        })
+            inProgCom: {
+                text: event.target.value,
+                regionStart: extThis.state.inProgCom["regionStart"],
+                regionEnd: extThis.state.inProgCom["regionEnd"],
+            },
+        });
     }
 
     render(){
         return(
             <>
                 <div id="commentArea">
-                    {this.state.commentCardList}
+                    {(this.state.commentList !== null) ?
+                    this.state.commentList.map((x) => this.renderItem(x))
+                        : <div></div>}
+                    {(this.state.inProgCom !== null) ?
+                    this.renderProg()
+                        : <div></div>}
                 </div>
                 <button className="monkeyButton" onClick={this.addComment}>Add Comment</button>
             </>

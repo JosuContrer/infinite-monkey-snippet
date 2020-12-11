@@ -26,17 +26,14 @@ class Snippet extends Component {
         this.state = {
             url: initURL,
             snippetID: snippetID,
-            password: "",
             languageText: "",
             timestampText: "",
             info: "",
             text: "",
 
             inputtedPass: "",
-            comments: [],
+            creatorMode: false,
 
-            startSelection: 0,
-            endSelection: 0,
         };
 
         this.setLanguage = this.setLanguage.bind(this);
@@ -57,12 +54,11 @@ class Snippet extends Component {
         // GET SNIPPET DATA
         callLambda(this, this.state.url, "GET")
             .then(response => {
-                if (Object.keys(response).length === 6) {
+                if (Object.keys(response).length >= 5) {
                     let timestampNum = response["timestamp"];
                     let unixDate = new Date(timestampNum);
 
                     this.setState({
-                        password: response["password"],
                         languageText: response["language"],
                         timestampText: unixDate.toLocaleString(),
                         info: response["info"],
@@ -85,44 +81,39 @@ class Snippet extends Component {
         let extThis = this;
 
         // TODO this is bad bad should be done in the backend
-        if (promptResp === this.state.password) {
-            this.setState({
-                inputtedPass: promptResp,
-            });
+        this.setState({
+            inputtedPass: promptResp,
+        }, () => {
+            extThis.infoSubmit(null);
+        });
 
-            let infoTextArea = document.createElement("textarea")
-            infoTextArea.id = "infoArea";
-            infoTextArea.value = this.state.info;
-            infoTextArea.onchange = this.infoChanged;
-
-            let buttDiv = document.createElement("div");
-            buttDiv.id = "buttDiv";
-
-            let infoButton = document.createElement("button");
-            infoButton.className = "monkeyButton";
-            infoButton.id = "infoButton";
-            infoButton.type = "button";
-            infoButton.onclick = this.infoSubmit;
-            infoButton.innerText = "Save Info";
-
-            let deleteButton = document.createElement("button");
-            deleteButton.className="monkeyButton";
-            deleteButton.id = "deleteButton";
-            deleteButton.type = "button";
-            deleteButton.onclick = extThis.deleteSnippet;
-            deleteButton.innerText = "Delete Snippet";
-
-            buttDiv.appendChild(infoButton);
-            buttDiv.appendChild(deleteButton);
-
-            document.getElementById("infoForm").replaceChild(infoTextArea, document.getElementById("infoArea"));
-            document.getElementById("langDiv").replaceChild(buttDiv, document.getElementById("infoButton"));
-        }
-        else {
-            alert("The password entered was incorrect.")
-
-            event.preventDefault();
-        }
+        // let infoTextArea = document.createElement("textarea")
+        // infoTextArea.id = "infoArea";
+        // infoTextArea.value = this.state.info;
+        // infoTextArea.onchange = this.infoChanged;
+        //
+        // let buttDiv = document.createElement("div");
+        // buttDiv.id = "buttDiv";
+        //
+        // let infoButton = document.createElement("button");
+        // infoButton.className = "monkeyButton";
+        // infoButton.id = "infoButton";
+        // infoButton.type = "button";
+        // infoButton.onclick = this.infoSubmit;
+        // infoButton.innerText = "Save Info";
+        //
+        // let deleteButton = document.createElement("button");
+        // deleteButton.className="monkeyButton";
+        // deleteButton.id = "deleteButton";
+        // deleteButton.type = "button";
+        // deleteButton.onclick = extThis.deleteSnippet;
+        // deleteButton.innerText = "Delete Snippet";
+        //
+        // buttDiv.appendChild(infoButton);
+        // buttDiv.appendChild(deleteButton);
+        //
+        // document.getElementById("infoForm").replaceChild(infoTextArea, document.getElementById("infoArea"));
+        // document.getElementById("langDiv").replaceChild(buttDiv, document.getElementById("infoButton"));
     }
 
     infoChanged(event) {
@@ -138,12 +129,23 @@ class Snippet extends Component {
     }
 
     infoSubmit(event) {
+        let extThis = this;
         let infoText = sanitizeText(this.state.info);
 
         let data = {};
         data["info"] = infoText;
         data["lang"] = this.state.languageText;
         callLambda(this, this.state.url + "/updateInfo", "POST",  data, this.state.inputtedPass)
+            .then(response => {
+                if (response["statusCode"] === 405) {
+                    alert("Incorrect Password")
+                }
+                else if (response["statusCode"] === 200) {
+                    extThis.setState({
+                        creatorMode: true,
+                    });
+                }
+            })
             .catch(error => {
                 console.log(error);
             });
@@ -212,23 +214,29 @@ class Snippet extends Component {
                             <h2 className="infoTitle">Snippet Information:</h2>
                             <br/>
                             <form id="infoForm">
-                                <p id="infoArea">{this.state.info}</p>
+                                {this.state.creatorMode ?
+                                    <textarea id="infoArea" onChange={this.infoChanged}>{this.state.info}</textarea>
+                                    : <p id="infoArea">{this.state.info}</p>
+                                }
                             </form>
                         </div>
                         <div id="langDiv" className="rightCol">
-                            <div id="accessory">
-                                <h5 id="languageText" className="languageTitle">Language: {this.state.languageText}</h5>
-                           </div>
-                            <button className="monkeyButton" id="infoButton" type="button" onClick={this.editInfo}>Edit Info</button>
+                            <div className="langDropDown">
+                                <h3>Language: </h3>
+                                <div id="langSelector">
+                                    <LangDropdown func={this.setLanguage} lang={this.state.languageText} disabled={this.state.creatorMode}/>
+                                </div>
+                            </div>
+                            {this.state.creatorMode ?
+                                <div id="buttDiv">
+                                    <button type="button" className="monkeyButton" id="infoButton" onClick={this.infoSubmit}>Save Info</button>
+                                    <button type="button" className="monkeyButton" id="deleteButton" onClick={this.deleteSnippet}>Delete Snippet</button>
+                                </div>
+                            : <button className="monkeyButton" id="infoButton" type="button" onClick={this.editInfo}>Edit Info</button>}
                         </div>
                     </div>
                     <div className="snippetsection">
                         <div className="flexContainerBar">
-                            <div className="equalCol">
-                                <div className="langDropDown">
-                                    <LangDropdown func={this.setLanguage} />
-                                </div>
-                            </div>
                             <div className="equalCol">
                                 <h3 className="idTitle" id="snippetId">Snippet ID: {this.state.snippetID}</h3>
                             </div>
@@ -266,7 +274,13 @@ class Snippet extends Component {
                         <div id="commentDiv" className="rightCol">
                             <h5 className="commentsTitle">Comments</h5>
                             <br/>
-                            <CommentList snipID={this.state.snippetID} snipPassword={this.state.password} startSel={this.state.startSelection} endSel={this.state.endSelection}/>
+                            <CommentList
+                                snipID={this.state.snippetID}
+                                snipPassword={this.state.password}
+                                startSel={this.state.startSelection}
+                                endSel={this.state.endSelection}
+                                creatorMode={this.state.creatorMode}
+                            />
                             <button className="monkeyButton" type="button" onClick={this.textSubmit}>Save Text</button>
                         </div>
                     </div>
