@@ -6,10 +6,13 @@ import org.junit.Test;
 
 import com.amazonaws.GetSnippetHandler;
 import com.amazonaws.UpdateTextHandler;
+import com.amazonaws.db.CommentDAO;
+import com.amazonaws.db.SnippetDAO;
 import com.amazonaws.http.snippet.GetRequest;
 import com.amazonaws.http.snippet.GetResponse;
 import com.amazonaws.http.snippet.UpdateTextRequest;
 import com.amazonaws.http.snippet.UpdateTextResponse;
+import com.amazonaws.model.Snippet;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.google.gson.Gson;
 
@@ -39,13 +42,22 @@ public class UpdateTextHandlerTest {
 	}
 	
 	@Test
-	public void testUpdateSniptText() {
+	public void testUpdateSnipText() throws Exception {
+		SnippetDAO snipdao = new SnippetDAO();
+		Snippet snip = new Snippet(snipdao.getAllSnippets(), "password");
+		snipdao.addSnippet(snip);
+
 		String incoming = "{"
-							+ "\"id\": \"78vylcev\","
+							+ "\"id\": \"" + snip.getID() + "\","
 							+ "\"text\": \"test\""
 						+ "}";
 		int sc = 200;
 		testUpdateText(incoming, sc);
+		
+		snipdao.deleteSnippet(snip.getID(), snip.getPassword());
+		CommentDAO commdao = new CommentDAO();
+		commdao.deleteCommentsBySnippet(snip, snip.getPassword());
+
 	}
 	
 	@Test

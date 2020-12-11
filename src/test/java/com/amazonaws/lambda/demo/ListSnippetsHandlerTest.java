@@ -20,15 +20,13 @@ public class ListSnippetsHandlerTest {
 		return ctx;
 	}
 	
-	void testList(String incoming, int outgoing, String errMes, String firstSnip) {
+	void testList(String incoming, int outgoing, String errMes) {
 		ListSnippetsHandler handler = new ListSnippetsHandler();
 		ListRequest req = new Gson().fromJson(incoming, ListRequest.class);
 		ListResponse response = handler.handleRequest(req, createContext("listSnippets"));
 		
 		assertEquals(outgoing, response.getStatusCode());
 		assertEquals(errMes, response.getErrorMessage());
-		if(outgoing == 200)
-			assertEquals(firstSnip, response.getSnippetList().get(0).getId());
 	}
 	
 	@Test
@@ -36,9 +34,8 @@ public class ListSnippetsHandlerTest {
 		String sample = "{\"adminPass\": \"admin\"}";
 		int sc = 200;
 		String errMes = "List Snippets";
-		String firstSnip = "09mj01p9";
 		
-		testList(sample, sc, errMes, firstSnip);
+		testList(sample, sc, errMes);
 	}
 	
 	@Test
@@ -46,9 +43,8 @@ public class ListSnippetsHandlerTest {
 		String sample = "{\"adminPass\": \"wrongPW\"}";
 		int sc = 405;
 		String errMes = "List snippets not allowed";
-		String firstSnip = "09mj01p9";
 		
-		testList(sample, sc, errMes, firstSnip);
+		testList(sample, sc, errMes);
 	}
 	
 }
