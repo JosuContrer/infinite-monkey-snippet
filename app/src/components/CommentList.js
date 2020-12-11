@@ -13,7 +13,6 @@ class CommentList extends Component {
 
         this.state = {
             snippetID: props.snipID,
-            password: props.snipPassword,
             commentList: [],
 
             inProgCom: null,
@@ -120,7 +119,7 @@ class CommentList extends Component {
             let data = {};
             data["snippetID"] = extThis.state.snippetID;
             data["commentID"] = commentID;
-            data["password"] = extThis.state.password;
+            data["password"] = extThis.props.snipPassword;
 
             callLambda(extThis, url +  commentID + "/deleteComment", "POST", data)
                 .then(response => {
