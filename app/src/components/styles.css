@@ -49,7 +49,6 @@ html {
 /* ---------- NAVBAR ---------- */
 .navbar{
     background-color: #FCCD04;
-    height: 80px;
     transition: 0.8s;
     position: sticky;
     top: 0;
@@ -60,28 +59,24 @@ html {
 
 .navbar .navbar-container{
     display: flex;
-    height: 100%;
-    justify-content: baseline;
-    flex-wrap: nowrap;
-    align-items: baseline;
+    min-height: fit-content;
+    width: 100%;
+    justify-content: space-between;
 }
 
 .navbar .navbar-container .navbar-logo {
     color: #A63A50;
     font-family: 'Shrikhand', cursive;
-    font-size: 35px;
-    align-items: flex-start;
-    align-self: center;
+    font-size: 40px;
     transition: 0.8s;
+    width: 80%;
+    margin: 30px;
 }
 
-.navbar .navbar-container .menu-icon{
-    color: white;
-    font-size: 40px;
-    position: absolute;
-    align-self: end;
-    top: 0;
-    right: 0;
+.navbar .navbar-container .loaderDiv{
+    max-width: 5%;
+    min-width: 5%;
+    margin: 5px;
 }
 
 .navbar .navbar-container a:hover {
@@ -326,23 +321,12 @@ html {
 }
 
 /*Snippet Info Titles*/
-#snippetpage .infoTitle{
+#snippetpage h2 {
     margin: 0;
-    padding: 4px;
+    padding: 8px 4px 4px 4px;
     line-height: 0;
     position: relative;
     font-size: 20px;
-    font-family: 'Courier New', Courier, monospace;
-    color: white;
-}
-
-#snippetpage .commentsTitle{
-    margin: 0;
-    padding: 0;
-    line-height: 0;
-    position: relative;
-    align-self: center;
-    font-size: 15px;
     font-family: 'Courier New', Courier, monospace;
     color: white;
 }
@@ -410,8 +394,35 @@ html {
 /** Flexbox Goodies **/
 #snippetpage .flexContainerBar{
     display: flex;
-    align-items: center;justify-content: center;
+    align-items: center;
+    justify-content: center;
     width: 100%;
+    padding: 10px
+}
+
+#snippetpage .titleContainerBar{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#snippetpage .titleContainerBar h2 {
+    line-height: normal;
+    white-space: nowrap;
+}
+
+#snippetpage .titleContainerBar .saveDiv {
+    display: flex;
+    flex-direction: row;
+}
+
+#snippetpage .titleContainerBar .saveDiv #syncButt {
+    background-color: transparent;
+    margin-left: 2%;
+    border: none;
+    color: white;
+    font-size: 20px;
 }
 
 #snippetpage .equalCol{
@@ -470,7 +481,7 @@ html {
     margin-top: 5%;
     margin-bottom: 5px;
     justify-content: space-between;
-    z-index: 999;
+    z-index: 998;
     position: relative;
 }
 
@@ -545,7 +556,6 @@ html {
     max-height: 580px;
     overflow-y: scroll;
 }
-
 
 #snippetpage #contactDiv {
     min-width: 100%;

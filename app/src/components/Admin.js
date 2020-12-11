@@ -101,6 +101,7 @@ class Admin extends Component{
             let data = {};
             data["adminPass"] = this.state.password;
             data["staleTime"] = this.state.removeDate.getTime();
+            data["snipID"] = "";
 
             callLambda(extThis, rm_url, "POST", data)
                 .then(response => {
@@ -134,7 +135,6 @@ class Admin extends Component{
         }
     }
 
-    // TODO - this is unironically the grossest code ive ever written
     deleteSnippet(snippetID) {
         let extThis = this;
         return function(e) {
@@ -142,48 +142,29 @@ class Admin extends Component{
                 isLoading: true,
             });
 
-            const list_url = url + "listSnippets";
-            const snip_url = url +  snippetID;
-            const del_url = snip_url + "/deleteSnippet";
+            const rm_url = url + "removeStaleSnippets"
+
             let data = {};
-            data["password"] = null;
-            callLambda(extThis, del_url, "POST", data)
+            data["adminPass"] = extThis.state.password;
+            data["staleTime"] = extThis.state.removeDate.getTime();
+            data["snipID"] = snippetID;
+
+            callLambda(extThis, rm_url, "POST", data)
                 .then(response => {
-                    if (response !== null) {
-                        let data = {};
-                        data["adminPass"] = extThis.state.password;
+                    console.log(response);
+                    extThis.setState({
+                        isLoading: false,
+                    });
 
-                        callLambda(extThis, list_url, "POST", data)
-                            .then(response => {
-                                extThis.setState({
-                                    isLoading: false,
-                                });
+                    if (response["statusCode"] === 200) {
+                        extThis.setState({
+                            snippetList: response["snippetList"],
+                        });
 
-                                if (response["statusCode"] === 200) {
-                                    extThis.setState({
-                                        snippetList: response["snippetList"],
-                                    });
-                                }
-                                else {
-                                    alert("Could not get Snippets after deletion");
-                                }
-                            })
-                            .catch(error => {
-                                extThis.setState({
-                                    isLoading: false,
-                                });
-
-                                alert("Something went wrong");
-                                console.log(error);
-                            });
-
+                        alert("Snippet " + snippetID + " successfully deleted");
                     }
                     else {
-                        alert("Did not get response from DeleteSnippet")
-
-                        extThis.setState({
-                            isLoading: false,
-                        });
+                        alert("Could not delete snippet");
                     }
                 })
                 .catch(error => {

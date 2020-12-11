@@ -114,7 +114,7 @@ class Homepage extends Component {
                         <Form className="input-form">
                             <FormGroup className="input_group">
                                 <h4>Create a Snippet</h4>
-                                <Input valid  type="text" value={this.state.password} onChange={this.passChanged} />
+                                <Input type="text" value={this.state.password} onChange={this.passChanged} />
                                 <FormFeedback  className="formF">Good Password My Dude!</FormFeedback>
                                 <FormText className="formF">Note: Password is Optional</FormText>
                                 { this.state.createLoading

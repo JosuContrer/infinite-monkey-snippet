@@ -8,6 +8,7 @@ public class RemoveStaleRequest implements Serializable{
 	private static final long serialVersionUID = 1L;
 	public String adminPass = null;
 	public long staleTime = 0;
+	public String snipID = "";
 	
 	public String getaPass() {
 		return adminPass;
@@ -21,7 +22,16 @@ public class RemoveStaleRequest implements Serializable{
 		return new Date(this.staleTime);
 	}
 	
+	public String getID() {
+		return snipID;
+	}
+	
 	public String toString() {
-		return "RemoveStaleSnippets(" + this.getStaleDateTime() + ")";
+		if (snipID == "") {
+			return "RemoveStaleSnippets(" + this.getStaleDateTime() + ")";
+		}
+		else {
+			return "RemoveStaleSnippets(Deleted" + this.getID() + ")";
+		}
 	}
 }

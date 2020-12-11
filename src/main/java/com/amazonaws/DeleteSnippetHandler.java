@@ -48,6 +48,7 @@ public class DeleteSnippetHandler implements RequestHandler<DeleteSnippetRequest
 					logger.log("    No Comments to delete");
 				}
 			} else {
+				logger.log(input.getPassword());
 				statusCode = 405;
 				response = new DeleteSnippetResponse(statusCode);
 			}

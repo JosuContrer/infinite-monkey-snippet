@@ -1,8 +1,10 @@
 import React, {Component} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub, faLinkedin, faInstagram} from '@fortawesome/free-brands-svg-icons'
+import {faSync} from "@fortawesome/free-solid-svg-icons";
 
 import AceEditor from "react-ace";
+import DiffMatchPatch from "diff-match-patch";
 
 import NavBar from './NavBar';
 import LangDropdown from './LangDropDown';
@@ -12,6 +14,7 @@ import {callLambda, sanitizeText} from "./Utilities";
 // import 'ace-builds/webpack-resolver';
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
+import reportWebVitals from "../reportWebVitals";
 
 /** GLOBAL URL **/
 const url = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/snippets/";
@@ -32,13 +35,19 @@ class Snippet extends Component {
             timestampText: "",
             info: "",
             text: "",
+            ogText: "",
 
             inputtedPass: "",
             creatorMode: false,
 
+            timerInterval: 10000,
+
+            isLoading: false,
+            lastLoad: 0,
         };
 
         this.setLanguage = this.setLanguage.bind(this);
+        this.timerUpdate = this.timerUpdate.bind(this);
 
         this.infoChanged = this.infoChanged.bind(this);
         this.textChanged = this.textChanged.bind(this);
@@ -51,6 +60,11 @@ class Snippet extends Component {
     }
 
     componentDidMount() {
+        let extThis = this;
+
+        this.setState({
+            isLoading: true,
+        });
 
         // GET SNIPPET DATA
         callLambda(this, this.state.url, "GET")
@@ -64,10 +78,76 @@ class Snippet extends Component {
                         timestampText: unixDate.toLocaleString(),
                         info: response["info"],
                         text: response["text"],
+                        ogText: response["text"],
+
+                        isLoading: false,
                     });
                 }
                 else {
                     alert("Loaded an invalid Snippet - Returning to Homepage")
+                    window.open("/", "_self");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+
+                this.setState({
+                    isLoading: false,
+                });
+
+            });
+        
+        setInterval(() => {
+            this.timerUpdate();
+        }, extThis.state.timerInterval);
+
+        setInterval(() => {
+            this.setState({
+                lastLoad: this.state.lastLoad + 1,
+            });
+        }, 1000)
+    }
+
+    timerUpdate() {
+        let extThis = this;
+
+        callLambda(extThis, extThis.state.url, "GET")
+            .then(response => {
+                if (Object.keys(response).length >= 5) {
+                    if (!extThis.state.creatorMode) {
+                        extThis.setState({
+                            languageText: response["language"],
+                            info: response["info"],
+                        });
+                    }
+
+                    let pulledText = response["text"];
+
+                    let dmp = new DiffMatchPatch();
+                    let diff1 = dmp.diff_main(extThis.state.ogText, pulledText);
+                    let diff2 = dmp.diff_main(extThis.state.ogText, extThis.state.text);
+                    let patches1 = dmp.patch_make(extThis.state.ogText, diff1);
+                    let patches2 = dmp.patch_make(extThis.state.ogText, diff2);
+                    let newText = dmp.patch_apply(patches1, extThis.state.ogText)[0];
+                    newText = dmp.patch_apply(patches2, newText)[0];
+
+                    extThis.setState({
+                        text: newText,
+                        ogText: newText,
+
+                        lastLoad: 0,
+                    }, () => {
+                        let data = {};
+                        data["text"] = sanitizeText(newText);
+
+                        callLambda(extThis, extThis.state.url + "/updateText", "POST", data)
+                            .catch(error => {
+                                console.log(error);
+                            });
+                    });
+                }
+                else {
+                    alert("This Snippet has been Deleted - Returning to Homepage")
                     window.open("/", "_self");
                 }
             })
@@ -104,6 +184,10 @@ class Snippet extends Component {
         let extThis = this;
         let infoText = sanitizeText(this.state.info);
 
+        this.setState({
+            isLoading: true,
+        });
+
         let data = {};
         data["info"] = infoText;
         data["lang"] = this.state.languageText;
@@ -118,29 +202,56 @@ class Snippet extends Component {
                         creatorMode: true,
                     });
                 }
+
+                extThis.setState({
+                    isLoading: false,
+                });
             })
             .catch(error => {
                 console.log(error);
+
+                extThis.setState({
+                    isLoading: false,
+                });
             });
     }
 
     textSubmit(event) {
+        let extThis = this;
         let textText = sanitizeText(this.state.text);
+
+        this.setState({
+            isLoading: false,
+        });
 
         let data = {};
         data["text"] = textText;
         callLambda(this, this.state.url + "/updateText", "POST", data)
+            .then(response => {
+                extThis.setState({
+                    isLoading: false,
+                });
+            })
             .catch(error => {
                 console.log(error);
+
+                extThis.setState({
+                    isLoading: false,
+                });
             });
     }
 
     deleteSnippet(event) {
+        let extThis = this;
         let delURL = this.state.url + "/deleteSnippet"
         const promptResp = prompt("Would you like to delete the Snippet:\n\nID: " + this.state.snippetID
             + "\n\nEnter 'delete' to confirm");
 
         if (promptResp != null && promptResp.includes("delete")) {
+
+            this.setState({
+                isLoading: true,
+            });
 
             let data = {};
             data["password"] = this.state.inputtedPass;
@@ -152,6 +263,10 @@ class Snippet extends Component {
                 })
                 .catch(error => {
                     console.log(error);
+
+                    extThis.setState({
+                        isLoading: false,
+                    });
                 });
         }
         else {
@@ -174,14 +289,25 @@ class Snippet extends Component {
           aceStyle: {
               borderRadius: "10px",
               padding: "0.5em",
+              minHeight: "635px",
           }
         }; 
 
         return (
             <>
-            <NavBar/>
+            <NavBar loading={this.state.isLoading}/>
             <div id="snippetpage">
                 <div className="column">
+                    <div className="snippetsection">
+                        <div className="titleContainerBar">
+                            <h2 className="idTitle" id="snippetId">Snippet ID: {this.state.snippetID}</h2>
+                            <h2 className="timeTitle" id="timestampText">Created: {this.state.timestampText}</h2>
+                            <div className="saveDiv">
+                                <h2 className="timeTitle">Last Updated: {this.state.lastLoad} seconds ago</h2>
+                                <button id="syncButt" onClick={this.timerUpdate}><FontAwesomeIcon  icon={faSync} /></button>
+                            </div>
+                        </div>
+                    </div>
                     <div className="snippetsection">
                         <div id="infoDiv" className="leftCol">
                             <h2 className="infoTitle">Snippet Information:</h2>
@@ -209,25 +335,16 @@ class Snippet extends Component {
                         </div>
                     </div>
                     <div className="snippetsection">
-                        <div className="flexContainerBar">
-                            <div className="equalCol">
-                                <h3 className="idTitle" id="snippetId">Snippet ID: {this.state.snippetID}</h3>
-                            </div>
-                            <div className="equalCol">
-                                <h3 className="timeTitle" id="timestampText">Created: {this.state.timestampText}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="snippetsection">
                         <div className="break"></div>
                         <div id="textDiv" className="leftCol">
+                            <h2>Snippet Text:</h2>
+                            <br/>
                             <AceEditor
                                 ref="mainEditor"
                                 placeholder=""
                                 mode={this.state.languageText}
                                 width={"100%"}
                                 theme={"monokai"}
-                                height={"600px"}
                                 onChange={this.textChanged}
                                 fontSize={14}
                                 showPrintMargin={true}
@@ -244,18 +361,18 @@ class Snippet extends Component {
                                 }}/>
                         </div>
                         <div id="commentDiv" className="rightCol">
-                            <h5 className="commentsTitle">Comments</h5>
+                            <h2>Comments:</h2>
                             <br/>
                             <CommentList
                                 snipID={this.state.snippetID}
                                 snipPassword={this.state.inputtedPass}
                                 creatorMode={this.state.creatorMode}
+                                timerInterval={this.state.timerInterval}
                             />
-                            <button className="monkeyButton" type="button" onClick={this.textSubmit}>Save Text</button>
                         </div>
                     </div>
                     <div className="snippetsection" id="contactDiv">
-                        <h2 className="contactTitle">Contact Us</h2>
+                        <h3 className="contactTitle">Contact Us</h3>
                         <div className="flexContainerBar">
                             <a className="iconStyled" href="https://github.com/JosuContrer/infinite-monkey-snippet">
                                 <FontAwesomeIcon  icon={faGithub} />
