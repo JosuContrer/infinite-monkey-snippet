@@ -40,7 +40,7 @@ class Snippet extends Component {
             inputtedPass: "",
             creatorMode: false,
 
-            timerInterval: 15000,
+            timerInterval: 9000,
 
             isLoading: false,
             lastLoad: 0,
