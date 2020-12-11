@@ -40,7 +40,7 @@ public class RemoveStaleSnippets implements RequestHandler<RemoveStaleRequest, R
 						CommentDAO comdao = new CommentDAO();
 						
 						for (String id: idsToDelete) {
-							snipdao.deleteSnippetNoPass(id);
+							snipdao.deleteSnippet(id, null);
 							comdao.deleteCommentsBySnippetNoPass(id);
 						}
 						

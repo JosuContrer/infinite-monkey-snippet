@@ -1,11 +1,7 @@
-import React, {useState, Component} from 'react'
+import React from 'react'
 import Select from 'react-select'
 
 const LangDropDown = (props) => {
-
-    const [dropdownVal, setDropdownVal] = useState("");
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const toggle = () => setDropdownOpen(prevState => !prevState);
 
     // Languages can be added to list (GUI dropdown will dynamically adjust)
     //  -> credits: ACE examples

@@ -20,16 +20,12 @@ export const sanitizeText = function(text) {
     return snipText;
 }
 
-export const callLambda = function(extThis, url, type, data=null, password=null) {
+export const callLambda = function(extThis, url, type, data=null) {
     console.log("Request " + type + " @ " + url);
 
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open(type, url, true);
-
-        if (password !== null) {
-            data["password"] = password;
-        }
 
         xhr.onload = () => {
             if(xhr.status >= 200 && xhr.status < 300){
