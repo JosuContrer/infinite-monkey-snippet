@@ -1,15 +1,17 @@
-import React, {Component, useState} from "react";
+import React, {Component} from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub, faLinkedin, faInstagram} from '@fortawesome/free-brands-svg-icons'
 
 import AceEditor from "react-ace";
+
 import NavBar from './NavBar';
 import LangDropdown from './LangDropDown';
 import CommentList from './CommentList';
 import {callLambda, sanitizeText} from "./Utilities";
 
-import "ace-builds/src-noconflict/mode-java";
+// import 'ace-builds/webpack-resolver';
 import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 /** GLOBAL URL **/
 const url = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/snippets/";
@@ -40,13 +42,12 @@ class Snippet extends Component {
 
         this.infoChanged = this.infoChanged.bind(this);
         this.textChanged = this.textChanged.bind(this);
-        this.onSelectionChanged = this.onSelectionChanged.bind(this);
 
         this.textSubmit = this.textSubmit.bind(this);
         this.infoSubmit = this.infoSubmit.bind(this);
 
         this.editInfo = this.editInfo.bind(this);
-        // this.deleteSnippet = this.deleteSnippet.bind(this);
+        this.deleteSnippet = this.deleteSnippet.bind(this);
     }
 
     componentDidMount() {
@@ -80,40 +81,11 @@ class Snippet extends Component {
 
         let extThis = this;
 
-        // TODO this is bad bad should be done in the backend
         this.setState({
             inputtedPass: promptResp,
         }, () => {
             extThis.infoSubmit(null);
         });
-
-        // let infoTextArea = document.createElement("textarea")
-        // infoTextArea.id = "infoArea";
-        // infoTextArea.value = this.state.info;
-        // infoTextArea.onchange = this.infoChanged;
-        //
-        // let buttDiv = document.createElement("div");
-        // buttDiv.id = "buttDiv";
-        //
-        // let infoButton = document.createElement("button");
-        // infoButton.className = "monkeyButton";
-        // infoButton.id = "infoButton";
-        // infoButton.type = "button";
-        // infoButton.onclick = this.infoSubmit;
-        // infoButton.innerText = "Save Info";
-        //
-        // let deleteButton = document.createElement("button");
-        // deleteButton.className="monkeyButton";
-        // deleteButton.id = "deleteButton";
-        // deleteButton.type = "button";
-        // deleteButton.onclick = extThis.deleteSnippet;
-        // deleteButton.innerText = "Delete Snippet";
-        //
-        // buttDiv.appendChild(infoButton);
-        // buttDiv.appendChild(deleteButton);
-        //
-        // document.getElementById("infoForm").replaceChild(infoTextArea, document.getElementById("infoArea"));
-        // document.getElementById("langDiv").replaceChild(buttDiv, document.getElementById("infoButton"));
     }
 
     infoChanged(event) {
@@ -135,7 +107,8 @@ class Snippet extends Component {
         let data = {};
         data["info"] = infoText;
         data["lang"] = this.state.languageText;
-        callLambda(this, this.state.url + "/updateInfo", "POST",  data, this.state.inputtedPass)
+        data["password"] = this.state.inputtedPass;
+        callLambda(this, this.state.url + "/updateInfo", "POST",  data)
             .then(response => {
                 if (response["statusCode"] === 405) {
                     alert("Incorrect Password")
@@ -164,28 +137,28 @@ class Snippet extends Component {
 
     deleteSnippet(event) {
         let delURL = this.state.url + "/deleteSnippet"
-        callLambda(this, delURL, "POST", {}, this.state.inputtedPass)
-            .then(response => {
-                if (response !== null) {
-                    window.open("/", "_self");
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        const promptResp = prompt("Would you like to delete the Snippet:\n\nID: " + this.state.snippetID
+            + "\n\nEnter 'delete' to confirm");
+
+        if (promptResp != null && promptResp.includes("delete")) {
+
+            let data = {};
+            data["password"] = this.state.inputtedPass;
+            callLambda(this, delURL, "POST", data)
+                .then(response => {
+                    if (response !== null) {
+                        window.open("/", "_self");
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+        else {
+            alert("Please input 'delete' to delete Snippet")
+        }
 
         event.preventDefault();
-    }
-
-    onSelectionChanged(editor){
-        let startRow = editor.anchor.row + 1;
-        let endRow = editor.cursor.row + 1;
-
-        this.setState({
-            startSelection: startRow,
-            endSelection: endRow,
-        });
-        console.log("Cursor Selection: " + this.state.startSelection + ", " + this.state.endSelection);
     }
 
     // Set language from dropdown select
@@ -256,7 +229,6 @@ class Snippet extends Component {
                                 theme={"monokai"}
                                 height={"600px"}
                                 onChange={this.textChanged}
-                                onSelectionChange={this.onSelectionChanged}
                                 fontSize={14}
                                 showPrintMargin={true}
                                 showGutter={true}
@@ -264,9 +236,9 @@ class Snippet extends Component {
                                 value={this.state.text}
                                 style={reactStyle.aceStyle}
                                 setOptions={{
-                                    enableBasicAutocompletion: false,
-                                    enableLiveAutocompletion: false,
-                                    enableSnippets: false,
+                                    enableBasicAutocompletion: true,
+                                    enableLiveAutocompletion: true,
+                                    enableSnippets: true,
                                     showLineNumbers: true,
                                     tabSize: 2,
                                 }}/>
@@ -276,9 +248,7 @@ class Snippet extends Component {
                             <br/>
                             <CommentList
                                 snipID={this.state.snippetID}
-                                snipPassword={this.state.password}
-                                startSel={this.state.startSelection}
-                                endSel={this.state.endSelection}
+                                snipPassword={this.state.inputtedPass}
                                 creatorMode={this.state.creatorMode}
                             />
                             <button className="monkeyButton" type="button" onClick={this.textSubmit}>Save Text</button>
@@ -302,7 +272,6 @@ class Snippet extends Component {
                                 <FontAwesomeIcon  icon={faInstagram} />
                                 <ul className="linkedInContent">
                                     <a href="https://www.instagram.com/contrerasjosu/">Josue</a><br></br>
-                                    <a href="">Nick</a><br></br>
                                     <a href="">Will</a><br></br>
                                 </ul>
                             </i>

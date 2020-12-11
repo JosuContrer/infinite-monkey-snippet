@@ -81,7 +81,7 @@ class Homepage extends Component {
                     loadLoading: false,
                 });
 
-                if (Object.keys(response).length === 6) {
+                if (Object.keys(response).length >= 5) {
                     window.open("snippet#" + extThis.state.snippetID, "_self");
                 }
                 else {

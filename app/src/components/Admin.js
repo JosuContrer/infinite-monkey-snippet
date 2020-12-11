@@ -1,4 +1,4 @@
-import React, {Component, setState} from "react";
+import React, {Component} from "react";
 import {Button} from "reactstrap/es";
 import { List } from 'semantic-ui-react';
 import 'react-calendar/dist/Calendar.css';
@@ -145,50 +145,27 @@ class Admin extends Component{
             const list_url = url + "listSnippets";
             const snip_url = url +  snippetID;
             const del_url = snip_url + "/deleteSnippet";
-            let password = "";
-
-            callLambda(extThis, snip_url, "GET")
+            let data = {};
+            data["password"] = null;
+            callLambda(extThis, del_url, "POST", data)
                 .then(response => {
-                    if (Object.keys(response).length === 6) {
-                        password = response["password"];
+                    if (response !== null) {
+                        let data = {};
+                        data["adminPass"] = extThis.state.password;
 
-                        callLambda(extThis, del_url, "POST", {}, password)
+                        callLambda(extThis, list_url, "POST", data)
                             .then(response => {
-                                if (response !== null) {
-                                    let data = {};
-                                    data["adminPass"] = extThis.state.password;
+                                extThis.setState({
+                                    isLoading: false,
+                                });
 
-                                    callLambda(extThis, list_url, "POST", data)
-                                        .then(response => {
-                                            extThis.setState({
-                                                isLoading: false,
-                                            });
-
-                                            if (response["statusCode"] === 200) {
-                                                extThis.setState({
-                                                    snippetList: response["snippetList"],
-                                                });
-                                            }
-                                            else {
-                                                alert("Could not get Snippets after deletion");
-                                            }
-                                        })
-                                        .catch(error => {
-                                            extThis.setState({
-                                                isLoading: false,
-                                            });
-
-                                            alert("Something went wrong");
-                                            console.log(error);
-                                        });
-
+                                if (response["statusCode"] === 200) {
+                                    extThis.setState({
+                                        snippetList: response["snippetList"],
+                                    });
                                 }
                                 else {
-                                    alert("huh?")
-
-                                    extThis.setState({
-                                        isLoading: false,
-                                    });
+                                    alert("Could not get Snippets after deletion");
                                 }
                             })
                             .catch(error => {
@@ -202,7 +179,7 @@ class Admin extends Component{
 
                     }
                     else {
-                        alert("Could not delete Snippet - Doesn't Exist?")
+                        alert("Did not get response from DeleteSnippet")
 
                         extThis.setState({
                             isLoading: false,
@@ -217,6 +194,7 @@ class Admin extends Component{
                     alert("Something went wrong");
                     console.log(error);
                 });
+
 
             e.preventDefault();
         }
