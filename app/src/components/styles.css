@@ -335,6 +335,7 @@ html {
 #snippetpage .contactTitle{
     font-size: 30px;
     color: white;
+    margin-top: 0;
 }
 
 #snippetpage .contactInfo{
