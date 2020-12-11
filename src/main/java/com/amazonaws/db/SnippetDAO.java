@@ -87,9 +87,9 @@ public class SnippetDAO {
 	public boolean deleteSnippet(String id, String password) throws Exception {
 		
 		Snippet snip = getSnippet(id);
-		int numUpdated = 2;
+		int numUpdated = -1;
 		
-		if(snip.isPassword(password) || password == null) {
+		if(snip.isPassword(password)) {
 			PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE id=?;");
 			ps.setString(1, id);
 			
@@ -98,6 +98,18 @@ public class SnippetDAO {
 		}else {
 			return false;
 		}
+		
+		return (numUpdated == 1);
+	}
+	
+	public boolean deleteSnippetNoPass(String id) throws Exception {
+		int numUpdated = -1;
+		
+		PreparedStatement ps = conn.prepareStatement("DELETE FROM " + table + " WHERE id=?;");
+		ps.setString(1, id);
+		
+		numUpdated = ps.executeUpdate();
+		ps.close();
 		
 		return (numUpdated == 1);
 	}

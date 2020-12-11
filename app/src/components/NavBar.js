@@ -1,8 +1,10 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faKeyboard,} from '@fortawesome/free-solid-svg-icons'
+import Loader from "react-loaders";
 
-function NavBar() {
+const NavBar = (props) => {
+
     // const [click, setClick] = useState(false);
     //
     // const toggleMenu = () => setClick(!click);
@@ -35,14 +37,9 @@ function NavBar() {
                     <a className='navbar-logo' id='mainLogo' href='/'>
                        <FontAwesomeIcon icon={faKeyboard}/> Infinite Monkey Snippet 
                     </a>
-                    {/* <div class='menu-icon' onClick={toggleMenu}>
-                        <FontAwesomeIcon icon={click ? faTimes : faBars} />
-                    </div>
-                    <ul class={click ? 'nav-menu active' : 'nav-menu'}>
-                        <li class='nav-item'>
-                            <h4 class='homepage' onClick={goHome}>Home</h4>
-                        </li>
-                    </ul>*/}
+                    {props.loading ?
+                        <div className="loaderDiv"><Loader type={"pacman"} /></div>
+                        : <div className="loaderDiv"></div>}
                 </div>
             </div>  
         </>

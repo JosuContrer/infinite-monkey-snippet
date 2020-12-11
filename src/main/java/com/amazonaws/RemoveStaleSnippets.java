@@ -32,15 +32,23 @@ public class RemoveStaleSnippets implements RequestHandler<RemoveStaleRequest, R
 				logger.log("Unix Stale Time: " + staleTime.toString());
 				logger.log("Readable Stale Time: " + input.toString());
 				
+				SnippetDAO snipdao = new SnippetDAO();
+				CommentDAO comdao = new CommentDAO();
+				
 				// Check valid time, current or past time
-				if(input.getStaleDateTime().compareTo(new Date()) <= 0) {
-					SnippetDAO snipdao = new SnippetDAO();
+				if(input.getID() != "") {
+					snipdao.deleteSnippetNoPass(input.getID());
+					comdao.deleteCommentsBySnippetNoPass(input.getID());
+					
+					response = new RemoveStaleResponse(200, "Deleted Snippet" + input.getID(), snipdao.getAllSnippetsDescriptors());
+					logger.log("Successfully deleted" + input.getID());
+				}
+				else if(input.getStaleDateTime().compareTo(new Date()) <= 0) {
 					ArrayList<String> idsToDelete = snipdao.getStaleSnippetIDs(staleTime);
 					if (idsToDelete.size() > 0) {
-						CommentDAO comdao = new CommentDAO();
-						
+					
 						for (String id: idsToDelete) {
-							snipdao.deleteSnippet(id, null);
+							snipdao.deleteSnippetNoPass(id);
 							comdao.deleteCommentsBySnippetNoPass(id);
 						}
 						
@@ -51,8 +59,9 @@ public class RemoveStaleSnippets implements RequestHandler<RemoveStaleRequest, R
 						response.setErrorMessage("DAO Error");
 						logger.log("Error Deleting Stale Snippets");
 					}	
-				}else{
-					response.setErrorMessage("Invalid date");
+				}
+				else{
+					response.setErrorMessage("Invalid Input");
 				}
 			}else {
 				return new RemoveStaleResponse(403, "Forbidden");

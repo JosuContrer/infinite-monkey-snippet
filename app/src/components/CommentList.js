@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Card, CardTitle } from 'reactstrap';
 import {callLambda, sanitizeText} from "./Utilities";
 import "./styles.css";
+import Loader from "react-loaders";
 
 const url = "https://22qzx6fqi8.execute-api.us-east-1.amazonaws.com/First/comments/"
 
@@ -18,7 +19,7 @@ class CommentList extends Component {
             inProgCom: null,
             inProgText: "",
 
-            loadCommentInterval: 5000,
+            isLoading: false,
         }
 
         this.addComment = this.addComment.bind(this);
@@ -40,7 +41,7 @@ class CommentList extends Component {
         // Load comments on set interval
         setInterval(() => {
                 extThis.loadComments();
-        }, extThis.state.loadCommentInterval);
+        }, extThis.props.timerInterval);
 
     }
 
@@ -78,6 +79,10 @@ class CommentList extends Component {
 
     submitComment(event) {
         let extThis = this;
+
+        this.setState({
+            isLoading: true,
+        });
         
         let data = {};
         data["snippetID"] = this.state.snippetID;
@@ -88,21 +93,29 @@ class CommentList extends Component {
         callLambda(extThis, url, "POST", data)
             .then(response => {
                 extThis.loadComments();
+
+                extThis.setState({
+                    isLoading: false,
+                    inProgCom: null,
+                });
             })
             .catch(error => {
                 console.log(error);
-            });
 
-        this.setState({
-            inProgCom: null,
-        });
+                extThis.setState({
+                    isLoading: false,
+                    inProgCom: null,
+                });
+            });
     }
 
     deleteComment(commentID){
         let extThis = this;
         return function(e) {
 
-            console.log(commentID);
+            extThis.setState({
+                isLoading: true,
+            });
 
             let data = {};
             data["snippetID"] = extThis.state.snippetID;
@@ -111,19 +124,24 @@ class CommentList extends Component {
 
             callLambda(extThis, url +  commentID + "/deleteComment", "POST", data)
                 .then(response => {
-                   console.log(response);
                     extThis.loadComments();
+
+                    extThis.setState({
+                        isLoading: false,
+                    });
                 })
                 .catch(error => {
                     console.log(error);
+
+                    extThis.setState({
+                        isLoading: false,
+                    });
                 });
         }
     }
 
 
     // ----------------------- LOAD COMMENTS FROM REQUEST ---------------------
-
-    // Function to load comments on GUI given a input list (TODO: Make it work onload of document and heartbeat?)
     loadComments(event){
         let extThis = this;
         const commentURl = url + "listCommentsBySnippet"
@@ -194,7 +212,7 @@ class CommentList extends Component {
                     this.renderProg()
                         : <div></div>}
                 </div>
-                <button className="monkeyButton" onClick={this.addComment}>Add Comment</button>
+                <button id="addComButt" className="monkeyButton" onClick={this.addComment}>Add Comment</button>
             </>
         );
     }
