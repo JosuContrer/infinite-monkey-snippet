@@ -4,6 +4,7 @@ import com.amazonaws.db.SnippetDAO;
 import com.amazonaws.http.snippet.UpdateTextRequest;
 import com.amazonaws.http.snippet.UpdateTextResponse;
 import com.amazonaws.model.Snippet;
+import com.amazonaws.model.diff_match_patch;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
@@ -25,10 +26,13 @@ public class UpdateTextHandler implements RequestHandler<UpdateTextRequest, Upda
 		UpdateTextResponse response;
 		try {
 			SnippetDAO snipdao = new SnippetDAO();
+			diff_match_patch dmp = new diff_match_patch();
 			
 			// TODO: Make function to update Snippet without having to create a snippet object
 			Snippet snippet = snipdao.getSnippet(input.id);
-			snippet.setText(input.text);
+			String initialText = snippet.getText();
+			
+			snippet.setText((String) dmp.patch_apply(dmp.patch_make(initialText, input.text), initialText)[0]);
 			snipdao.updateSnippetText(snippet);
 			
 			response = new UpdateTextResponse(200);

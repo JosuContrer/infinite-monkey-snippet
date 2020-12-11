@@ -38,10 +38,8 @@ class CommentList extends Component {
 
         let extThis = this;
         // Load comments on set interval
-        setInterval(function() {
-            if(!extThis.state.commentInProgress) {
+        setInterval(() => {
                 extThis.loadComments();
-            }
         }, extThis.state.loadCommentInterval);
 
     }
@@ -127,8 +125,6 @@ class CommentList extends Component {
 
     // Function to load comments on GUI given a input list (TODO: Make it work onload of document and heartbeat?)
     loadComments(event){
-        console.log("Loading comments ...");
-
         let extThis = this;
         const commentURl = url + "listCommentsBySnippet"
         let data = {};

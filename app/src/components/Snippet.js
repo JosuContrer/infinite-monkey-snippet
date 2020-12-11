@@ -36,9 +36,12 @@ class Snippet extends Component {
             inputtedPass: "",
             creatorMode: false,
 
+            timerInterval: 5000,
+
         };
 
         this.setLanguage = this.setLanguage.bind(this);
+        this.timerUpdate = this.timerUpdate.bind(this);
 
         this.infoChanged = this.infoChanged.bind(this);
         this.textChanged = this.textChanged.bind(this);
@@ -51,6 +54,7 @@ class Snippet extends Component {
     }
 
     componentDidMount() {
+        let extThis = this;
 
         // GET SNIPPET DATA
         callLambda(this, this.state.url, "GET")
@@ -74,6 +78,66 @@ class Snippet extends Component {
             .catch(error => {
                 console.log(error);
             });
+        
+        setInterval(() => {
+            this.timerUpdate();
+        }, extThis.state.timerInterval);
+    }
+
+    timerUpdate() {
+        const lambda = () => {
+            callLambda(this, this.state.url + "/updateText", "POST", {text: sanitizeText(this.state.text)})
+            .then(response => {
+                callLambda(this, this.state.url, "GET")
+                    .then(response => {
+                        if (Object.keys(response).length >= 5) {
+                            let timestampNum = response["timestamp"];
+                            let unixDate = new Date(timestampNum);
+
+                            this.setState({
+                                languageText: response["language"],
+                                timestampText: unixDate.toLocaleString(),
+                                info: response["info"],
+                                text: response["text"],
+                            });
+                        }
+                        else {
+                            alert("This Snippet has been Deleted - Returning to Homepage")
+                            window.open("/", "_self");
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            })
+
+            .catch(error => {
+                console.log(error);
+            })
+        };
+
+        if (this.state.creatorMode) {
+            callLambda(this, this.state.url + "/updateInfo", "POST",
+                {
+                    info: sanitizeText(this.state.info),
+                    lang: this.state.languageText,
+                    password: this.state.inputtedPass,
+                })
+                .then(response => {
+                    if (response["statusCode"] === 200) {
+                        lambda();
+                    }
+                    else {
+                        alert("rut roh raggy");
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+        else {
+            lambda();
+        }
     }
 
     editInfo(event) {
