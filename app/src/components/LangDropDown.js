@@ -1,7 +1,5 @@
 import React, {useState, Component} from 'react'
 import Select from 'react-select'
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-
 
 const LangDropDown = (props) => {
 
@@ -12,7 +10,8 @@ const LangDropDown = (props) => {
     // Languages can be added to list (GUI dropdown will dynamically adjust)
     //  -> credits: ACE examples
     const languages = [
-        {value:"abap", label: "abap" },
+        {value: "", label: "No Language Selected"},
+        {value: "abap", label: "abap" },
         {value: "abc", label: "abc" },
         {value: "actionscript", label: "actionscript" },
         {value: "ada", label: "ada" },
@@ -175,24 +174,32 @@ const LangDropDown = (props) => {
     ]
 
     languages.forEach(lang => {
-        require(`ace-builds/src-noconflict/mode-${lang["value"]}`);
-        require(`ace-builds/src-noconflict/snippets/${lang["value"]}`);
+        if (lang["value"] !== "") {
+            require(`ace-builds/src-noconflict/mode-${lang["value"]}`);
+            require(`ace-builds/src-noconflict/snippets/${lang["value"]}`);
+        }
      });
 
-    return (
-        // <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-        //     <DropdownToggle caret>
-        //         Language
-        //     </DropdownToggle>
-        //     <DropdownMenu>
-        //         <DropdownItem header>Supported</DropdownItem>
-        //         {languages.map((languages, index)=>{
-        //             return <DropdownItem className="languageDropdown" onClick={props.func}>{languages}</DropdownItem>
-        //         })}
-        //     </DropdownMenu>
-        // </Dropdown>
+    const dropDownStyle = {
+        indicatorsContainer: (provider, state) => ({
+            ...provider,
+            visibility: state.isDisabled ? 'hidden' : 'visible',
+        }),
+        singleValue: (provider, state) => ({
+            ...provider,
+            color: state.isDisabled ? 'black' :'black',
+            fontWeight: state.isDisabled ? 'bold' : 'normal',
+        }),
+    }
 
-        <Select options={languages} onChange={props.func} />
+    return (
+        <Select
+            styles={dropDownStyle}
+            value={languages.find((x) => (x["value"] === props.lang))}
+            options={languages}
+            onChange={props.func}
+            isDisabled={!props.disabled}
+        />
     )
 }
 

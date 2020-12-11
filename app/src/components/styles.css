@@ -465,7 +465,21 @@ html {
 	color: white;
 }
 
-#snippetpage .snippetsection button{
+#snippetpage .langDropDown {
+    display: flex;
+    margin-top: 5%;
+    margin-bottom: 5px;
+    justify-content: space-between;
+    z-index: 999;
+    position: relative;
+}
+
+#snippetpage .langDropDown #langSelector {
+    width: 75%;
+    margin-top: 5px;
+}
+
+#snippetpage .snippetsection .monkeyButton{
 	margin-top: 1%;
     height: 50px;
     min-width: 100%;
@@ -476,6 +490,26 @@ html {
     text-align: center;
     font-size: 20px;
     border-radius: 10px;
+}
+
+#snippetpage .not_textarea {
+    background: white;
+    color: black;
+    padding: 0.5em 0.25em 0.5em 0.5em;
+    border-radius: 10px;
+    max-height: 200px;
+}
+
+#snippetpage #commentDeleteButton{
+    color: rgb(68, 64, 64);
+    background-color: transparent;
+    max-width: 20px;
+    padding: 0;
+    border: 0;
+    position: absolute;
+    right: 10px;
+    top: 6px;
+
 }
 
 #snippetpage .snippetsection #langDiv #buttDiv,
@@ -512,6 +546,7 @@ html {
     overflow-y: scroll;
 }
 
+
 #snippetpage #contactDiv {
     min-width: 100%;
     align-items: center;
@@ -542,7 +577,7 @@ html {
         padding-top: 0.1em;
     }
 
-    #snippetpage .snippetsection button{
+    #snippetpage .snippetsection .monkeyButton{
         height: max-content;
         padding: 5px;
         margin-top: 4px;
