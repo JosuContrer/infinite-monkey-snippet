@@ -43,6 +43,10 @@ public class Snippet {
 		return this.password;
 	}
 	
+	public void setPassword(String newPass) {
+		this.password = newPass;
+	}
+	
 	public boolean isPassword(String pass) {
 		return this.password.equals(pass);
 	}
