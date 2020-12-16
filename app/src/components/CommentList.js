@@ -26,6 +26,7 @@ class CommentList extends Component {
         this.cancelComment = this.cancelComment.bind(this);
         this.loadComments = this.loadComments.bind(this);
         this.deleteComment = this.deleteComment.bind(this);
+        this.highlightCommentArea = this.highlightCommentArea.bind(this);
 
         this.newComUpdate = this.newComUpdate.bind(this);
     }
@@ -139,6 +140,30 @@ class CommentList extends Component {
         }
     }
 
+    highlightCommentArea(cardID, regionStartC, regionEndC){
+        let extThis = this;
+        return function(e){
+            let ace = document.getElementById("ace-editor");
+            let commentList = extThis.state.commentList;
+
+            for(let i = 0; i < commentList.length; i++){
+
+                let currentCardID = commentList[i].ID;
+                let card = document.getElementById(currentCardID);
+                    
+                if(currentCardID === cardID){
+                    card.style.borderColor="#d4d004";
+                }else{
+                    card.style.borderColor="#309c49";    
+                }
+            }
+           
+            let r = {start: {row: regionStartC, column:0 }, end: {row:regionEndC, column:70}};
+            ace.env.editor.selection.setSelectionRange(r, false);     
+
+        }
+    }
+
 
     // ----------------------- LOAD COMMENTS FROM REQUEST ---------------------
     loadComments(event){
@@ -165,7 +190,7 @@ class CommentList extends Component {
         let extThis = this;
         let unixDate = new Date(listItem["timestamp"])
         return(
-            <Card key={listItem["ID"]} id={listItem["ID"]} body inverse color="success">
+            <Card key={listItem["ID"]} id={listItem["ID"]} body inverse color="success" onClick={extThis.highlightCommentArea(listItem["ID"], listItem["regionStart"], listItem["regionEnd"])}>
                 {extThis.props.creatorMode ?
                     <button id="commentDeleteButton" onClick={extThis.deleteComment(listItem["ID"])}>x</button>
                     : <div></div>
@@ -179,14 +204,14 @@ class CommentList extends Component {
 
     renderProg() {
         let extThis = this;
-        return <Card key="comInProg" id="comInProg" body inverse color="success">
-            <p>Selected Lines: {extThis.state.inProgCom["regionStart"] + ", " + extThis.state.inProgCom["regionEnd"]}</p>
-            <textarea onChange={extThis.newComUpdate}></textarea>
-            <div id="newComDiv">
-                <button className="monkeyButton" onClick={extThis.submitComment}>Submit Comment</button>
-                <button className="monkeyButton" id="cancelButt" onClick={extThis.cancelComment}>Cancel Comment</button>
-            </div>
-        </Card>
+        return  <Card key="comInProg" id="comInProg" body inverse color="success">
+                    <p>Selected Lines: {extThis.state.inProgCom["regionStart"] + ", " + extThis.state.inProgCom["regionEnd"]}</p>
+                    <textarea onChange={extThis.newComUpdate}></textarea>
+                    <div id="newComDiv">
+                        <button className="monkeyButton" onClick={extThis.submitComment}>Submit Comment</button>
+                        <button className="monkeyButton" id="cancelButt" onClick={extThis.cancelComment}>Cancel Comment</button>
+                    </div>
+                </Card>
     }
 
     newComUpdate(event) {
